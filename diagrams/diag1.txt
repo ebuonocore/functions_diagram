@@ -1,0 +1,13 @@
+def otot(x:int)->int
+otot.position(387,194)
+otot.dimension(80,39)
+
+def noe(a:flot,b:float)->str
+noe.position(691,278)
+noe.dimension(100,58)
+
+node(A:int,(564,300))
+node(B:str,(577,376))
+otot>---A
+noe<0---A
+noe<1---B

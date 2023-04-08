@@ -1,0 +1,47 @@
+def f1(a:int,b:bool)
+f1.position(677,193)
+f1.dimension(90,58)
+
+def f1*(a:int,b:bool)->str
+f1*.position(677,350)
+f1*.dimension(90,58)
+
+def f2(n:str,m:str)->str
+f2.position(896,263)
+f2.dimension(80,58)
+
+def f4(x:str,y:str,v:str)->int
+f4.position(1123,251)
+f4.dimension(80,77)
+
+def g*0(a:int)
+g*0.position(523,143)
+g*0.dimension(80,39)
+
+def g*1(a:int)
+g*1.position(523,219)
+g*1.dimension(80,39)
+
+def g*2(a:int)
+g*2.position(525,348)
+g*2.dimension(80,39)
+
+def g*3(a:int)
+g*3.position(528,430)
+g*3.dimension(80,39)
+
+node(A:str,(831,208))
+node(B:str,(840,459))
+node(C:str,(1037,317))
+f1<0---g*0>
+f1<1---g*1>
+f1>---A
+f1*<0---g*2>
+f1*<1---g*3>
+f1*>---B
+f2<0---A
+f2<1---B
+f2>---C
+f4<0---A
+f4<1---C
+f4<2---B
