@@ -1,13 +1,13 @@
 {
-"text_color": "black",
-"type_color": "#7f0055", 
-"police": "Consolas",
-"title_background_color": "lightgrey",
-"main_background_color": "white",
-"borders_default_color": "grey",
-"line_color": "black",
-"line_thikness": 2,
-"title_size" : 16,
-"text_size" : 12
+    "text_color": "black",
+    "type_color": "#7f0055",
+    "police": "Consolas",
+    "title_background_color": "lightgrey",
+    "main_background_color": "white",
+    "borders_default_color": "black",
+    "line_color": "black",
+    "line_thikness": 2,
+    "title_size": 16,
+    "text_size": 12,
+    "thickness": 2
 }
-

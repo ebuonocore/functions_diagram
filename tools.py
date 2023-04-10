@@ -5,6 +5,7 @@ from node import *
 from link import *
 from function_block import *
 import matplotlib.colors as mcolors
+from math import cos, sin, pi
 
 
 def index_occurrence(char, string):
@@ -371,6 +372,48 @@ def test_compound(compound: str) -> bool:
         if 0 <= int(compound) < 256:
             return True
     return False
+
+
+def draw_box(can, x_start, y_start, x_end, y_end, **kwargs):
+    """ Create a rectangle in the canvas (can).
+        if rounded is True, create a rounded rectangle.
+    """
+    outline = 'black'
+    fill = 'white'
+    rounded_up = False
+    rounded_down = False
+    thickness = 1
+    for k, v in kwargs.items():
+        if k == 'outline':
+            outline = v
+        elif k == 'fill':
+            fill = v
+        elif k == 'rounded_up':
+            rounded_up = v
+        elif k == 'thickness':
+            thickness = v
+    if rounded_up == False:
+        can.create_rectangle(x_start, y_start, x_end, y_end,
+                             outline=outline, fill=fill, width=thickness)
+    elif rounded_up == True:
+        d = max(1, (y_end - y_start) // 2)
+        step = 8
+        x1 = x_start + d
+        x2 = x_end - d
+        ym = y_start + d
+        curve_left = []
+        curve_right = []
+        for i in range(step):
+            a = pi + i*pi/16
+            curve_left.append(x1+d*cos(a))
+            curve_left.append(ym+d*sin(a))
+            b = a + pi/2
+            curve_right.append(x2+d*cos(b))
+            curve_right.append(ym+d*sin(b))
+        vertices = [x_start, y_end, x_start, ym] + curve_left + [x1,
+                                                                 y_start, x2, y_start] + curve_right + [x_end, ym, x_end, y_end]
+        can.create_polygon(vertices,
+                           outline=outline, fill=fill, width=thickness)
 
 
 if __name__ == "__main__":

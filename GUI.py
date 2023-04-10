@@ -287,6 +287,7 @@ class Window:
         title_size = self.preferences["title_size"]
         text_size = self.preferences["text_size"]
         text_color = self.preferences["text_color"]
+        thickness = self.preferences["thickness"]
         font_titre = tkfont.Font(
             family=police, size=title_size, weight="bold")
         font_texte = tkfont.Font(
@@ -304,13 +305,13 @@ class Window:
                 else:
                     header_color = function.header_color
                 # Dessin du cadre du nom de la fonction
-                self.can.create_rectangle(x, y, x+function_width, y+self.title_char_height,
-                                          outline=border_color, fill=header_color)
+                tl.draw_box(self.can, x, y, x+function_width, y+self.title_char_height,
+                            outline=border_color, fill=header_color, thickness=thickness,  rounded_up=True)
 
                 # Dessin du cadre du corps de la fonction
-                self.can.create_rectangle(x, y+self.title_char_height, x+function_width,
-                                          y+self.title_char_height+function_height,
-                                          outline=border_color, fill=main_background_color)
+                tl.draw_box(self.can, x, y+self.title_char_height, x+function_width,
+                            y+self.title_char_height+function_height,
+                            outline=border_color, fill=main_background_color, thickness=thickness)
 
                 # Ecriture du nom de la fonction
                 x_titre = x + function_width // 2

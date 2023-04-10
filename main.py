@@ -5,6 +5,7 @@ Output Shortcuts : Détection peu fiable. Modéliser le diagramme avec networkx.
         Dans les deux sens.
 GUI.py          Spec et commentaires en anglais
     bords arrondis (paramétrable) pour l'entête et/ou le pied de fonction
+      entête ok. Faire pied.
     Proposer le dessin (et enregistrement) d'objet de type encadrement (pointillés)
     mettre en place .scale sur self.can ? 
     et un drag pour déplacer l'ensemble du diagram ? avec scrollregion ?
