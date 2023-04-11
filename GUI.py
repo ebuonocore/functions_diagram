@@ -306,12 +306,12 @@ class Window:
                     header_color = function.header_color
                 # Dessin du cadre du nom de la fonction
                 tl.draw_box(self.can, x, y, x+function_width, y+self.title_char_height,
-                            outline=border_color, fill=header_color, thickness=thickness,  rounded_up=True)
+                            outline=border_color, fill=header_color, thickness=thickness, rounded_up=True)
 
                 # Dessin du cadre du corps de la fonction
                 tl.draw_box(self.can, x, y+self.title_char_height, x+function_width,
                             y+self.title_char_height+function_height,
-                            outline=border_color, fill=main_background_color, thickness=thickness)
+                            outline=border_color, fill=main_background_color, thickness=thickness, rounded_down=True, radius=self.title_char_height//2)
 
                 # Ecriture du nom de la fonction
                 x_titre = x + function_width // 2

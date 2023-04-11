@@ -383,6 +383,8 @@ def draw_box(can, x_start, y_start, x_end, y_end, **kwargs):
     rounded_up = False
     rounded_down = False
     thickness = 1
+    radius = 2  # bending_radius
+    step = 12
     for k, v in kwargs.items():
         if k == 'outline':
             outline = v
@@ -390,21 +392,23 @@ def draw_box(can, x_start, y_start, x_end, y_end, **kwargs):
             fill = v
         elif k == 'rounded_up':
             rounded_up = v
+        elif k == 'rounded_down':
+            rounded_down = v
         elif k == 'thickness':
             thickness = v
-    if rounded_up == False:
-        can.create_rectangle(x_start, y_start, x_end, y_end,
-                             outline=outline, fill=fill, width=thickness)
-    elif rounded_up == True:
-        d = max(1, (y_end - y_start) // 2)
-        step = 8
+        elif k == 'radius':
+            radius = v
+        elif k == 'step':
+            step = v
+    if rounded_up == True:
+        d = max(radius, (y_end - y_start) // 2)
         x1 = x_start + d
         x2 = x_end - d
         ym = y_start + d
         curve_left = []
         curve_right = []
         for i in range(step):
-            a = pi + i*pi/16
+            a = pi + i*pi/(step*2)
             curve_left.append(x1+d*cos(a))
             curve_left.append(ym+d*sin(a))
             b = a + pi/2
@@ -414,6 +418,27 @@ def draw_box(can, x_start, y_start, x_end, y_end, **kwargs):
                                                                  y_start, x2, y_start] + curve_right + [x_end, ym, x_end, y_end]
         can.create_polygon(vertices,
                            outline=outline, fill=fill, width=thickness)
+    elif rounded_down == True:
+        d = max(radius, 2)
+        x1 = x_start + d
+        x2 = x_end - d
+        ym = y_end - d
+        curve_left = []
+        curve_right = []
+        for i in range(step):
+            a = pi/2 + i*pi/(step*2)
+            curve_left.append(x1+d*cos(a))
+            curve_left.append(ym+d*sin(a))
+            b = i*pi/(step*2)
+            curve_right.append(x2+d*cos(b))
+            curve_right.append(ym+d*sin(b))
+        vertices = [x_start, y_start, x_end, y_start, x_end, ym] + curve_right + [x2,
+                                                                                  y_end, x1, y_end] + curve_left + [x_start, y_start]
+        can.create_polygon(vertices,
+                           outline=outline, fill=fill, width=thickness)
+    else:
+        can.create_rectangle(x_start, y_start, x_end, y_end,
+                             outline=outline, fill=fill, width=thickness)
 
 
 if __name__ == "__main__":
