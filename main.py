@@ -4,12 +4,11 @@ Output Shortcuts : Détection peu fiable. Modéliser le diagramme avec networkx.
     Recherche de chemin préexistants entre les 2 noeuds cibles de la création de lien. 
         Dans les deux sens.
 GUI.py          Spec et commentaires en anglais
-    bords arrondis (paramétrable) pour l'entête et/ou le pied de fonction
-      entête ok. Faire pied.
     Proposer le dessin (et enregistrement) d'objet de type encadrement (pointillés)
     mettre en place .scale sur self.can ? 
     et un drag pour déplacer l'ensemble du diagram ? avec scrollregion ?
-Option : permettre de paramétrer l'attribut. smooth_lines de Window
+Options : permettre de paramétrer l'attribut. smooth_lines de Window
+        rounded functions (up & down)
 
 Alternative : https://app.diagrams.net/
 """
