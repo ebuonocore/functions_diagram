@@ -1,10 +1,14 @@
 """
-Output Shortcuts : Détection peu fiable. Modéliser le diagramme avec networkx. 
-    Digraph : Bidirectionnels entre noeuds de la même zone, directionnel au sein des fonctions.
-    Recherche de chemin préexistants entre les 2 noeuds cibles de la création de lien. 
+Output Shortcuts : 
+    Détection peu fiable. Modéliser le diagramme avec networkx. 
+      Digraph : Bidirectionnels entre noeuds de la même zone, directionnel au sein des fonctions.
+      Recherche de chemins préexistants entre les 2 noeuds cibles de la création de lien. 
         Dans les deux sens.
-GUI.py          Spec et commentaires en anglais
+GUI.py     
+    Un message d'erreur lors de l'appel de lift_window
+      _tkinter.TclError: bad window path name ".!toplevel2"
     Proposer le dessin (et enregistrement) d'objet de type encadrement (pointillés)
+      Défini par un nom, les fonctions englobées et marge ou position/dimensions, couleur, épaisseur de trait
     mettre en place .scale sur self.can ? 
     et un drag pour déplacer l'ensemble du diagram ? avec scrollregion ?
 Options : permettre de paramétrer l'attribut. smooth_lines de Window
