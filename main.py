@@ -1,4 +1,6 @@
 """
+diagram et node:
+    Traduire les specs
 Output Shortcuts : 
     Détection peu fiable. Modéliser le diagramme avec networkx. 
       Digraph : Bidirectionnels entre noeuds de la même zone, directionnel au sein des fonctions.
@@ -7,6 +9,7 @@ Output Shortcuts :
 GUI.py     
     Un message d'erreur lors de l'appel de lift_window
       _tkinter.TclError: bad window path name ".!toplevel2"
+      résoudre par try/except ?
     Proposer le dessin (et enregistrement) d'objet de type encadrement (pointillés)
       Défini par un nom, les fonctions englobées et marge ou position/dimensions, couleur, épaisseur de trait
     mettre en place .scale sur self.can ? 
