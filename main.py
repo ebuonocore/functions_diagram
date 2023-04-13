@@ -2,7 +2,7 @@
 diagram et node:
     Traduire les specs
 window_edition:
-    Fenêtre trop hute    
+    Fenêtre trop haute    
 GUI.py     
     Un message d'erreur lors de l'appel de lift_window
       _tkinter.TclError: bad window path name ".!toplevel2"
