@@ -1,11 +1,8 @@
 """
 diagram et node:
     Traduire les specs
-Output Shortcuts : 
-    Détection peu fiable. Modéliser le diagramme avec networkx. 
-      Digraph : Bidirectionnels entre noeuds de la même zone, directionnel au sein des fonctions.
-      Recherche de chemins préexistants entre les 2 noeuds cibles de la création de lien. 
-        Dans les deux sens.
+window_edition:
+    Fenêtre trop hute    
 GUI.py     
     Un message d'erreur lors de l'appel de lift_window
       _tkinter.TclError: bad window path name ".!toplevel2"

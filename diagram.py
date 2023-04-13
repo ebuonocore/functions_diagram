@@ -15,6 +15,7 @@ class Diagram:
         # keys = floor number, values = list of functions in this floor.
         self.floors = dict()
         self.links = list()  # List of Links
+        self.zones_tree = {}  # liste of description des niveaux antécédentes pour chaque niveau
 
     def is_empty(self):
         """ Returns True if there is no function and no nodes
@@ -97,8 +98,7 @@ class Diagram:
         return False
 
     def disconnect_nodes(self, link):
-        """ 
-            Disconnects the two nodes of the link.
+        """ Disconnects the two nodes of the link.
         """
         if len(link.nodes) == 2:
             node_A = link.nodes[0]
@@ -111,23 +111,90 @@ class Diagram:
             self.links.remove(destination)
 
     def update_zones(self):
-        """ Initialise toutes les zones des noeuds à None.
-            Créé autant de zones que de fonctions. Une zone par sortie de fonction.
-            Les connections entre sorties sont interdites.
-            Les noeuds de sortie de fonctions sont affectés aux zones créés.
-            Ajoute une zone supplémentaire(-1) pour les noeuds extérieurs.
-            Recherche et affecte la zone de chaque noeud connecté à une sortie de fonction.
+        """ Explores all the nodes of the diagram. Builds the dictionary of zones containing
+            their levels and the lists of nodes at the same level (connected together)
+            The level of a zone connected to an output is positive.
+            Zones not connected to an output have a negative level.
         """
+        # Initialization
+        self.zones = {}
+        current_level = 0
         for node in self.nodes.values():
             node.zone = None
-        self.zones = {-1: []}  # Initialize the zones dictionary
-        for zone, function in enumerate(self.functions.values()):
-            self.zones[zone] = [function.output]
-            function.output.zone = zone
-        for node in self.nodes.values():
-            zone = node.update_zone()
-            if node not in self.zones[zone]:
-                self.zones[zone].append(node)
+        for function in self.functions.values():
+            self.zones[current_level] = [function.output]
+            function.output.zone = current_level
+            current_level += 1
+        current_level = -1
+        to_visit = {node for node in self.nodes.values()}
+        # Explore and update all nodes
+        while len(to_visit) > 0:
+            node = to_visit.pop()
+            level, visited = node.explore_zone(node.zone, {node})
+            if level is None:
+                level = current_level
+                self.zones[level] = []
+                current_level -= 1
+            for node in visited:
+                node.zone = level
+                if node not in self.zones[level]:
+                    self.zones[level].append(node)
+                if node in to_visit:
+                    to_visit.remove(node)
+        self.update_zones_tree()
+
+    def update_zones_tree(self):
+        self.zones_tree = dict()
+        for level, nodes in self.zones.items():
+            if level >= 0:
+                function = self.function_in(nodes)
+                if function is not None:
+                    antecedents = []
+                    for entry in function.entries:
+                        antecedents.append(entry.zone)
+                    self.zones_tree[level] = antecedents
+
+    def function_in(self, nodes: list):
+        """ Returns the function whose output is in the list of nodes.
+        """
+        for node in nodes:
+            if '>' in node.name:
+                function_name = node.name.split('>')[0]
+                if function_name in self.functions:
+                    return self.functions[function_name]
+        return None
+
+    def are_reachables(self, node_A, node_B):
+        """ Returns True if a link can be created between node_A and node_B without creating a feedback loop.
+        """
+        self.update_zones()
+        level_A = node_A.zone
+        level_B = node_B.zone
+        antecedent_A = self.antecedents(level_A)
+        antecedent_B = self.antecedents(level_B)
+        print(level_A, level_B, antecedent_A, antecedent_B)
+        # False if node_A and node_B are linked to different outputs.
+        if level_A >= 0 and level_B >= 0:
+            return False
+        # False a node is a antecedent of the other one.
+        elif level_B in antecedent_A:
+            return False
+        elif level_A in antecedent_B:
+            return False
+        else:
+            return True
+
+    def antecedents(self, level, levels=None):
+        if levels is None:
+            levels = set()
+        if level in levels:
+            return levels
+        levels.add(level)
+        if level < 0:
+            return levels
+        for zone_level in self.zones_tree[level]:
+            levels = self.antecedents(zone_level, levels)
+        return levels
 
     def update_function_floor(self, function):
         # function.floor already update
@@ -161,12 +228,14 @@ class Diagram:
         self.floors = dict()
         for function in self.functions.values():
             function.floor = -1
+        """
         for function in self.functions.values():
             floor = self.update_function_floor(function)
             if floor in self.floors.keys():
                 self.floors[floor].append(function)
             else:
                 self.floors[floor] = [function]
+        """
 
     def update_links(self):
         self.links = list()

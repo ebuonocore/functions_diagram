@@ -79,7 +79,7 @@ class Window_settings():
     def resize_height(self):
         self.parent.can.update()
         if self.frame.winfo_exists():
-            height = max(100, self.frame.winfo_height() + 40)
+            height = max(200, self.frame.winfo_height() + 40)
             width = max(200, self.window.winfo_width())
             self.window.geometry("{}x{}".format(width, height))
 

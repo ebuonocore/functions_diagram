@@ -155,6 +155,7 @@ class Window:
             The free points (not associated with functions) are located on the intermediate levels.
         """
         self.diagram.update_zones()
+        """
         self.diagram.update_floors()
         # Search for the maximum floor
         floor_max = len(self.diagram.floors)
@@ -207,6 +208,7 @@ class Window:
                     node.position[1] = output_ordinate
                 else:
                     node.position[1] = sum(ordinates) / len(ordinates)
+        """
 
     def draw(self):
         """ Updates the system display in the Tkinter window
@@ -648,11 +650,7 @@ class Window:
         elif self.state == 7:  # Destination selected
             self.diagram.update_zones()
             compliant_nodes = False
-            if self.origin.zone == self.destination.zone:
-                compliant_nodes = True
-            if self.origin.zone == -1 or self.destination.zone == -1:
-                compliant_nodes = True
-            if compliant_nodes:
+            if self.diagram.are_reachables(self.origin, self.destination):
                 message('Nodes connected. Select another origin.',
                         self.text_message)
                 self.diagram.nodes_connection(
