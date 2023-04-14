@@ -18,7 +18,7 @@ COLOR_OUTLINE = "#FFFF00"
 
 
 def message(message, destination=None):
-    """ Affiche le message dans la console en attendant de créer les zones de texte sur Tkinter
+    """ Displays the message in the console or in the text box on Tkinter.
     """
     if destination is None:
         print(message)
@@ -48,7 +48,7 @@ class Window:
                                                                                 title_size)
         self.text_char_width, self.text_char_height = tl.character_dimensions(police,
                                                                               text_size)
-        # Initialisation
+        # Initialization
         self.state = 1
         self.memory = Memory(50, self.diagram.export_to_text())
         self.MARGIN = 10
@@ -87,8 +87,8 @@ class Window:
         self.engine()  # Starts state management
 
     def load_preferences(self):
-        """ Charge les informations stockées dans le fichiers préférences.json
-            et met à jour les attributs du systeme et du paquet
+        """ Loads the information stored in the preferences.json file
+            and updates the system and package attributes.
         """
         with open('preferences.json', 'r') as fichier:
             return json.load(fichier)
@@ -104,18 +104,17 @@ class Window:
         return WIDTH, HEIGHT
 
     def auto_resize_blocks(self):
-        """ Parcourt tous les blocs_fonctions et redimensionne automatiquement ceux qui n'ont pas de
-            dimensions imposées (à None).
-            Tiens compte de la taille de la police.
-            hauteur : fonction du nombre d'entrées + 1
-            largeur : fonction du nombre de caractères max de la plus longue entrée ou du titre
+        """ Scans all function_blocks and automatically resizes those that do not have dimensions (to None).
+            Takes into account the font size.
+            height: function of the number of entries + 1
+            width: function of the maximum number of characters of the longest entry or title
         """
         for function in self.diagram.functions.values():
             if function.dimension == [] or not function.fixed:
                 if len(function.entries) > 0:
                     longest_name = max(
                         [len(entry.label)+len(entry.annotation) for entry in function.entries])
-                    # Ajout de 2 caractères ': '
+                    # Ajout de 2 caractèreAdd two characters ': '
                     max_width = (longest_name+2) * self.text_char_width
                 else:
                     max_width = 0
@@ -128,9 +127,9 @@ class Window:
     def position_functions_nodes(self):
         """ Positions the nodes linked to the functions.
         """
-        # Place les positions des noeuds des fonctions
+        # Places the nodes of the functions
         for function in self.diagram.functions.values():
-            # Points de repère : Cadre du corps
+            # Benchmarks: Body frame
             if function.position is not None:
                 x, y = function.position
                 function_width, function_height = function.dimension
@@ -138,28 +137,29 @@ class Window:
                 y_entry = y + self.title_char_height + self.MARGIN
 
                 for entry in function.entries:
-                    # Met à jour, les positions des points du bloc
+                    # Updates the positions of the points in the block
                     entry.position = [x_entry-self.MARGIN,
                                       y_entry + self.text_char_height//2]
                     entry.free = False
                     y_entry += self.text_char_height
-                # Point de sortie du bloc
+                # Exit point of the block
                 function.output.position = [x+function_width,
                                             y+self.title_char_height+function_height//2]
                 function.output.free = False
 
     def update_positions(self):
-        """ Les positions relatives des fonctions et des points sont déterminées par leur étage.
-            Sauf si les positions sont fixées.
-            Etage 0 : Feuilles du graphe orienté décrit par self.matrice.
-            Les fonctions se répartissent graphiquement entre self.MARGIN_DOWN et self.WIDTH - self.MARGIN_UP
-            Les points libres (non-associés à des fonctions) se situent sur les étages intermédiaires.
+        """ The relative positions of functions and points are determined by their floor.
+            Unless the positions are fixed.
+            Stage 0: Leaves of the directed graph described by self.matrix.
+            The functions are divided graphically between self.MARGIN_DOWN and self.WIDTH - self.MARGIN_UP
+            The free points (not associated with functions) are located on the intermediate levels.
         """
         self.diagram.update_zones()
+        """
         self.diagram.update_floors()
-        # Recherche l'étage maximum
+        # Search for the maximum floor
         floor_max = len(self.diagram.floors)
-        # Impose l'abscisse des blocs_fonctions non fixés.
+        # Imposes the abscissa of unfixed function_blocks.
         nb_intervals = floor_max + 1
         interval_width = (self.WIDTH - 2*self.MARGIN) // nb_intervals
         free_height = (self.HEIGHT - self.MARGIN_UP - self.MARGIN_DOWN)
@@ -177,7 +177,7 @@ class Window:
         # Positions the nodes linked to the functions
         self.position_functions_nodes()
 
-        # Calcul la position des noeud libres en fonction des positions des noeuds non-libres connexes.
+        # Calculates the position of free nodes based on the positions of related non-free nodes.
         for node in self.diagram.nodes.values():
             if node.free and not node.fixed:
                 output_abscissas = None
@@ -185,14 +185,14 @@ class Window:
                 max_abscissas = None
                 ordinates = []
                 for connected_node in node.connections:
-                    # Ce point est une entrée de fonction
+                    # This point is a function input
                     if '<' in connected_node.name:
                         ordinates.append(connected_node.position[1])
                         if max_abscissas is None:
                             max_abscissas = connected_node.position[0]
                         elif connected_node.position[0] < max_abscissas:
                             max_abscissas = connected_node.position[0]
-                    # Ce point est une sortie de fonction
+                    # This point is a function output
                     elif '>' in connected_node.name or '<' in connected_node.name:
                         output_abscissas = connected_node.position[0]
                         output_ordinate = connected_node.position[1]
@@ -208,19 +208,20 @@ class Window:
                     node.position[1] = output_ordinate
                 else:
                     node.position[1] = sum(ordinates) / len(ordinates)
+        """
 
     def draw(self):
-        """ Met à jour l'affichage du systeme dans la fenêtre Tkinter
+        """ Updates the system display in the Tkinter window
         """
-        # Efface tous les objets du canevas avant de les recréer
+        # Deletes all objects from the canvas before recreating them
         self.can.delete("all")
-        # Dessine tous les éléments du système
+        # Draws all the elements of the system
         self.draw_function()
         self.draw_nodes()
         self.draw_lines()
 
     def draw_nodes(self):
-        """ Dessine des disque pour les points isolés et des flèches pour les points liés à des blocs.
+        """ Draws discs for isolated points and arrows for points linked to blocks.
         """
         police = self.preferences["police"]
         text_size = self.preferences["text_size"]
@@ -247,8 +248,8 @@ class Window:
                                          node.annotation, 'w')
 
     def draw_triangle(self, x, y, orientation=0, color=None, d=None):
-        """ Dessine un triangle isocèle. Origine = H, intersection de la hauteur principale et de la base.
-            Orientation : 0 = Est, 1 = Sud, 2 = Ouest, 3 = Nord
+        """ Draw an isosceles triangle. Origin = H, intersection of the main height and the base.
+            Orientation: 0 = East, 1 = South, 2 = West, 3 = North
         """
         if color is None:
             color = self.preferences["line_color"]
@@ -261,7 +262,7 @@ class Window:
         self.can.create_polygon(perimeter[orientation], fill=color)
 
     def print_label(self, x, y, label, annotation, ancre='nw'):
-        """ Écrit le label et si besoin l'annotation de type séparé par :
+        """ Writes the label and if necessary the type annotation separated by :
         """
         police = self.preferences["police"]
         text_size = self.preferences["text_size"]
@@ -280,8 +281,8 @@ class Window:
                                  anchor=ancre, fill=type_color)
 
     def draw_function(self):
-        """ Dessin le bloc_fonction : Cadres de l'entête, du corps.
-            Met à jour les positions des points du bloc : Entrées et sortie
+        """ Draws the function_block: Header, body frames.
+            Updates the positions of the points in the block: Inputs and outputs
         """
         police = self.preferences["police"]
         title_size = self.preferences["title_size"]
@@ -296,7 +297,7 @@ class Window:
         title_background_color = self.preferences["title_background_color"]
         main_background_color = self.preferences["main_background_color"]
         for function in self.diagram.functions.values():
-            # Dessin du cadre du corps
+            # Drawing of the body frame
             if function.position is not None:
                 x, y = function.position
                 function_width, function_height = function.dimension
@@ -304,16 +305,16 @@ class Window:
                     header_color = title_background_color
                 else:
                     header_color = function.header_color
-                # Dessin du cadre du nom de la fonction
+                # Drawing of the function name frame
                 tl.draw_box(self.can, x, y, x+function_width, y+self.title_char_height,
                             outline=border_color, fill=header_color, thickness=thickness, rounded_up=True)
 
-                # Dessin du cadre du corps de la fonction
+                # Drawing of the body of the function
                 tl.draw_box(self.can, x, y+self.title_char_height, x+function_width,
                             y+self.title_char_height+function_height,
                             outline=border_color, fill=main_background_color, thickness=thickness, rounded_down=True, radius=self.title_char_height//2)
 
-                # Ecriture du nom de la fonction
+                # Writing the function name
                 x_titre = x + function_width // 2
                 y_titre = y + self.title_char_height // 2
                 texte = function.label
@@ -321,11 +322,11 @@ class Window:
                                      anchor='center', fill=text_color)
 
     def draw_lines(self):
-        """ Dessine les liaisons entre les points : Traits verticaux ou horizontaux.
+        """ Draw the connections between the points: Vertical or horizontal lines.
         """
         thikness = self.preferences["line_thikness"]
         self.diagram.update_links()
-        lines_ok = set()  # Ensemble de tuples (point_de_depart, point_d_arrivee)
+        lines_ok = set()  # Set of tuples (point_of_departure, point_of_arrival)
         for link in self.diagram.links:
             x_start, y_start = link.points[0]
             x_first, y_first = link.points[1]
@@ -372,8 +373,8 @@ class Window:
                                       outline=color)
 
     def import_image(self, banque, name):
-        """ Importe l'image en fonction du nom passé en paramètre
-            et l'associe à une clef du dictionnaire banque
+        """ Imports the image according to the name passed in parameter
+            and associates it with a key in the bank dictionary.
         """
         file = 'images/' + name + '.png'
         image = Image.open(file)
@@ -404,7 +405,7 @@ class Window:
                                         command=command)
 
     def add_buttons(self):
-        """ Ajoute les boutons
+        """ Adds the buttons
         """
         self.create_button('new', self.cmd_new)  # state:1
         self.create_button('open', self.cmd_open)  # state:1
@@ -432,7 +433,7 @@ class Window:
         child_window.update()
 
     def cmd_new(self):
-        """ Vide la liste des points et des fonctions
+        """ Empty the list of points and functions.
         """
         message('New diagram.', self.text_message)
         self.state = 1
@@ -440,9 +441,9 @@ class Window:
         self.draw()
 
     def cmd_open(self):
-        """ Ouvre le fichier JSON sélectionné et reconstruit l'instance de systeme.
-            Permet de choisir le format JSON ou le TXT
-            Renvoie True si la procédure aboutit sinon False
+        """ Opens the selected JSON file and rebuilds the system instance.
+            Allows to choose the JSON format or the TXT
+            Returns True if the procedure succeeds otherwise False
         """
         self.can.config(cursor="arrow")
         message('Open file.', self.text_message)
@@ -542,7 +543,7 @@ class Window:
             self.can.config(cursor="pencil")
             self.state = 5
         else:
-            message('Edition already open.', self.text_message)
+            message('The editing window is already open.', self.text_message)
             self.lift_window(self.window_edition.window)
 
     def edit(self, destination):
@@ -649,12 +650,7 @@ class Window:
         elif self.state == 7:  # Destination selected
             self.diagram.update_zones()
             compliant_nodes = False
-            if self.origin.zone == self.destination.zone:
-                compliant_nodes = True
-            if self.origin.zone == -1 or self.destination.zone == -1:
-                compliant_nodes = True
-            # Manque le test si les zones permettent un rebouclage E/S d'une fonction
-            if compliant_nodes:
+            if self.diagram.are_reachables(self.origin, self.destination):
                 message('Nodes connected. Select another origin.',
                         self.text_message)
                 self.diagram.nodes_connection(
@@ -666,7 +662,7 @@ class Window:
             self.state = 6  # Choose another target to link
             self.memory.add(self.diagram.export_to_text())
         else:
-            self.state = 1  # Return to basic state
+            self.state = 1  # Returns to basic state
 
     def right_click(self, event):
         message('', self.text_message)

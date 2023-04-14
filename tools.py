@@ -384,7 +384,7 @@ def draw_box(can, x_start, y_start, x_end, y_end, **kwargs):
     rounded_down = False
     thickness = 1
     radius = 2  # bending_radius
-    step = 12
+    step = 20
     for k, v in kwargs.items():
         if k == 'outline':
             outline = v

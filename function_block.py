@@ -37,6 +37,8 @@ class Function_block:
         self.output.visible = visible
 
     def __repr__(self):
+        line = str(self.name)
+        """
         line = "** Function:" + str(self.name) + '\n'
         line += "Parameters: "
         for entry in self.entries:
@@ -51,4 +53,5 @@ class Function_block:
             line += "Position: " + str(self.position) + '\n'
         if self.dimension != []:
             line += "Dimension: " + str(self.dimension) + '\n'
+        """
         return line

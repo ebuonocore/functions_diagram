@@ -24,29 +24,34 @@ class Node:
         if '>' in self.label:
             self.zone = self.name
 
-    def update_zone(self):
-        """ Fixe la zone du noeud par appel récursif des noeuds connectés.
-            Renvoie la zone du noeud de sortie de fonction trouvée ou -1.
-            La zone des noeuds non encore visités ont pour value None. 
+    def explore_zone(self, level=None, visited=None):
+        """ Recursively explores all nodes directly connected to the current node.
+            Returns the level of the connected function output (otherwise None) and the set of
+            the nodes at the same level.
         """
-        if self.zone is None:
-            self.zone = -1
-        else:
-            return self.zone
+        if visited is None:
+            visited = set()
         for connected_node in self.connections:
-            zone = connected_node.update_zone()
-            if zone != -1:
-                self.zone = zone
-                return zone
-        self.zone = -1
-        return -1
+            if connected_node not in visited:
+                visited.add(connected_node)
+                if connected_node.zone is not None:
+                    new_node_level = connected_node.zone
+                    if level is None:
+                        level = new_node_level
+                    if new_node_level is not None:
+                        level = max(new_node_level, level)
+                level, visited = connected_node.explore_zone(level, visited)
+        return level, visited
 
     def __repr__(self):
+        line = self.name
+        """
         line = self.name + ":" + self.annotation + ' '
         line += str(len(self.connections)) + " Connection(s) "
         if self.position != []:
             line += "Position: " + str(self.position)
-        return line + "\n"
+        """
+        return line
 
 
 if __name__ == "__main__":
