@@ -3,8 +3,8 @@ f1.position(341,226)
 f1.dimension(90,58)
 
 def f2(n:str,m:str)->str
-f2.position(722,349)
-f2.dimension(80,58)
+f2.position(666,349)
+f2.dimension(200,58)
 
 def f4(x:str,y:str,v:str)->int
 f4.position(1098,340)
@@ -29,5 +29,5 @@ f2>---C
 f4<0---A
 f4<1---C
 f4<2---B
-B---f3>
+f3>---B
 Y---Y

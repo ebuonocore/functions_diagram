@@ -1,16 +1,22 @@
 """
+DONE:
+    Perte de la dimension de fct saisie lors de la sauvegarde
+    Décalage sur l'affichage des noeuds entre label & annotation (selon l'ancre à 'w' ou 's') 
+TODO:
 diagram et node:
+    update_floors, next_zones_from et set_zone_floor erronés. Revoir la modélisation.
     Traduire les specs
 window_edition:
     Fenêtre trop haute    
 GUI.py     
-    Un message d'erreur lors de l'appel de lift_window
-      _tkinter.TclError: bad window path name ".!toplevel2"
-      résoudre par try/except ?
-    Proposer le dessin (et enregistrement) d'objet de type encadrement (pointillés)
+    Frame : Proposer le dessin (et enregistrement) d'objet de type encadrement (pointillés)
       Défini par un nom, les fonctions englobées et marge ou position/dimensions, couleur, épaisseur de trait
     mettre en place .scale sur self.can ? 
     et un drag pour déplacer l'ensemble du diagram ? avec scrollregion ?
+    Un message d'erreur lors de l'appel de lift_window
+      _tkinter.TclError: bad window path name ".!toplevel2"
+      résoudre par try/except ?
+    traduire la variable ancre par anchor
 Options : permettre de paramétrer l'attribut. smooth_lines de Window
         rounded functions (up & down)
 

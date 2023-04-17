@@ -11,11 +11,11 @@ class Diagram:
         self.functions = dict()  # keys = functions names, values = functions objects
         self.nodes = dict()  # keys = nodes names, valeus = nodes objects
         # Grouping of connected points (same potential linked at most to a function output)
-        self.zones = dict()  #
+        self.zones = dict()
         # keys = floor number, values = list of functions in this floor.
         self.floors = dict()
-        self.links = list()  # List of Links
-        self.zones_tree = {}  # liste of description des niveaux antécédentes pour chaque niveau
+        self.links = list()  # List of links
+        self.zones_tree = {}  # list of description des niveaux antécédentes pour chaque niveau
 
     def is_empty(self):
         """ Returns True if there is no function and no nodes
@@ -130,8 +130,9 @@ class Diagram:
         # Explore and update all nodes
         while len(to_visit) > 0:
             node = to_visit.pop()
+            # Returns the output level connected to this node and the set of all the nodes connected.
             level, visited = node.explore_zone(node.zone, {node})
-            if level is None:
+            if level is None:  # There is no output function in this zone
                 level = current_level
                 self.zones[level] = []
                 current_level -= 1
@@ -142,6 +143,10 @@ class Diagram:
                 if node in to_visit:
                     to_visit.remove(node)
         self.update_zones_tree()
+        print("zones: ", self.zones)
+        print("zones_tree: ", self.zones_tree)
+        # self.update_floors()
+        print("floors: ", self.floors)
 
     def update_zones_tree(self):
         self.zones_tree = dict()
@@ -196,46 +201,41 @@ class Diagram:
             levels = self.antecedents(zone_level, levels)
         return levels
 
-    def update_function_floor(self, function):
-        # function.floor already update
-        if function.floor >= 0:
-            return function.floor
-        # Build the list of the daughter functions
-        zone = function.output.zone
-        neighbors = self.zones[zone]
-        daughters = []
-        for neighbor in neighbors:
-            if '<' in neighbor.name:
-                function_name = neighbor.name.split('<')[0]
-                if function_name in self.functions:
-                    daughters.append(self.functions[function_name])
-        # Leave find
-        if len(daughters) == 0:
-            function.floor = 0
-            return 0
-        # Function with daughters
-        min_floor = 0
-        for daughter in daughters:
-            daughter_floor = self.update_function_floor(daughter)
-            if daughter_floor > min_floor:
-                min_floor = daughter_floor
-        function.floor = min_floor + 1
-        return function.floor
-
     def update_floors(self):
-        """ Initialise tous les étages des fonctions à -1
+        """ Initializes all function floors to -1.
+            Initialise self.floors.
+            Sets all functions whose inputs are in the negative zone to floor 0
+            This starts recursive calls to self.set_zone_floor() for subsequent floors.
         """
         self.floors = dict()
         for function in self.functions.values():
             function.floor = -1
+        for zone, nodes in self.zones.items():
+            if zone < 0:
+                next_zones = self.next_zones_from(nodes)
+                for next_zone in next_zones:
+                    self.set_zone_floor(next_zone, 0)
+
+    def next_zones_from(nodes):
+        """ nodes is a list of nodes. 
+            Returns the list of the next zones from 
+        """
+        ...
+
+    def set_zone_floor(self, zone, floor):
+        """ Sets the floor of all the functions in a zone.
+            Calls recursively self.set_zone_floor() for the next floor.
         """
         for function in self.functions.values():
-            floor = self.update_function_floor(function)
-            if floor in self.floors.keys():
-                self.floors[floor].append(function)
-            else:
-                self.floors[floor] = [function]
-        """
+            if function.output.zone == zone:
+                if function.floor == -1:
+                    function.floor = floor
+                    if floor in self.floors:
+                        self.floors[floor].append(function)
+                    else:
+                        self.floors[floor] = [function]
+                    next_zone = function.output.zone
+                    self.set_zone_floor(next_zone, floor+1)
 
     def update_links(self):
         self.links = list()
