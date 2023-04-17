@@ -104,13 +104,13 @@ class Window:
         return WIDTH, HEIGHT
 
     def auto_resize_blocks(self):
-        """ Scans all function_blocks and automatically resizes those that do not have dimensions (to None).
+        """ Scans all function_blocks and automatically resizes those that do not have dimensions (to []).
             Takes into account the font size.
             height: function of the number of entries + 1
             width: function of the maximum number of characters of the longest entry or title
         """
         for function in self.diagram.functions.values():
-            if function.dimension == [] or not function.fixed:
+            if function.dimension == [] and not function.fixed:
                 if len(function.entries) > 0:
                     longest_name = max(
                         [len(entry.label)+len(entry.annotation) for entry in function.entries])
@@ -150,7 +150,7 @@ class Window:
     def update_positions(self):
         """ The relative positions of functions and points are determined by their floor.
             Unless the positions are fixed.
-            Stage 0: Leaves of the directed graph described by self.matrix.
+            Stage 0: Leaves of the directed graph described by self.floors.
             The functions are divided graphically between self.MARGIN_DOWN and self.WIDTH - self.MARGIN_UP
             The free points (not associated with functions) are located on the intermediate levels.
         """
@@ -237,7 +237,7 @@ class Window:
                 if node.free:
                     self.can.create_oval(x-d, y-d, x+d, y+d, fill=color)
                     self.print_label(x, y-self.MARGIN,
-                                     node.label, node.annotation, 's')
+                                     node.label, node.annotation, 'sw')
                 else:
                     self.draw_triangle(x, y, 0)
                     if '>' in node.name:
@@ -269,13 +269,14 @@ class Window:
         font = tkfont.Font(family=police, size=text_size, weight="normal")
         text_color = self.preferences["text_color"]
         type_color = self.preferences["type_color"]
-        # Écrit le label
+        # Display the label
         if len(annotation) > 0 and len(label) > 0:
             label += ': '
         self.can.create_text(x, y, text=label, font=font,
                              anchor=ancre, fill=text_color)
         if len(annotation) > 0:
-            offset = tkfont.Font(size=text_size, family=police).measure(label)
+            offset = tkfont.Font(size=text_size, family=police,
+                                 weight="normal").measure(label)
             x_type = x + offset
             self.can.create_text(x_type, y, text=annotation, font=font,
                                  anchor=ancre, fill=type_color)
