@@ -10,7 +10,6 @@ class Window_edition(Window_settings):
     def __init__(self, parent_window, diagram, destination):
         super().__init__(parent_window, diagram)
         self.destination = destination
-        self.window.geometry("300x300")
         self.parameters = dict()
         self.entries = dict()
         self.widget_grid = dict()  # keys: widget / values : tuple(line, column on the grid)
@@ -35,8 +34,10 @@ class Window_edition(Window_settings):
         # Add specfic lines for function or node
         if type(self.destination) == Node:
             self.node_parameters()
+            self.window.geometry("300x140")
         elif type(self.destination) == Function_block:
             self.function_parameters()
+            self.window.geometry("300x240")
         self.resize_height()
 
     def function_parameters(self):

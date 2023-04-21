@@ -1,13 +1,16 @@
 """
 DONE:
-    Perte de la dimension de fct saisie lors de la sauvegarde
-    Décalage sur l'affichage des noeuds entre label & annotation (selon l'ancre à 'w' ou 's') 
+    Création de la classe Design
+    Gestion des étages
+    Rectification des positions des étages droite/gauche
+    Réparation de la MAJ des dimensions de fonctions
+    window_edition: Fenêtre trop haute  
 TODO:
+design :
+    refactoring : renommer level en floor
 diagram et node:
-    update_floors, next_zones_from et set_zone_floor erronés. Revoir la modélisation.
-    Traduire les specs
-window_edition:
-    Fenêtre trop haute    
+    supprimer toutes ref à .zone (update_zones...)
+    Traduire les specs  
 GUI.py     
     Frame : Proposer le dessin (et enregistrement) d'objet de type encadrement (pointillés)
       Défini par un nom, les fonctions englobées et marge ou position/dimensions, couleur, épaisseur de trait

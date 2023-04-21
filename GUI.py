@@ -110,7 +110,7 @@ class Window:
             width: function of the maximum number of characters of the longest entry or title
         """
         for function in self.diagram.functions.values():
-            if function.dimension == [] and not function.fixed:
+            if not function.fixed:
                 if len(function.entries) > 0:
                     longest_name = max(
                         [len(entry.label)+len(entry.annotation) for entry in function.entries])
@@ -154,11 +154,13 @@ class Window:
             The functions are divided graphically between self.MARGIN_DOWN and self.WIDTH - self.MARGIN_UP
             The free points (not associated with functions) are located on the intermediate levels.
         """
-        self.diagram.update_zones()
-        """
-        self.diagram.update_floors()
+        design = Design(self.diagram.nodes.values(),
+                        self.diagram.functions.values())
+        functions_dict, self.diagram.floors = design.report()
+        for function, level in functions_dict.items():
+            function.floor = level
         # Search for the maximum floor
-        floor_max = len(self.diagram.floors)
+        floor_max = design.max_floor
         # Imposes the abscissa of unfixed function_blocks.
         nb_intervals = floor_max + 1
         interval_width = (self.WIDTH - 2*self.MARGIN) // nb_intervals
@@ -167,7 +169,7 @@ class Window:
             floor = function.floor
             if function.fixed == False:
                 function.position[0] = (self.MARGIN
-                                        + (floor_max - floor) * interval_width
+                                        + (floor+1) * interval_width
                                         - function.dimension[0]//2)
                 rank = tl.function_rank(function, self.diagram.floors[floor])
                 ratio = (rank+1) / (len(self.diagram.floors[floor])+1)
@@ -208,7 +210,6 @@ class Window:
                     node.position[1] = output_ordinate
                 else:
                     node.position[1] = sum(ordinates) / len(ordinates)
-        """
 
     def draw(self):
         """ Updates the system display in the Tkinter window
@@ -584,7 +585,7 @@ class Window:
         Window_export_image(self, self.diagram)
 
     def cmd_auto(self):
-        """ Updates automaticly the positions of functions and nodes.
+        """ Updates automaticly the dimensions and positions of functions and nodes.
         """
         self.state = 1
         self.auto_resize_blocks()

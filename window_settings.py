@@ -19,7 +19,7 @@ class Window_settings():
         win_width, win_height = self.window_dimension(
             self.parent.tk.geometry())
         self.window.geometry(
-            "300x200+{}+{}".format(rootx+win_width-300-self.MARGE, rooty+self.MARGE))
+            "300x240+{}+{}".format(rootx+win_width-300-self.MARGE, rooty+self.MARGE))
         file = 'images/painting_can.png'
         image = Image.open(file)
         self.painting_can_image = ImageTk.PhotoImage(image)
@@ -79,8 +79,8 @@ class Window_settings():
     def resize_height(self):
         self.parent.can.update()
         if self.frame.winfo_exists():
-            height = max(200, self.frame.winfo_height() + 40)
-            width = max(200, self.window.winfo_width())
+            height = self.frame.winfo_height() + 40
+            width = self.window.winfo_width()
             self.window.geometry("{}x{}".format(width, height))
 
     def window_location(self, geometry: str) -> tuple:

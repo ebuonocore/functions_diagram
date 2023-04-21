@@ -76,7 +76,6 @@ class Window_export_image(Window_settings):
     def cmd_commit(self):
         """ Launches the rendering function according to the choice made between the PNG or SVG format.
         """
-        print("Export Ok 1", self.diagram.is_empty())
         if not self.diagram.is_empty():
             selected_file = fd.asksaveasfile(
                 title='Save SVG file', defaultextension=".svg")
