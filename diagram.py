@@ -1,6 +1,7 @@
 from function_block import *
 from node import *
 from link import *
+from design import Design
 import tools as tl
 
 
@@ -143,10 +144,6 @@ class Diagram:
                 if node in to_visit:
                     to_visit.remove(node)
         self.update_zones_tree()
-        print("zones: ", self.zones)
-        print("zones_tree: ", self.zones_tree)
-        # self.update_floors()
-        print("floors: ", self.floors)
 
     def update_zones_tree(self):
         self.zones_tree = dict()
@@ -177,7 +174,6 @@ class Diagram:
         level_B = node_B.zone
         antecedent_A = self.antecedents(level_A)
         antecedent_B = self.antecedents(level_B)
-        print(level_A, level_B, antecedent_A, antecedent_B)
         # False if node_A and node_B are linked to different outputs.
         if level_A >= 0 and level_B >= 0:
             return False
@@ -215,12 +211,6 @@ class Diagram:
                 next_zones = self.next_zones_from(nodes)
                 for next_zone in next_zones:
                     self.set_zone_floor(next_zone, 0)
-
-    def next_zones_from(nodes):
-        """ nodes is a list of nodes. 
-            Returns the list of the next zones from 
-        """
-        ...
 
     def set_zone_floor(self, zone, floor):
         """ Sets the floor of all the functions in a zone.

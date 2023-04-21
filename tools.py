@@ -441,6 +441,18 @@ def draw_box(can, x_start, y_start, x_end, y_end, **kwargs):
                              outline=outline, fill=fill, width=thickness)
 
 
+def compare(element1, element2):
+    """ Returns None if element1 and element2 are None.
+        Otherwise returns the element who is not None.
+    """
+    if element1 is None and element2 is None:
+        return None
+    elif element1 is None:
+        return element2
+    else:
+        return element1
+
+
 if __name__ == "__main__":
     # Tests
     print("index_occurrence : ", index_occurrence("e", "ereieoel"))
