@@ -1,17 +1,15 @@
 """
 DONE:
-    Création de la classe Design
-    Gestion des étages
-    Rectification des positions des étages droite/gauche
-    Réparation de la MAJ des dimensions de fonctions
-    window_edition: Fenêtre trop haute  
-TODO:
 design :
     refactoring : renommer level en floor
+    Correction du rapport fait par Design
+    MAJ des étages dans group.update_floor
+TODO:
 diagram et node:
     supprimer toutes ref à .zone (update_zones...)
     Traduire les specs  
 GUI.py     
+    Paramètre : espace par étage ( si rien, auto) => centrer le diagramme (offset)
     Frame : Proposer le dessin (et enregistrement) d'objet de type encadrement (pointillés)
       Défini par un nom, les fonctions englobées et marge ou position/dimensions, couleur, épaisseur de trait
     mettre en place .scale sur self.can ? 
