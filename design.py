@@ -61,9 +61,7 @@ class Design:
                 if next_group is not None:
                     group.next.add(next_group)
         for group in self.leaves:
-            print("Leave")
             group.update_floor(0)
-        print(self)
 
     def group_with_node(self, node):
         """ If it exists, return the group of the node. Otherwise, returns None
@@ -120,8 +118,6 @@ class Design:
         return functions_dict, floors_dict
 
     def __repr__(self):
-        for function in self.functions:
-            print("Function : ", function.name, "Floor", function.floor)
         line = "Groups: "
         for group in self.groups:
             line += "\nGroup : " + str(group)
@@ -155,9 +151,7 @@ class Group:
             self.floor = max(self.floor, floor)
         for function in self.functions:
             if function.floor < self.floor:
-                print(function.name, " was at ", self.floor)
                 function.floor = self.floor
-            print("set ", function.name, "at ", self.floor)
         for node in self.nodes:
             node.floor = self.floor
         for group in self.next:
