@@ -169,7 +169,7 @@ class Window:
             floor = function.floor
             if function.fixed == False:
                 function.position[0] = (self.MARGIN
-                                        + (floor+1) * interval_width
+                                        + (floor+0.5) * interval_width
                                         - function.dimension[0]//2)
                 rank = tl.function_rank(function, self.diagram.floors[floor])
                 ratio = (rank+1) / (len(self.diagram.floors[floor])+1)

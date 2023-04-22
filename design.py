@@ -6,8 +6,8 @@ import tools as tl
 class Design:
     """ A graph structure fed by a list of nodes and functions.
         Gathers elements of the same area (directly connected to each other) by group instances.
-        Provides dictionaries (self.nodes_levels and self.functions_levels) to locate nodes and
-        functions by levels for a linear representation of the diagram.
+        Provides dictionaries (self.nodes_floors and self.functions_floors) to locate nodes and
+        functions by floors for a linear representation of the diagram.
     """
 
     def __init__(self, nodes=None, functions=None):
@@ -61,7 +61,9 @@ class Design:
                 if next_group is not None:
                     group.next.add(next_group)
         for group in self.leaves:
-            group.update_level(0)
+            print("Leave")
+            group.update_floor(0)
+        print(self)
 
     def group_with_node(self, node):
         """ If it exists, return the group of the node. Otherwise, returns None
@@ -91,34 +93,35 @@ class Design:
         """ Merges all the elements of group2 in group1.
             Deletes group2 from the self.groups list.
         """
-        # Set of the groups of the next level.
+        # Set of the groups of the next floor.
         group1.next = group1.next.union(group2.next)
         # Set of the nodes of this group
         group1.nodes = group1.nodes.union(group2.nodes)
         group1.functions = group1.functions.union(
             group2.functions)  # Set of the functions of this group
-        group1.level = tl.compare(group2.level, group2.level)
+        group1.floor = tl.compare(group2.floor, group2.floor)
         self.groups.remove(group2)
 
     def report(self):
         """ Returns a tuple of dictionaries:
-            + functions_dict : dictionnary with the functions as keys and their level as values.
+            + functions_dict : dictionnary with the functions as keys and their floor as values.
             + floors_dict : dictionnary whose keys are the floors and whose values are the functions that belong to them.
         """
         self.max_floor = 0
         functions_dict = dict()
         floors_dict = dict()
-        for group in self.groups:
-            for function in group.functions:
-                functions_dict[function] = group.level
-                self.max_floor = max(self.max_floor, group.level)
-                if group.level in floors_dict.keys():
-                    floors_dict[group.level].append(function)
-                else:
-                    floors_dict[group.level] = [function]
+        for function in self.functions:
+            functions_dict[function] = function.floor
+            self.max_floor = max(self.max_floor, function.floor)
+            if function.floor in floors_dict.keys():
+                floors_dict[function.floor].append(function)
+            else:
+                floors_dict[function.floor] = [function]
         return functions_dict, floors_dict
 
     def __repr__(self):
+        for function in self.functions:
+            print("Function : ", function.name, "Floor", function.floor)
         line = "Groups: "
         for group in self.groups:
             line += "\nGroup : " + str(group)
@@ -129,41 +132,44 @@ class Group:
     """ Groups the elements (nodes and functions) of the same area: directly connected to each other.
         A group can contain only one output function.
         In this case, self.previous refers to the group of this function.
-        All function entries are used to determine the list self.next: List of groups on the next level.
+        All function entries are used to determine the list self.next: List of groups on the next floor.
     """
 
     def __init__(self, node):
-        # Previous level group: Group of the output node function if it exists.
+        # Previous floor group: Group of the output node function if it exists.
         self.previous = None
-        self.next = set()  # Set of the groups of the next level.
+        self.next = set()  # Set of the groups of the next floor.
         self.nodes = set()  # Set of the nodes of this group
         self.nodes.add(node)
         # Set of the functions of this group
         self.functions = set()
-        # Level of this group: Relative position in the diagram, from left (level 0) to right.
-        self.level = None
+        # floor of this group: Relative position in the diagram, from left (floor 0) to right.
+        self.floor = None
 
-    def update_level(self, level):
-        """ Updates the levels of the group. Recursively call the update level for each next group.
+    def update_floor(self, floor):
+        """ Updates the floors of the group. Recursively call the update floor for each next group.
         """
-        if self.level is None:
-            self.level = level
+        if self.floor is None:
+            self.floor = floor
         else:
-            self.level = max(self.level, level)
+            self.floor = max(self.floor, floor)
         for function in self.functions:
-            function.level = self.level
+            if function.floor < self.floor:
+                print(function.name, " was at ", self.floor)
+                function.floor = self.floor
+            print("set ", function.name, "at ", self.floor)
         for node in self.nodes:
-            node.level = self.level
+            node.floor = self.floor
         for group in self.next:
-            group.update_level(self.level+1)
+            group.update_floor(self.floor+1)
 
     def __repr__(self):
-        line = "Level: " + str(self.level)
-        line += "Nodes: "
+        line = "floor: " + str(self.floor)
+        line += " / Nodes: "
         for node in self.nodes:
-            line += ". " + str(node)
+            line += str(node) + " "
         line += " / Functions: "
         for function in self.functions:
-            line += "+ " + str(function)
-        line += " / Nb of next groups: "+str(len(self.next))
+            line += str(function) + " "
+        line += " / Nb of next groups: " + str(len(self.next))
         return line
