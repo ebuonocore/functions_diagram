@@ -100,6 +100,27 @@ class Design:
         group1.floor = tl.compare(group2.floor, group2.floor)
         self.groups.remove(group2)
 
+    def are_reachables(self, origin, destination):
+        """ origin and destination are nodes of the diagram.
+            If one of these nodes is not an antecedent of the other, it returns True.
+            Otherwise, returns False.
+        """
+        if origin not in self.nodes:
+            return False
+        if destination not in self.nodes:
+            return False
+        origin_group = self.group_with_node(origin)
+        destination_group = self.group_with_node(destination)
+        # At least one of the two nodes must belong to a leaf group.
+        if origin_group not in self.leaves and destination_group not in self.leaves:
+            return False
+        # destination is not a successor of origin
+        test_destination = origin_group.is_successor(destination)
+        if test_destination == False:
+            return False
+        # origin is not a successsor of destination
+        return destination_group.is_successor(origin)
+
     def report(self):
         """ Returns a tuple of dictionaries:
             + functions_dict : dictionnary with the functions as keys and their floor as values.
@@ -156,6 +177,18 @@ class Group:
             node.floor = self.floor
         for group in self.next:
             group.update_floor(self.floor+1)
+
+    def is_successor(self, node):
+        """ Recursively traverses all subsequent groups.
+            If the node appears in one of the following groups, it returns False.
+            Otherwise, it returns True.
+        """
+        if node in self.nodes:
+            return False
+        for next_group in self.next:
+            if next_group.is_successor(node) == False:
+                return False
+        return True
 
     def __repr__(self):
         line = "floor: " + str(self.floor)
