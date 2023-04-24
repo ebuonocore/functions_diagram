@@ -169,7 +169,7 @@ class Window:
             floor = function.floor
             if function.fixed == False:
                 function.position[0] = (self.MARGIN
-                                        + (floor+1) * interval_width
+                                        + (floor+0.5) * interval_width
                                         - function.dimension[0]//2)
                 rank = tl.function_rank(function, self.diagram.floors[floor])
                 ratio = (rank+1) / (len(self.diagram.floors[floor])+1)
@@ -650,9 +650,9 @@ class Window:
                         self.text_message)
                 self.state = 7  # Destination selection
         elif self.state == 7:  # Destination selected
-            self.diagram.update_zones()
-            compliant_nodes = False
-            if self.diagram.are_reachables(self.origin, self.destination):
+            design = Design(self.diagram.nodes.values(),
+                            self.diagram.functions.values())
+            if design.are_reachables(self.origin, self.destination):
                 message('Nodes connected. Select another origin.',
                         self.text_message)
                 self.diagram.nodes_connection(
