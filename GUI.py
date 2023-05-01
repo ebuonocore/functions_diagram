@@ -28,6 +28,21 @@ def message(message, destination=None):
 
 class Window:
 
+    class Decorators():
+        @classmethod
+        def disable_if_editing(cls, func):
+            """ Decorator function: Invokes the target function if self.edition_in_progress is True
+            """
+            def edition_test(obj):
+                result = None
+                if obj.edition_in_progress == False:
+                    result = func(obj)
+                else:
+                    message('Warning: First close the editing window.',
+                            obj.text_message)
+                return result
+            return edition_test
+
     def __init__(self, diagram=None):
         self.tk = tki.Tk()
         self.tk.title('Functions Diagram')
@@ -434,6 +449,7 @@ class Window:
         child_window.focus_force()
         child_window.update()
 
+    @Decorators.disable_if_editing
     def cmd_new(self):
         """ Empty the list of points and functions.
         """
@@ -442,6 +458,7 @@ class Window:
         self.diagram = Diagram()
         self.draw()
 
+    @Decorators.disable_if_editing
     def cmd_open(self):
         """ Opens the selected JSON file and rebuilds the system instance.
             Allows to choose the JSON format or the TXT
@@ -467,6 +484,7 @@ class Window:
         self.memory.add(self.diagram.export_to_text())
         return True
 
+    @Decorators.disable_if_editing
     def cmd_save(self):
         """ Save the configuration of the diagram as a file.
         """
@@ -484,6 +502,7 @@ class Window:
             message('Backup canceled.', self.text_message)
             return False
 
+    @Decorators.disable_if_editing
     def cmd_add_function(self):
         """
         """
@@ -504,6 +523,7 @@ class Window:
             message('Edition already open.', self.text_message)
             self.lift_window(self.window_edition.window)
 
+    @Decorators.disable_if_editing
     def cmd_add_node(self):
         """
         """
@@ -522,6 +542,7 @@ class Window:
             message('Edition already open.', self.text_message)
             self.lift_window(self.window_edition.window)
 
+    @Decorators.disable_if_editing
     def cmd_add_link(self):
         """
         """
@@ -529,6 +550,7 @@ class Window:
         self.can.config(cursor="plus")
         self.state = 6
 
+    @Decorators.disable_if_editing
     def cmd_move(self):
         """
         """
@@ -536,6 +558,7 @@ class Window:
         self.can.config(cursor="fleur")
         self.state = 2
 
+    @Decorators.disable_if_editing
     def cmd_edit(self):
         """
         """
@@ -556,6 +579,7 @@ class Window:
         self.window_edition = Window_edition(self, self.diagram, destination)
         self.lift_window(self.window_edition.window)
 
+    @Decorators.disable_if_editing
     def cmd_erase(self):
         """
         """
@@ -577,6 +601,7 @@ class Window:
                 self.diagram.functions, destination)
             self.diagram.delete_function(function_to_delete)
 
+    @Decorators.disable_if_editing
     def cmd_export(self):
         """
         """
@@ -584,6 +609,7 @@ class Window:
         self.state = 1
         Window_export_image(self, self.diagram)
 
+    @Decorators.disable_if_editing
     def cmd_auto(self):
         """ Updates automaticly the dimensions and positions of functions and nodes.
         """
@@ -592,6 +618,7 @@ class Window:
         self.update_positions()
         self.draw()
 
+    @Decorators.disable_if_editing
     def cmd_undo(self):
         """
         """
@@ -604,6 +631,7 @@ class Window:
                     str(self.memory.size), self.text_message)
             self.draw()
 
+    @Decorators.disable_if_editing
     def cmd_redo(self):
         """
         """
@@ -616,11 +644,13 @@ class Window:
                     str(self.memory.size), self.text_message)
             self.draw()
 
+    @Decorators.disable_if_editing
     def cmd_configuration(self):
         """
         """
         pass
 
+    @Decorators.disable_if_editing
     def cmd_information(self):
         """
         """
@@ -658,7 +688,7 @@ class Window:
                 self.diagram.nodes_connection(
                     self.origin.name, self.destination.name)
             else:
-                message('Forbiden link: Output shortcut.'+str(self.origin.zone),
+                message('Forbiden link: Output shortcut.',
                         self.text_message)
             self.draw()
             self.state = 6  # Choose another target to link
