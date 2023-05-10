@@ -1,23 +1,15 @@
 """
 DONE:
-    Création de la sous-classe Decorators dans GUI.Window.
-    Décorateur disable_if_editing : Permet de bloquer les actions sur les boutons si la fenêtre d'édition est ouverte.
-
+    obj.lift_window(obj.window_edition.window) dans Decorators.disable_if_editing()
+    Traduction des specs et des commentaires
 TODO:
-bugs:
-    Blocage partiel du programme si opération interdite pendant l'édition d'un element.
-    Opération sur Nonetype dans tl.nearest(mouse_position, targets) si un élément supprimé entre temps.
-    Ajout d'entrée dans une fonction / Fenetre d'édition ouverte / Déplacement de la fonction / Création de lien
-    Un message d'erreur lors de l'appel de lift_window
-      _tkinter.TclError: bad window path name ".!toplevel2"
-      résoudre par try/except ? ou vérifier si la fenêtre n'a pas déjà été fermée.
-          Dans GUI, si self.edition_in_progress, mémoriser la fenetre ouverte et cancel la fenetre si autre action demandée.
-diagram et node:
-    Traduire les specs  
+Renommer le projet en functions_synoptic ?
+ 
 GUI.py   
     Bugs sur les tailles des fenêtres d'édition fonction et noeuds.
+    A partir du quatrième paramètre de fonction.
     
-    Paramètre : espace par étage ( si rien, auto) => centrer le diagramme (offset)
+    Paramètre : espace par étage (si rien, auto) => centrer le diagramme (offset)
     Frame : Proposer le dessin (et enregistrement) d'objet de type encadrement (pointillés)
       Défini par un nom, les fonctions englobées et marge ou position/dimensions, couleur, épaisseur de trait
     mettre en place .scale sur self.can ? 

@@ -32,7 +32,7 @@ class Function_block:
         return None
 
     def set_output_visibility(self, visible: bool):
-        """ Set the output visibiliy.
+        """ Sets the output visibiliy.
         """
         self.output.visible = visible
 

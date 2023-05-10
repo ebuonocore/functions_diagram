@@ -35,8 +35,7 @@ class Diagram:
         return new_name
 
     def add_function(self, new_function):
-        """
-            Add a new function in the diagram.
+        """ Adds a new function in the diagram.
             If the function's name already exist, increment the name and add the modifies function.
         """
         if new_function.name in self.functions.keys():
@@ -47,7 +46,7 @@ class Diagram:
         self.add_node(new_function.output)
 
     def delete_function(self, function_name):
-        """ Delete the function in the diagram. Remove all the nodes of these function.
+        """ Deletes the function in the diagram. Remove all the nodes of these function.
         """
         function = self.functions[function_name]
         pop_result = self.functions.pop(function_name)
@@ -58,8 +57,7 @@ class Diagram:
         return pop_result
 
     def add_node(self, new_node):
-        """
-            Add a new node in the diagram.
+        """ Adds a new node in the diagram.
         """
         if type(new_node) == Node and new_node.name not in self.nodes.keys():
             self.nodes[new_node.name] = new_node
@@ -82,8 +80,7 @@ class Diagram:
         return pop_result
 
     def nodes_connection(self, A, B):
-        """
-            Create a link between the nodes node_A and node_B designated by the names A and B respectively.
+        """ Creates a link between the nodes node_A and node_B designated by the names A and B respectively.
         """
         if A in self.nodes.keys() and B in self.nodes.keys():
             node_A = self.nodes[A]
@@ -110,7 +107,7 @@ class Diagram:
 
     def update_links(self):
         self.links = list()
-        lines_ok = set()  # Ensemble de tuples (point_de_depart, point_d_arrivee)
+        lines_ok = set()  # Set of tuples (point_of_departure, point_of_arrival)
         for start_node in self.nodes.values():
             for end_node in start_node.connections:
                 if (end_node, start_node) not in lines_ok:

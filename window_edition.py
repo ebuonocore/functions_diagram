@@ -217,7 +217,7 @@ class Window_edition(Window_settings):
 
     def is_like_tuple(self, value):
         """ Returns True if value is string castable in a tuple.
-        Otherwise, returns False.
+            Otherwise, returns False.
         """
         couple = tl.coordinates(value)
         if couple is not None and len(couple) == 2:

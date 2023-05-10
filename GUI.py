@@ -40,6 +40,7 @@ class Window:
                 else:
                     message('Warning: First close the editing window.',
                             obj.text_message)
+                    obj.lift_window(obj.window_edition.window)
                 return result
             return edition_test
 
@@ -264,7 +265,7 @@ class Window:
                                          node.annotation, 'w')
 
     def draw_triangle(self, x, y, orientation=0, color=None, d=None):
-        """ Draw an isosceles triangle. Origin = H, intersection of the main height and the base.
+        """ Draws an isosceles triangle. Origin = H, intersection of the main height and the base.
             Orientation: 0 = East, 1 = South, 2 = West, 3 = North
         """
         if color is None:
@@ -451,7 +452,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_new(self):
-        """ Empty the list of points and functions.
+        """ Clears the list of points and functions.
         """
         message('New diagram.', self.text_message)
         self.state = 1
@@ -486,7 +487,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_save(self):
-        """ Save the configuration of the diagram as a file.
+        """ Saves the configuration of the diagram as a file.
         """
         self.can.config(cursor="arrow")
         message('Save diagram.', self.text_message)
@@ -504,7 +505,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_add_function(self):
-        """
+        """ Adds a nex function block.
         """
         if self.edition_in_progress == False:
             message('Create a new function.', self.text_message)
@@ -525,7 +526,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_add_node(self):
-        """
+        """ Adds a new node.
         """
         if self.edition_in_progress == False:
             message('Create a new node.', self.text_message)
@@ -544,7 +545,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_add_link(self):
-        """
+        """ Adds a link between two nodes.
         """
         message('Select the first node.', self.text_message)
         self.can.config(cursor="plus")
@@ -552,7 +553,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_move(self):
-        """
+        """ Allows objects to move.
         """
         message('Select the free node or the function to move.', self.text_message)
         self.can.config(cursor="fleur")
@@ -560,7 +561,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_edit(self):
-        """
+        """ Initiates the editing of the selected object.
         """
         if self.edition_in_progress == False:
             message('Select the free node or the function to edit.',
@@ -572,7 +573,7 @@ class Window:
             self.lift_window(self.window_edition.window)
 
     def edit(self, destination):
-        """
+        """ Edits the selected object.
         """
         self.memory.add(self.diagram.export_to_text())
         self.edition_in_progress = True
@@ -581,7 +582,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_erase(self):
-        """
+        """ Initiates object deletion.
         """
         message('Select the free node or the function to erase.',
                 self.text_message)
@@ -589,7 +590,7 @@ class Window:
         self.state = 4
 
     def erase(self, destination):
-        """ Delete the destination object from the functions or the nodes dictionary.
+        """ Deletes the destination object from the functions or the nodes dictionary.
         """
         if type(destination) == Node:
             node_to_delete = tl.key_of(self.diagram.nodes, destination)
@@ -603,7 +604,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_export(self):
-        """
+        """ Initiates exportation to image.
         """
         message('Export diagram to image.', self.text_message)
         self.state = 1
