@@ -5,7 +5,7 @@ from node import *
 
 
 def open_file(file_name):
-    """ Open and read file_name.
+    """ Opens and reads file_name.
     """
     with open(file_name) as f:
         file_text = f.read()
@@ -14,7 +14,7 @@ def open_file(file_name):
 
 
 def read_state(file_text, file_name=None):
-    """ Build the function blocks and the nodes relatives
+    """ Builds the function blocks and the nodes relatives
         to the different lines of the state text. Returns a diagram.
     """
     error_message = ""
@@ -36,7 +36,7 @@ def read_state(file_text, file_name=None):
             else:
                 error_message += add_message(line_number,
                                              line, new_function.name+" not congruant.")
-        # Connexions between nodes
+        # Connections between nodes
         # Syntax: "A---B" connexion between nodes A and B
         if "---" in line:
             line = line.replace(' ', '')
@@ -181,8 +181,7 @@ def function_definition(line):
 
 
 def node_definition(line):
-    """
-        In the diagram, create the node describe in the line.
+    """ In the diagram, create the node describe in the line.
         Syntax : node(A) or node(B:float) or node(C:int, (x,y))
     """
     fixed = False  # A priori the point is not fixed
@@ -208,8 +207,7 @@ def node_definition(line):
 
 
 def change_parameter(parameter, diagram, line):
-    """
-        Change the parameter of the function_block designated in the line.
+    """ Changes the parameter of the function_block designated in the line.
         Parameter is 'position' or 'dimension'
         Returns de function_block object.
         Example : funct1.postion(42, 24)

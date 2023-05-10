@@ -24,8 +24,7 @@ def function_rank(function, function_list):
 
 
 def parameters_in(line):
-    """
-    Returns the list of strings in line separated by commas except those enclosed in parentheses.
+    """ Returns the list of strings in line separated by commas except those enclosed in parentheses.
     Example :
     >>> parameters_in("param1, param2, (2,4), param3, (5, 7)")
     (["param1", "param2", "(2,4)", "param3", "(5, 7)"]
@@ -48,8 +47,7 @@ def parameters_in(line):
 
 
 def coordinates(parameters):
-    """
-        If parameters is a pair of integer-castable strings, then returns the list of matching integers.
+    """ If parameters is a pair of integer-castable strings, then returns the list of matching integers.
         Otherwise returns None.
         >>> coordinates("(12, 43)")
         [12,43]
@@ -86,7 +84,7 @@ def key_of(dictionary, value):
 
 
 def create_definition_description(function):
-    """ Create the string description of a function.
+    """ Creates the string description of a function.
         Example : "def my_function(a:int, b:float)->float"
     """
     description = "def " + function.name + '('
@@ -123,7 +121,7 @@ def create_definition_description(function):
 
 
 def create_node_description(node):
-    """ Create the string description of a free node (not in a function).
+    """ Creates the string description of a free node (not in a function).
         Example for the A node at position (800, 200): "node (A:str,(800,200))"
     """
     if node.free:
@@ -140,8 +138,8 @@ def create_node_description(node):
 
 
 def reverse(link_description):
-    """ create the symmetric expression of the link between two nodes.
-    Example for "A---B" : "B---A"
+    """ Creates the symmetric expression of the link between two nodes.
+        Example for "A---B" : "B---A"
     """
     nodes = link_description.split('---')
     if len(nodes) == 2:
@@ -155,7 +153,7 @@ def distance(origin_position, target_position):
 
 
 def nearest(mouse_position, targets):
-    """ Return the nearest object (and the distance) from the mouse_position.
+    """ Returns the nearest object (and the distance) from the mouse_position.
     """
     nearest_target = None
     nearest_target_distance = None
@@ -217,7 +215,7 @@ def new_label(previous_labels, label=None):
 
 
 def next_label(previous_label):
-    """ Increment the last character of the previous_label string.
+    """ Increments the last character of the previous_label string.
     """
     alphabet = [chr(i) for i in range(97, 123, 1)]
     parts = previous_label.split('*')
@@ -287,11 +285,11 @@ def cast_to_float(value_str: str, shape=None) -> float:
 
 def cast_to_int(value_str: str, format=None) -> int:
     """ Takes a value (str) in parameter.
-    if value is cast to integer, returns the integer value.
-    Otherwise, returns None.
-    if format is "8bits" returns the integer value only if it's between 0 and 255, .
-    >>> cast_to_int("42")
-    42
+        if value is cast to integer, returns the integer value.
+        Otherwise, returns None.
+        if format is "8bits" returns the integer value only if it's between 0 and 255, .
+        >>> cast_to_int("42")
+        42
     """
     if value_str.isdigit():
         value_int = int(value_str)
@@ -305,15 +303,15 @@ def cast_to_int(value_str: str, format=None) -> int:
 
 def cast_to_color(color_str: str, format=None) -> str:
     """ Takes color_str in parameter : A specific name of mcolors.CSS4_COLORS key or a rgb format.
-    if format is "hex" accepts  or colors in hexadecimal digits.
-    Returns the good format to insert the color in the fill setting of the SVG file.
-    Otherwise, returns None.
-    >>> cast_to_color("green")
-    green
-    >>> cast_to_color("(42,0,255)")
-    rgb(42,0,255)
-    >>> cast_to_color("42")
-    None
+        if format is "hex" accepts  or colors in hexadecimal digits.
+        Returns the good format to insert the color in the fill setting of the SVG file.
+        Otherwise, returns None.
+        >>> cast_to_color("green")
+        green
+        >>> cast_to_color("(42,0,255)")
+        rgb(42,0,255)
+        >>> cast_to_color("42")
+        None
     """
     if format is None:
         if color_str == "":
@@ -366,7 +364,7 @@ def hex_digit(value_str):
 
 def test_compound(compound: str) -> bool:
     """Takes a str in parameter.
-    If compound is castable to int and lower than 256, returns True.
+        If compound is castable to int and lower than 256, returns True.
     """
     if compound.isdigit():
         if 0 <= int(compound) < 256:
@@ -376,7 +374,7 @@ def test_compound(compound: str) -> bool:
 
 def draw_box(can, x_start, y_start, x_end, y_end, **kwargs):
     """ Create a rectangle in the canvas (can).
-        if rounded is True, create a rounded rectangle.
+        If rounded is True, create a rounded rectangle.
     """
     outline = 'black'
     fill = 'white'

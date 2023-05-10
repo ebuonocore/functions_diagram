@@ -84,7 +84,7 @@ class Window_export_image(Window_settings):
         self.window.destroy()
 
     def export_SVG(self, selected_file):
-        """ Export the diagram in the SVG format.
+        """ Exports the diagram in the SVG format.
         """
         marge_str = self.SVG_labels["Marge"].get()
         marge = tl.cast_to_int(marge_str)
