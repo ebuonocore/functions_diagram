@@ -12,7 +12,12 @@ class Window_export_image(Window_settings):
     def __init__(self, parent_window, diagram, destination=None):
         super().__init__(parent_window, diagram)
         self.window.title('Export diagram to SVG')
-        self.window.geometry("300x230")
+        rootx = self.parent.can.winfo_rootx()
+        rooty = self.parent.can.winfo_rooty()
+        win_width, win_height = self.window_dimension(
+            self.parent.tk.geometry())
+        self.window.geometry(
+            "300x140+{}+{}".format(rootx+win_width-300-self.MARGE, rooty+self.MARGE))
         self.diagram = diagram
         self.SVG_labels = dict()
         self.draw_grid()

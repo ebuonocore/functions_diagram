@@ -446,9 +446,12 @@ class Window:
     def lift_window(self, child_window):
         """ Moves the parent window and the child_window in the stack.
         """
-        child_window.lift()
-        child_window.focus_force()
-        child_window.update()
+        try:
+            child_window.lift()
+            child_window.focus_force()
+            child_window.update()
+        except:
+            print("_tkinter.TclError: bad window path name")
 
     @Decorators.disable_if_editing
     def cmd_new(self):
