@@ -15,6 +15,19 @@ class Window_edition(Window_settings):
         self.widget_grid = dict()  # keys: widget / values : tuple(line, column on the grid)
         self.next_entry_to_add = ""  # Name of the next node to add
         self.draw_grid()
+        rootx = self.parent.can.winfo_rootx()
+        rooty = self.parent.can.winfo_rooty()
+        win_width, win_height = self.window_dimension(
+            self.parent.tk.geometry())
+        if type(self.destination) == Node:
+            self.window.geometry(
+                "300x140+{}+{}".format(rootx+win_width-300-self.MARGE, rooty+self.MARGE))
+        elif type(self.destination) == Function_block:
+            height = (len(self.widget_grid)+1) * \
+                self.parent.text_char_height + 40
+            self.window.geometry(
+                "300x{}+{}+{}".format(height, rootx+win_width-300-self.MARGE, rooty+self.MARGE))
+        self.resize_height()
 
     def draw_grid(self):
         position = str(
@@ -34,11 +47,9 @@ class Window_edition(Window_settings):
         # Add specfic lines for function or node
         if type(self.destination) == Node:
             self.node_parameters()
-            self.window.geometry("300x140")
         elif type(self.destination) == Function_block:
             self.function_parameters()
-            self.window.geometry("300x240")
-        self.resize_height()
+        # self.resize_height()
 
     def function_parameters(self):
         self.entries = dict()
@@ -322,6 +333,7 @@ class Window_edition(Window_settings):
                         bg=self.colors["LABEL"])
         if key == "Show/Hide Output":
             self.destination.set_output_visibility(value)
+        self.update_windows()
 
     def change_destination_attribut(self, attribut, value):
         self.destination.__dict__[attribut] = value

@@ -10,16 +10,10 @@ class Window_settings():
         self.tk = parent_window.tk
         self.diagram = diagram
         self.window = tki.Toplevel(self.tk)
-        self.window.resizable(height=False, width=False)
+        self.window.resizable(height=True, width=False)
         self.window.bind("<Return>", lambda event: self.cmd_commit())
         self.parent.tk.update_idletasks()
         self.MARGE = 4
-        rootx = self.parent.can.winfo_rootx()
-        rooty = self.parent.can.winfo_rooty()
-        win_width, win_height = self.window_dimension(
-            self.parent.tk.geometry())
-        self.window.geometry(
-            "300x240+{}+{}".format(rootx+win_width-300-self.MARGE, rooty+self.MARGE))
         file = 'images/painting_can.png'
         image = Image.open(file)
         self.painting_can_image = ImageTk.PhotoImage(image)
@@ -38,15 +32,15 @@ class Window_settings():
         self.frame.columnconfigure(1, weight=1)
         self.frame.columnconfigure(2, weight=1)
         self.frame.columnconfigure(3, weight=0)
-        self.frame.pack(fill=tki.BOTH)
+        self.frame.pack(fill=tki.BOTH, expand=True)
         self.cancel_button = tki.Button(self.bt_frame, text="Cancel",
                                         command=self.cmd_cancel)
         self.cancel_button.pack(side=tki.RIGHT, padx=5, pady=5)
         self.validate_button = tki.Button(self.bt_frame, text="Ok",
                                           command=self.cmd_commit)
         self.validate_button.pack(side=tki.RIGHT, padx=5, pady=5)
-        self.bt_frame.pack(fill=tki.BOTH)
-        self.bt_frame.pack_propagate(False)
+        self.bt_frame.pack(fill=tki.BOTH, expand=True)
+        # self.bt_frame.pack_propagate(False)
 
         self.window.protocol("WM_DELETE_WINDOW", self.cmd_cancel)
 

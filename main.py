@@ -1,22 +1,23 @@
 """
 DONE:
-    obj.lift_window(obj.window_edition.window) dans Decorators.disable_if_editing()
-    Traduction des specs et des commentaires
+  Rafraîchissement de l'affichage lors de la selection/deselection de Show output
+  Supression des print non nécessaires
+  Bugs sur les tailles des fenêtres d'édition fonction.
+
 TODO:
 Renommer le projet en functions_synoptic ?
  
 GUI.py   
-    Bugs sur les tailles des fenêtres d'édition fonction et noeuds.
-    A partir du quatrième paramètre de fonction.
-    
-    Paramètre : espace par étage (si rien, auto) => centrer le diagramme (offset)
-    Frame : Proposer le dessin (et enregistrement) d'objet de type encadrement (pointillés)
-      Défini par un nom, les fonctions englobées et marge ou position/dimensions, couleur, épaisseur de trait
-    mettre en place .scale sur self.can ? 
+    _tkinter.TclError: bad window path name dans lift_window()
+  Il est possible d'ouvrir une fenetre d'édition de noeud et une de fct en meme temps :[
+  mettre en place .scale sur self.can ? 
     et un drag pour déplacer l'ensemble du diagram ? avec scrollregion ?
-    traduire la variable ancre par anchor
+  traduire la variable ancre par anchor
 Options : permettre de paramétrer l'attribut. smooth_lines de Window
         rounded functions (up & down)
+Paramètre : espace par étage (si rien, auto) => centrer le diagramme (offset)
+
+Fenêtres Options/Settings et Infos
 
 Alternative : https://app.diagrams.net/
 """
