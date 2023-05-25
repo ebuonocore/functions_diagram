@@ -124,7 +124,9 @@ def create_node_description(node):
     """ Creates the string description of a free node (not in a function).
         Example for the A node at position (800, 200): "node (A:str,(800,200))"
     """
-    if node.free:
+    if node.position is None:
+        return ''
+    elif node.free:
         description = "node" + '(' + node.name
         if node.annotation != '':
             description += ':' + node.annotation
@@ -149,6 +151,8 @@ def reverse(link_description):
 def distance(origin_position, target_position):
     x1, y1 = origin_position
     x2, y2 = target_position
+    if x1 is None or y1 is None or x2 is None or y2 is None:
+        return None
     return sqrt((x2-x1)**2+(y2-y1)**2)
 
 
@@ -159,7 +163,7 @@ def nearest(mouse_position, targets):
     nearest_target_distance = None
     for target in targets:
         compliant_target = False
-        if type(target) == Function_block:
+        if type(target) == Function_block and target.position is not None:
             compliant_target = True
             position_x = target.position[0] + target.dimension[0]//2
             position_y = target.position[1] + target.dimension[1]//2
@@ -169,7 +173,9 @@ def nearest(mouse_position, targets):
             position = target.position
         if compliant_target:  # target is a free node or a function
             dist = distance(mouse_position, position)
-            if nearest_target_distance is None:
+            if dist is None:
+                pass
+            elif nearest_target_distance is None:
                 nearest_target = target
                 nearest_target_distance = dist
             elif dist < nearest_target_distance:

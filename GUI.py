@@ -278,7 +278,7 @@ class Window:
                      [x-d, y-2*d, x, y, x+d, y-2*d]]
         self.can.create_polygon(perimeter[orientation], fill=color)
 
-    def print_label(self, x, y, label, annotation, ancre='nw'):
+    def print_label(self, x, y, label, annotation, anchor='nw'):
         """ Writes the label and if necessary the type annotation separated by :
         """
         police = self.preferences["police"]
@@ -290,13 +290,13 @@ class Window:
         if len(annotation) > 0 and len(label) > 0:
             label += ': '
         self.can.create_text(x, y, text=label, font=font,
-                             anchor=ancre, fill=text_color)
+                             anchor=anchor, fill=text_color)
         if len(annotation) > 0:
             offset = tkfont.Font(size=text_size, family=police,
                                  weight="normal").measure(label)
             x_type = x + offset
             self.can.create_text(x_type, y, text=annotation, font=font,
-                                 anchor=ancre, fill=type_color)
+                                 anchor=anchor, fill=type_color)
 
     def draw_function(self):
         """ Draws the function_block: Header, body frames.
@@ -451,7 +451,7 @@ class Window:
             child_window.focus_force()
             child_window.update()
         except:
-            print("_tkinter.TclError: bad window path name")
+            pass
 
     @Decorators.disable_if_editing
     def cmd_new(self):

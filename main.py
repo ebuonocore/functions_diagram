@@ -1,25 +1,23 @@
 """
 DONE:
-  Rafraîchissement de l'affichage lors de la selection/deselection de Show output
-  Supression des print non nécessaires
-  Bugs sur les tailles des fenêtres d'édition fonction.
+  traduction de la variable ancre par anchor
+  Blocage de l'ouverture simultanée de deux fenêtres d'édition (noeud et fonction)
+  Correction sur l'appel de tools.distance() avec des paramètres à None
+  "tools.py", line 133, in create_node_description; Détection si position est à None
+  Erreur dans "GUI.py" : _tkinter.TclError: bad window path name dans lift_window() résolu par try/except
 
 TODO:
-Renommer le projet en functions_synoptic ?
- 
 GUI.py   
-    _tkinter.TclError: bad window path name dans lift_window()
-  Il est possible d'ouvrir une fenetre d'édition de noeud et une de fct en meme temps :[
   mettre en place .scale sur self.can ? 
     et un drag pour déplacer l'ensemble du diagram ? avec scrollregion ?
-  traduire la variable ancre par anchor
+
 Options : permettre de paramétrer l'attribut. smooth_lines de Window
         rounded functions (up & down)
 Paramètre : espace par étage (si rien, auto) => centrer le diagramme (offset)
 
 Fenêtres Options/Settings et Infos
 
-Alternative : https://app.diagrams.net/
+Alternative/Existant : https://app.diagrams.net/
 """
 
 from diagram import *
