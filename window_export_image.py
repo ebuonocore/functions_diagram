@@ -5,10 +5,10 @@ import tools as tl
 from tkinter import filedialog as fd
 from canvasvg import saveall
 from os import remove
-from window_settings import *
+from window_pattern import *
 
 
-class Window_export_image(Window_settings):
+class Window_export_image(Window_pattern):
     def __init__(self, parent_window, diagram, destination=None):
         super().__init__(parent_window, diagram)
         self.window.title('Export diagram to SVG')

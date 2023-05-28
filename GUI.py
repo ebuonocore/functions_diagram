@@ -12,6 +12,7 @@ from math import pi, cos, sin
 from os import path
 from window_edition import *
 from window_export_image import *
+from window_information import *
 from PIL import Image
 
 COLOR_OUTLINE = "#FFFF00"
@@ -658,7 +659,7 @@ class Window:
     def cmd_information(self):
         """
         """
-        pass
+        Window_information(self, self.images)
 
     def left_click(self, event):
         Xpix = event.x
