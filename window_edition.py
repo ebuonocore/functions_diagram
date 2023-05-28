@@ -2,11 +2,11 @@ import tkinter as tki
 from PIL import Image, ImageTk
 from diagram import *
 import tools as tl
-from window_settings import *
+from window_pattern import *
 from tkinter import colorchooser
 
 
-class Window_edition(Window_settings):
+class Window_edition(Window_pattern):
     def __init__(self, parent_window, diagram, destination):
         super().__init__(parent_window, diagram)
         self.destination = destination

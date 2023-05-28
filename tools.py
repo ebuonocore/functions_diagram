@@ -1,4 +1,5 @@
 from tkinter import font as tkfont
+import tkinter as tki
 import diagram as dia
 from math import sqrt
 from node import *
@@ -455,6 +456,24 @@ def compare(element1, element2):
         return element2
     else:
         return element1
+
+
+class ScrollableFrame(tki.Frame):
+    """ source: https://blog.teclado.com/tkinter-scrollable-frames/
+    """
+
+    def __init__(self, container, *args, **kwargs):
+        super().__init__(container, *args, **kwargs)
+        canvas = tki.Canvas(self)
+        scrollbar = tki.Scrollbar(
+            self, orient="vertical", command=canvas.yview)
+        self.scrollable_frame = tki.Frame(canvas)
+        self.scrollable_frame.bind(
+            "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
 
 
 if __name__ == "__main__":

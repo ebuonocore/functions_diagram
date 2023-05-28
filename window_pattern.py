@@ -4,7 +4,7 @@ from diagram import *
 import tools as tl
 
 
-class Window_settings():
+class Window_pattern():
     def __init__(self, parent_window, diagram):
         self.parent = parent_window
         self.tk = parent_window.tk

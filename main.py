@@ -1,21 +1,17 @@
 """
 DONE:
-  traduction de la variable ancre par anchor
-  Blocage de l'ouverture simultanée de deux fenêtres d'édition (noeud et fonction)
-  Correction sur l'appel de tools.distance() avec des paramètres à None
-  "tools.py", line 133, in create_node_description; Détection si position est à None
-  Erreur dans "GUI.py" : _tkinter.TclError: bad window path name dans lift_window() résolu par try/except
+  Windows_settings renommé en Windows_pattern
+  Fenêtre Option scrollable et mise en forme
 
 TODO:
-GUI.py   
-  mettre en place .scale sur self.can ? 
-    et un drag pour déplacer l'ensemble du diagram ? avec scrollregion ?
-
-Options : permettre de paramétrer l'attribut. smooth_lines de Window
+  Fenêtres Options/Settings et Infos
+  Options : permettre de paramétrer l'attribut. smooth_lines de Window
         rounded functions (up & down)
-Paramètre : espace par étage (si rien, auto) => centrer le diagramme (offset)
+  Paramètre : espace par étage (si rien, auto) => centrer le diagramme (offset)
 
-Fenêtres Options/Settings et Infos
+  GUI.py
+    mettre en place .scale sur self.can ? 
+    et un drag pour déplacer l'ensemble du diagram ? avec scrollregion ?
 
 Alternative/Existant : https://app.diagrams.net/
 """
