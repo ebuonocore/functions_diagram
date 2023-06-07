@@ -1,0 +1,27 @@
+def f1(a:int,b:bool)  # header_color = "red"
+f1.position(386,74)
+f1.dimension(90,58)
+
+def f1*(a:int,b:bool)->str  # header_color = "#0000A0"
+f1*.position(276,385)
+f1*.dimension(90,58)
+
+def f2(n:str,m:str)->str
+f2.position(723,349)
+f2.dimension(80,58)
+
+def f4(x:str,y:str,v:str)->int
+f4.position(1225,340)
+f4.dimension(80,77)
+
+node(A:str,(601,152))
+node(B:str,(501,631))
+node(C:str,(1014,404))
+f1>---A
+f1*>---B
+f2<0---A
+f2<1---B
+f2>---C
+f4<0---A
+f4<1---C
+f4<2---B

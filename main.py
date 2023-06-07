@@ -1,13 +1,23 @@
 """
 DONE:
-  Windows_settings renommé en Windows_pattern
-  Fenêtre Option scrollable et mise en forme
+  Paramètre de preferences.json en str
+  Ne sauvegarde pas les positions de noeuds à [0, 0]
+  Bouton Default pour configuration
+  Modifier main_bckground_color lorsque modifié.
+  Recharger les préférences par défaut
+  Les traits utilisent line_color
 
 TODO:
-  Fenêtres Options/Settings et Infos
-  Options : permettre de paramétrer l'attribut. smooth_lines de Window
-        rounded functions (up & down)
-  Paramètre : espace par étage (si rien, auto) => centrer le diagramme (offset)
+  Export image :
+    Supprimer choix Background et forcer bck selon preferences
+  Sauvegarder après Auto
+  Fenêtre info : Minimiser hauteur
+  Fenêtres Options/Settings
+  colorchooser ne sert à rien pour l'instant : ne pointe pas vers la bonne cellule
+  Options : 
+    Boutons Default_light & Default_dark (Utf_8)
+    smooth_lines & rounded functions (up & down) avec des box
+    Espace par étage (si rien, auto) => centrer le diagramme (offset)
 
   GUI.py
     mettre en place .scale sur self.can ? 

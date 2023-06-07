@@ -2,7 +2,6 @@ import tkinter as tki
 from PIL import Image, ImageTk
 from diagram import *
 import tools as tl
-from window_pattern import *
 
 
 class Window_information():
@@ -20,8 +19,6 @@ class Window_information():
         can_height = self.parent.can.winfo_height()
         win_width, win_height = self.window_dimension(
             self.parent.tk.geometry())
-        offset = win_height - can_height
-        print(can_height, rootx, rooty, win_width, win_height)
         self.window.geometry(
             "400x{}+{}+{}".format(can_height-2*self.MARGE-40, rootx+win_width-400-self.MARGE, rooty+self.MARGE))
         self.images = images

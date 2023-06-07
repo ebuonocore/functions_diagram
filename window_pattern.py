@@ -72,10 +72,13 @@ class Window_pattern():
 
     def resize_height(self):
         self.parent.can.update()
-        if self.frame.winfo_exists():
-            height = self.frame.winfo_height() + 40
-            width = self.window.winfo_width()
-            self.window.geometry("{}x{}".format(width, height))
+        try:
+            if self.frame.winfo_exists():
+                height = self.frame.winfo_height() + 40
+                width = self.window.winfo_width()
+                self.window.geometry("{}x{}".format(width, height))
+        except:
+            pass
 
     def window_location(self, geometry: str) -> tuple:
         """ Takes the geometry string as a parameter.
