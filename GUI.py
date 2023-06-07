@@ -2,7 +2,6 @@ from tkinter import filedialog as fd
 from tkinter import font as tkfont
 import tkinter as tki
 from PIL import Image, ImageTk
-import json
 import tools as tl
 from diagram import *
 from node import *
@@ -13,6 +12,7 @@ from os import path
 from window_edition import *
 from window_export_image import *
 from window_information import *
+from window_configuration import *
 from PIL import Image
 
 COLOR_OUTLINE = "#FFFF00"
@@ -53,10 +53,10 @@ class Window:
         else:
             self.diagram = diagram
         # Configuration
-        self.preferences = self.load_preferences()
+        self.preferences = tl.load_preferences()
         police = self.preferences["police"]
-        title_size = self.preferences["title_size"]
-        text_size = self.preferences["text_size"]
+        title_size = int(self.preferences["title_size"])
+        text_size = int(self.preferences["text_size"])
         self.title_size = tkfont.Font(
             family=police, size=title_size, weight="bold")
         self.text_size = tkfont.Font(
@@ -76,7 +76,7 @@ class Window:
         self.smooth_lines = True
         self.window_edition = None
         self.can = tki.Canvas(self.tk, width=self.SCREEN_WIDTH,
-                              height=self.SCREEN_HEIGHT, bg='white')
+                              height=self.SCREEN_HEIGHT, bg=self.preferences["main_background_color"])
         self.menu = tki.Canvas(self.tk, width=self.SCREEN_WIDTH, height=self.MENU_HEIGHT,
                                bg='#F0F0F0')
         self.menu_label = tki.Label(self.menu)
@@ -102,13 +102,6 @@ class Window:
         message("Function_diagram v1.0", self.text_message)
         self.edition_in_progress = False
         self.engine()  # Starts state management
-
-    def load_preferences(self):
-        """ Loads the information stored in the preferences.json file
-            and updates the system and package attributes.
-        """
-        with open('preferences.json', 'r') as fichier:
-            return json.load(fichier)
 
     def screen_dimensions(self):
         WIDTH = self.tk.winfo_screenwidth()
@@ -233,6 +226,7 @@ class Window:
         """
         # Deletes all objects from the canvas before recreating them
         self.can.delete("all")
+        self.can.configure(bg=self.preferences["main_background_color"])
         # Draws all the elements of the system
         self.draw_function()
         self.draw_nodes()
@@ -242,13 +236,13 @@ class Window:
         """ Draws discs for isolated points and arrows for points linked to blocks.
         """
         police = self.preferences["police"]
-        text_size = self.preferences["text_size"]
+        text_size = int(self.preferences["text_size"])
 
         font_texte = tkfont.Font(
             family=police, size=text_size, weight="normal")
         color = self.preferences["line_color"]
         text_color = self.preferences["text_color"]
-        d = self.preferences["text_size"] // 2
+        d = int(self.preferences["text_size"]) // 2
         for node_name, node in self.diagram.nodes.items():
             if node.position != [None, None] and node.visible:
                 x, y = node.position
@@ -272,7 +266,7 @@ class Window:
         if color is None:
             color = self.preferences["line_color"]
         if d is None:
-            d = self.preferences["text_size"] // 2
+            d = int(self.preferences["text_size"]) // 2
         perimeter = [[x-2*d, y-d, x, y, x-2*d, y+d],
                      [x-d, y+2*d, x, y, x+d, y+2*d],
                      [x+2*d, y-d, x, y, x+2*d, y+d],
@@ -283,7 +277,7 @@ class Window:
         """ Writes the label and if necessary the type annotation separated by :
         """
         police = self.preferences["police"]
-        text_size = self.preferences["text_size"]
+        text_size = int(self.preferences["text_size"])
         font = tkfont.Font(family=police, size=text_size, weight="normal")
         text_color = self.preferences["text_color"]
         type_color = self.preferences["type_color"]
@@ -304,17 +298,17 @@ class Window:
             Updates the positions of the points in the block: Inputs and outputs
         """
         police = self.preferences["police"]
-        title_size = self.preferences["title_size"]
-        text_size = self.preferences["text_size"]
+        title_size = int(self.preferences["title_size"])
+        text_size = int(self.preferences["text_size"])
         text_color = self.preferences["text_color"]
-        thickness = self.preferences["thickness"]
+        thickness = int(self.preferences["thickness"])
         font_titre = tkfont.Font(
             family=police, size=title_size, weight="bold")
         font_texte = tkfont.Font(
             family=police, size=text_size, weight="normal")
         border_color = self.preferences["borders_default_color"]
         title_background_color = self.preferences["title_background_color"]
-        main_background_color = self.preferences["main_background_color"]
+        function_background_color = self.preferences["function_background_color"]
         for function in self.diagram.functions.values():
             # Drawing of the body frame
             if function.position is not None:
@@ -331,7 +325,7 @@ class Window:
                 # Drawing of the body of the function
                 tl.draw_box(self.can, x, y+self.title_char_height, x+function_width,
                             y+self.title_char_height+function_height,
-                            outline=border_color, fill=main_background_color, thickness=thickness, rounded_down=True, radius=self.title_char_height//2)
+                            outline=border_color, fill=function_background_color, thickness=thickness, rounded_down=True, radius=self.title_char_height//2)
 
                 # Writing the function name
                 x_titre = x + function_width // 2
@@ -343,7 +337,9 @@ class Window:
     def draw_lines(self):
         """ Draw the connections between the points: Vertical or horizontal lines.
         """
-        thikness = self.preferences["line_thikness"]
+        thikness = int(self.preferences["line_thikness"])
+        color = self.preferences["line_color"]
+        smooth = True if self.preferences["smooth_lines_bool"] == "True" else False
         self.diagram.update_links()
         lines_ok = set()  # Set of tuples (point_of_departure, point_of_arrival)
         for link in self.diagram.links:
@@ -352,37 +348,41 @@ class Window:
             x_middle, y_middle = link.points[2]
             x_last, y_last = link.points[3]
             x_end, y_end = link.points[4]
-            if self.smooth_lines == True:
+            if smooth:
                 self.can.create_line((x_start, y_start),
                                      (x_first, y_start),
                                      (x_middle, y_middle),
                                      (x_last, y_end),
                                      (x_end, y_end),
+                                     fill=color,
                                      smooth="true")
             else:
                 self.can.create_line((x_start, y_start),
                                      (x_middle, y_start),
+                                     fill=color,
                                      width=thikness)
                 self.can.create_line((x_middle, y_start),
                                      (x_middle, y_end),
+                                     fill=color,
                                      width=thikness)
                 self.can.create_line((x_middle, y_end),
                                      (x_end, y_end),
+                                     fill=color,
                                      width=thikness)
 
     def draw_destination_outine(self, color=COLOR_OUTLINE):
         if type(self.destination) == Link:
-            d = 2 * self.preferences["text_size"] // 3
+            d = 2 * int(self.preferences["text_size"]) // 3
             x, y = self.destination.position
             self.can.create_rectangle(x-2, y-2, x+2, y+2, width=2,
                                       outline=color)
         if type(self.destination) == Node:
-            d = 2 * self.preferences["text_size"] // 3
+            d = 2 * int(self.preferences["text_size"]) // 3
             x, y = self.destination.position
             if self.destination.free:
                 self.can.create_oval(x-d, y-d, x+d, y+d, fill=color)
             else:
-                scale = self.preferences["text_size"] // 3
+                scale = int(self.preferences["text_size"]) // 3
                 self.draw_triangle(
                     x-scale//2, y, 0, color, scale)
         elif type(self.destination) == Function_block:
@@ -653,7 +653,7 @@ class Window:
     def cmd_configuration(self):
         """
         """
-        pass
+        Window_configuration(self)
 
     @Decorators.disable_if_editing
     def cmd_information(self):

@@ -7,6 +7,7 @@ from link import *
 from function_block import *
 import matplotlib.colors as mcolors
 from math import cos, sin, pi
+import json
 
 
 def index_occurrence(char, string):
@@ -127,14 +128,20 @@ def create_node_description(node):
     """
     if node.position is None:
         return ''
+    if len(node.position) < 2:
+        return ''
+    elif node.position[0] is None and node.position[1] is None:
+        return ''
     elif node.free:
         description = "node" + '(' + node.name
         if node.annotation != '':
             description += ':' + node.annotation
         # Add the position
-        description += ',('
-        description += str(int(node.position[0])) + ','
-        description += str(int(node.position[1])) + '))\n'
+        if node.position != [0, 0]:
+            description += ',('
+            description += str(int(node.position[0])) + ','
+            description += str(int(node.position[1])) + ')'
+        description += ')\n'
         return description
     else:
         return ''
@@ -456,6 +463,27 @@ def compare(element1, element2):
         return element2
     else:
         return element1
+
+
+def load_preferences(file=None):
+    """ Loads the information stored in the preferences.json file.
+    """
+    if file is None:
+        file = 'preferences.json'
+    elif file == 'default':
+        file = 'preferences_default.json'
+    with open(file, 'r') as f:
+        return json.load(f)
+
+
+def write_preferences(preferences: dict):
+    """ Writes the informations stored in preferences dictionary 
+        in the preferences.json file
+    """
+    # Serializing json
+    json_object = json.dumps(preferences, indent=4)
+    with open('preferences.json', 'w') as fichier:
+        fichier.write(json_object)
 
 
 class ScrollableFrame(tki.Frame):
