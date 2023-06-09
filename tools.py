@@ -315,9 +315,9 @@ def cast_to_int(value_str: str, format=None) -> int:
     return None
 
 
-def cast_to_color(color_str: str, format=None) -> str:
+def cast_to_color(color_str: str, col_format=None) -> str:
     """ Takes color_str in parameter : A specific name of mcolors.CSS4_COLORS key or a rgb format.
-        if format is "hex" accepts  or colors in hexadecimal digits.
+        Accepts if col_format is "hex" and colors in hexadecimal digits.
         Returns the good format to insert the color in the fill setting of the SVG file.
         Otherwise, returns None.
         >>> cast_to_color("green")
@@ -327,7 +327,9 @@ def cast_to_color(color_str: str, format=None) -> str:
         >>> cast_to_color("42")
         None
     """
-    if format is None:
+    if col_format is None and color_str[0] == "#":
+        col_format = "hex"
+    if col_format is None:
         if color_str == "":
             color_str = "white"
         if color_str in mcolors.CSS4_COLORS.keys():
@@ -337,15 +339,15 @@ def cast_to_color(color_str: str, format=None) -> str:
             if len(rgb) == 3:
                 if test_compound(rgb[0]) and test_compound(rgb[1]) and test_compound(rgb[2]):
                     return 'rgb'+color_str
-    elif format == "hex":
+    elif col_format == "hex":
         if color_str[0] == '#':
-            color_str = color_str[1:]
-            if len(color_str) == 6 or len(color_str) == 3:
+            if len(color_str) == 7 or len(color_str) == 4:
                 format_ok = True
+                digits = color_str[1:]
                 hex_digits = [chr(i) for i in range(48, 58)]
                 hex_digits += [chr(i) for i in range(65, 71)]
                 hex_digits += [chr(i) for i in range(97, 103)]
-                for digit in color_str:
+                for digit in digits:
                     if digit not in hex_digits:
                         format_ok = False
                 if format_ok:
@@ -470,8 +472,10 @@ def load_preferences(file=None):
     """
     if file is None:
         file = 'preferences.json'
-    elif file == 'default':
-        file = 'preferences_default.json'
+    elif file == 'dark':
+        file = 'preferences_default_dark.json'
+    elif file == 'light':
+        file = 'preferences_default_light.json'
     with open(file, 'r') as f:
         return json.load(f)
 

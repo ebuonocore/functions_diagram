@@ -27,18 +27,14 @@ class Window_export_image(Window_pattern):
         """
         # SVG cell : Marge
         self.create_entry(self.SVG_labels, "Marge",
-                          row=4, default_value="0")
+                          row=1, default_value="0")
         self.SVG_labels["Marge"].bind("<FocusOut>", self.check_marge)
-        # SVG cell : Background color
-        self.create_entry(self.SVG_labels, "Background",
-                          row=5, default_value="(255, 255, 255)")
-        self.SVG_labels["Background"].bind("<FocusOut>", self.check_background)
         # SVG cell : opacity
-        self.create_entry(self.SVG_labels, "Opacity",
-                          row=6, default_value="1")
-        # SVG cell : Spacer
-        self.create_entry(self.SVG_labels, "", row=7, cell_type="Spacer")
-        self.resize_height()
+        self.create_entry(self.SVG_labels, "Background opacity",
+                          row=2, default_value="1")
+        opacity_label = tki.Label(
+            self.window, text="  0(transparency) to 1(opacity)", anchor="w")
+        opacity_label.pack(side=tki.LEFT)
 
     def create_entry(self, dico_labels, name, **kwargs):
         """ Creates the label and cell, places them in the grid, and adds them to the dictionary.
@@ -55,8 +51,8 @@ class Window_export_image(Window_pattern):
                 default_value = v
             else:
                 raise Exception("The parameter " + k + " doesn't exist.")
-        label = tki.Label(self.frame, text=name)
-        label.grid(row=row, column=1, sticky=tki.E)
+        label = tki.Label(self.frame, text=name, anchor="w")
+        label.grid(row=row, column=1, sticky=tki.W)
         if cell_type == "Label":
             if type(default_value) == int:
                 value = tki.IntVar()
@@ -95,9 +91,11 @@ class Window_export_image(Window_pattern):
         marge = tl.cast_to_int(marge_str)
         if marge is None or marge > 1000:
             marge = 0
-        background_color_str = self.SVG_labels["Background"].get()
+        background_color_str = self.parent.preferences["main background color_color"]
         background_color = tl.cast_to_color(background_color_str)
-        opacity_str = self.SVG_labels["Opacity"].get()
+        if background_color is None:
+            background_color = 'white'
+        opacity_str = self.SVG_labels["Background opacity"].get()
         opacity = tl.cast_to_float(opacity_str, "unit")
         file_name = selected_file.name
         saveall(file_name, self.parent.can)
@@ -144,13 +142,3 @@ class Window_export_image(Window_pattern):
             else:
                 entry.config(bg=self.colors["DANGER"])
                 return False
-
-    def check_background(self, event):
-        if "Background" in self.SVG_labels.keys():
-            entry = self.SVG_labels["Background"]
-            value = entry.get()
-            if tl.cast_to_color(value) is not None:
-                entry.config(bg='white')
-                return True
-        entry.config(bg=self.colors["DANGER"])
-        return False

@@ -1,22 +1,20 @@
 """
 DONE:
-  Paramètre de preferences.json en str
-  Ne sauvegarde pas les positions de noeuds à [0, 0]
-  Bouton Default pour configuration
-  Modifier main_bckground_color lorsque modifié.
-  Recharger les préférences par défaut
-  Les traits utilisent line_color
-
-TODO:
+  Export image récupère main background color Ok. Transparence Ok.
   Export image :
     Supprimer choix Background et forcer bck selon preferences
   Sauvegarder après Auto
-  Fenêtre info : Minimiser hauteur
-  Fenêtres Options/Settings
-  colorchooser ne sert à rien pour l'instant : ne pointe pas vers la bonne cellule
-  Options : 
-    Boutons Default_light & Default_dark (Utf_8)
+  window_configuration:
+    Boutons Default_light & Default_dark 
+    Correction de l'appel à colorchooser(). Passage du paramètre pref_key valide.
+    '_' comme séparateur nom, type des pref_key 
     smooth_lines & rounded functions (up & down) avec des box
+    Labels justifiés à gauche dans toutes les fenêtres.
+
+TODO:
+  Fenêtres : Vérifier les mises en forme (taille des boutons)
+  Fenêtre info : Minimiser hauteur
+  Options : 
     Espace par étage (si rien, auto) => centrer le diagramme (offset)
 
   GUI.py

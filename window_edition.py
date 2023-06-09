@@ -9,7 +9,10 @@ from tkinter import colorchooser
 class Window_edition(Window_pattern):
     def __init__(self, parent_window, diagram, destination):
         super().__init__(parent_window, diagram)
-        self.destination = destination
+        if destination is not None:
+            self.destination = destination
+        else:
+            self.cmd_cancel()
         self.parameters = dict()
         self.entries = dict()
         self.widget_grid = dict()  # keys: widget / values : tuple(line, column on the grid)
@@ -114,11 +117,11 @@ class Window_edition(Window_pattern):
             else:
                 raise Exception("The key " + k + " doesn't exist.")
         tki.Label(self.frame, text=key, anchor='w').grid(
-            row=line_number, column=0)
+            row=line_number, column=0, sticky=tki.W)
         value = tki.StringVar()
         value.set(default_value)
         entry = tki.Entry(self.frame, textvariable=value)
-        entry.grid(row=line_number, column=1)
+        entry.grid(row=line_number, column=1, sticky=tki.W)
         self.widget_grid[entry] = (line_number, 1)
         return entry
 
@@ -160,12 +163,12 @@ class Window_edition(Window_pattern):
             else:
                 raise Exception("The key " + k + " doesn't exist.")
         tki.Label(self.frame, text=key, anchor='w').grid(
-            row=line_number, column=0)
+            row=line_number, column=0, sticky=tki.W)
         value = tki.IntVar()
         value.set(default_value)
         box = tki.Checkbutton(
             self.frame, variable=value, onvalue=1, offvalue=0, command=lambda: self.check_box(key, value.get()))
-        box.grid(sticky="W", row=line_number, column=1)
+        box.grid(sticky=tki.W, row=line_number, column=1)
         return box
 
     def cmd_commit(self):

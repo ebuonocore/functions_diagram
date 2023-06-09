@@ -39,7 +39,7 @@ class Window_pattern():
         self.validate_button = tki.Button(self.bt_frame, text="Ok",
                                           command=self.cmd_commit)
         self.validate_button.pack(side=tki.RIGHT, padx=5, pady=5)
-        self.bt_frame.pack(fill=tki.BOTH, expand=True)
+        self.bt_frame.pack(side=tki.BOTTOM, fill=tki.BOTH, expand=True)
         # self.bt_frame.pack_propagate(False)
 
         self.window.protocol("WM_DELETE_WINDOW", self.cmd_cancel)
