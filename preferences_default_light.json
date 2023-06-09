@@ -1,0 +1,16 @@
+{
+    "text color_color": "black",
+    "type color_color": "#7f0055",
+    "police": "Consolas",
+    "main background color_color": "white",
+    "title background color_color": "#dddddd",
+    "function background color_color": "white",
+    "borders default color_color": "black",
+    "line color_color": "black",
+    "line thikness_int": "4",
+    "title size_int": "18",
+    "text size_int": "12",
+    "thickness_int": "3",
+    "smooth lines_bool": 1,
+    "rounded functions_bool": 1
+}

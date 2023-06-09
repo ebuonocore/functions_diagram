@@ -28,19 +28,22 @@ class Window_configuration():
         height = min(400, can_height-2*self.MARGE-40)
         self.window.geometry(
             "400x{}+{}+{}".format(height, rootx+win_width-400-self.MARGE, rooty+self.MARGE))
-        self.preferences = tl.load_preferences()
+        self.preferences = tl.load_preferences()  # dict()
         self.frame = tl.ScrollableFrame(self.window)
-        self.pref_cells = dict()
+        self.pref_cells = dict()  # keys : pref_key, values : tki.Entry
+        self.box_vars = dict()  # keys : pref_key, values : tki.IntVar
+        # Builds the main frame
         self.lines = self.build_frame()
         self.frame.pack(fill=tki.BOTH, expand=True)
         self.bt_frame = tki.Frame(
             self.window, relief=tki.RAISED, borderwidth=1, width=300, height=40)
-        self.cancel_button = tki.Button(self.bt_frame, text="Cancel",
-                                        command=self.cmd_cancel)
-        self.cancel_button.pack(side=tki.RIGHT, padx=5, pady=5)
-        self.default_button = tki.Button(self.bt_frame, text="Default",
-                                         command=self.cmd_default)
-        self.default_button.pack(side=tki.RIGHT, padx=5, pady=5)
+        # Build the buttons
+        self.dark_default_button = tki.Button(self.bt_frame, text="Default "+chr(0x1F316),
+                                              command=lambda: self.cmd_default('dark'))
+        self.dark_default_button.pack(side=tki.RIGHT, padx=5, pady=5)
+        self.light_default_button = tki.Button(self.bt_frame, text="Default "+chr(0x263C),
+                                               command=lambda: self.cmd_default('light'))
+        self.light_default_button.pack(side=tki.RIGHT, padx=5, pady=5)
         self.validate_button = tki.Button(self.bt_frame, text="Ok",
                                           command=self.cmd_commit)
         self.validate_button.pack(side=tki.RIGHT, padx=5, pady=5)
@@ -51,22 +54,32 @@ class Window_configuration():
         for pref_key, pref_value in self.preferences.items():
             line = tki.Frame(lines)
             label_var = tki.StringVar()
-            label_var.set(pref_key)
-            label_field = tki.Label(line, textvariable=label_var, width=23)
+            label_var.set(pref_key.split('_')[0])
+            label_field = tki.Label(
+                line, textvariable=label_var, anchor="w",  width=24)
             label_field.config(bg=self.colors["LABEL"])
             label_field.pack(side=tki.LEFT)
-            value = tki.StringVar()
-            value.set(pref_value)
-            self.pref_cells[pref_key] = tki.Entry(
-                line, textvariable=value, width=20)
-            self.pref_cells[pref_key].bind(
-                "<FocusOut>", self.update_preferences)
-            self.pref_cells[pref_key].pack(side=tki.LEFT)
+            if "bool" in pref_key:
+                value = tki.IntVar()
+                value.set(pref_value)
+                self.box_vars[pref_key] = value
+                self.pref_cells[pref_key] = tki.Checkbutton(
+                    line, variable=value, onvalue=1, offvalue=0, command=lambda: self.update_preferences(None))
+                self.pref_cells[pref_key].pack(side=tki.LEFT)
+            else:
+                value = tki.StringVar()
+                value.set(pref_value)
+                self.pref_cells[pref_key] = tki.Entry(
+                    line, textvariable=value, width=14)
+                self.pref_cells[pref_key].bind(
+                    "<FocusOut>", self.update_preferences)
+                self.pref_cells[pref_key].pack(side=tki.LEFT)
             if "color" in pref_key:
                 bt = tki.Button(line, image=self.painting_can_image,
-                                command=lambda: self.colorchooser(pref_key))
+                                command=(lambda p=pref_key: self.colorchooser(p)))
                 bt.pack(side=tki.LEFT)
-            line.pack(side=tki.TOP)
+
+            line.pack(side=tki.TOP, fill=tki.X)
         lines.pack()
         return lines
 
@@ -76,19 +89,23 @@ class Window_configuration():
         self.parent.draw()
         self.window.destroy()
 
-    def cmd_default(self):
-        self.preferences = tl.load_preferences('default')
+    def cmd_default(self, mode):
+        self.lines.destroy()
+        self.preferences = tl.load_preferences(mode)
         self.parent.preferences = self.preferences
         self.parent.draw()
-        self.lines.destroy()
-        self.build_frame()
+        self.lines = self.build_frame()
 
     def cmd_cancel(self):
         self.window.destroy()
 
     def update_preferences(self, event):
         for pref_key, entry_cell in self.pref_cells.items():
-            pref_value = entry_cell.get()
+            if type(entry_cell) == tki.Checkbutton:
+                pref_value = self.box_vars[pref_key].get()
+                print(pref_key, pref_value)
+            else:
+                pref_value = entry_cell.get()
             self.preferences[pref_key] = pref_value
         self.parent.preferences = self.preferences
         self.parent.draw()
@@ -98,6 +115,7 @@ class Window_configuration():
         entry = self.pref_cells[pref_key]
         entry.delete(0, tki.END)
         entry.insert(0, color)
+        self.update_preferences(None)
 
     def window_dimension(self, geometry: str) -> tuple:
         """ Takes the geometry string as a parameter.

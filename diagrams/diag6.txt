@@ -1,22 +1,22 @@
-def a(a,b,c)  # header_color = "#58d9d9"
+def a(a,b,c)  # header_color = "#102070"
 a.position(343,212)
 a.dimension(50,77)
 
-def bxwc*(a,b,c)  # header_color = "#d9c8d9"
+def bxwc*(a,b,c)  # header_color = "#a02010"
 bxwc*.position(353,353)
-bxwc*.dimension(72,77)
+bxwc*.dimension(76,77)
 
-def b(a:int,b:int | float)
+def b(a:int,b:int|float)
 b.position(619,265)
-b.dimension(160,58)
+b.dimension(140,58)
 
-node(a,(876,292))
+node(a:str,(876,292))
 node(b,(99,293))
 node(c,(93,373))
-a>---b<0
 a<0---b
-a---b>
-b---bxwc*<2
 a<2---c
+a>---b<0
 bxwc*<0---c
+bxwc*<2---b
 bxwc*>---b<1
+b>---a

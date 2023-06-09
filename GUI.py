@@ -41,7 +41,7 @@ class Window:
                 else:
                     message('Warning: First close the editing window.',
                             obj.text_message)
-                    obj.lift_window(obj.window_edition.window)
+                    # obj.lift_window(obj.window_edition.window)
                 return result
             return edition_test
 
@@ -55,8 +55,8 @@ class Window:
         # Configuration
         self.preferences = tl.load_preferences()
         police = self.preferences["police"]
-        title_size = int(self.preferences["title_size"])
-        text_size = int(self.preferences["text_size"])
+        title_size = int(self.preferences["title size_int"])
+        text_size = int(self.preferences["text size_int"])
         self.title_size = tkfont.Font(
             family=police, size=title_size, weight="bold")
         self.text_size = tkfont.Font(
@@ -76,7 +76,7 @@ class Window:
         self.smooth_lines = True
         self.window_edition = None
         self.can = tki.Canvas(self.tk, width=self.SCREEN_WIDTH,
-                              height=self.SCREEN_HEIGHT, bg=self.preferences["main_background_color"])
+                              height=self.SCREEN_HEIGHT, bg=self.preferences["main background color_color"])
         self.menu = tki.Canvas(self.tk, width=self.SCREEN_WIDTH, height=self.MENU_HEIGHT,
                                bg='#F0F0F0')
         self.menu_label = tki.Label(self.menu)
@@ -226,7 +226,7 @@ class Window:
         """
         # Deletes all objects from the canvas before recreating them
         self.can.delete("all")
-        self.can.configure(bg=self.preferences["main_background_color"])
+        self.can.configure(bg=self.preferences["main background color_color"])
         # Draws all the elements of the system
         self.draw_function()
         self.draw_nodes()
@@ -236,13 +236,13 @@ class Window:
         """ Draws discs for isolated points and arrows for points linked to blocks.
         """
         police = self.preferences["police"]
-        text_size = int(self.preferences["text_size"])
+        text_size = int(self.preferences["text size_int"])
 
         font_texte = tkfont.Font(
             family=police, size=text_size, weight="normal")
-        color = self.preferences["line_color"]
-        text_color = self.preferences["text_color"]
-        d = int(self.preferences["text_size"]) // 2
+        color = self.preferences["line color_color"]
+        text_color = self.preferences["text color_color"]
+        d = int(self.preferences["text size_int"]) // 2
         for node_name, node in self.diagram.nodes.items():
             if node.position != [None, None] and node.visible:
                 x, y = node.position
@@ -264,9 +264,9 @@ class Window:
             Orientation: 0 = East, 1 = South, 2 = West, 3 = North
         """
         if color is None:
-            color = self.preferences["line_color"]
+            color = self.preferences["line color_color"]
         if d is None:
-            d = int(self.preferences["text_size"]) // 2
+            d = int(self.preferences["text size_int"]) // 2
         perimeter = [[x-2*d, y-d, x, y, x-2*d, y+d],
                      [x-d, y+2*d, x, y, x+d, y+2*d],
                      [x+2*d, y-d, x, y, x+2*d, y+d],
@@ -277,10 +277,10 @@ class Window:
         """ Writes the label and if necessary the type annotation separated by :
         """
         police = self.preferences["police"]
-        text_size = int(self.preferences["text_size"])
+        text_size = int(self.preferences["text size_int"])
         font = tkfont.Font(family=police, size=text_size, weight="normal")
-        text_color = self.preferences["text_color"]
-        type_color = self.preferences["type_color"]
+        text_color = self.preferences["text color_color"]
+        type_color = self.preferences["type color_color"]
         # Display the label
         if len(annotation) > 0 and len(label) > 0:
             label += ': '
@@ -298,17 +298,18 @@ class Window:
             Updates the positions of the points in the block: Inputs and outputs
         """
         police = self.preferences["police"]
-        title_size = int(self.preferences["title_size"])
-        text_size = int(self.preferences["text_size"])
-        text_color = self.preferences["text_color"]
-        thickness = int(self.preferences["thickness"])
+        title_size = int(self.preferences["title size_int"])
+        text_size = int(self.preferences["text size_int"])
+        text_color = self.preferences["text color_color"]
+        thickness = int(self.preferences["thickness_int"])
         font_titre = tkfont.Font(
             family=police, size=title_size, weight="bold")
         font_texte = tkfont.Font(
             family=police, size=text_size, weight="normal")
-        border_color = self.preferences["borders_default_color"]
-        title_background_color = self.preferences["title_background_color"]
-        function_background_color = self.preferences["function_background_color"]
+        border_color = self.preferences["borders default color_color"]
+        title_background_color = self.preferences["title background color_color"]
+        function_background_color = self.preferences["function background color_color"]
+        rounded = True if self.preferences["rounded functions_bool"] == 1 else False
         for function in self.diagram.functions.values():
             # Drawing of the body frame
             if function.position is not None:
@@ -320,12 +321,12 @@ class Window:
                     header_color = function.header_color
                 # Drawing of the function name frame
                 tl.draw_box(self.can, x, y, x+function_width, y+self.title_char_height,
-                            outline=border_color, fill=header_color, thickness=thickness, rounded_up=True)
+                            outline=border_color, fill=header_color, thickness=thickness, rounded_up=rounded)
 
                 # Drawing of the body of the function
                 tl.draw_box(self.can, x, y+self.title_char_height, x+function_width,
                             y+self.title_char_height+function_height,
-                            outline=border_color, fill=function_background_color, thickness=thickness, rounded_down=True, radius=self.title_char_height//2)
+                            outline=border_color, fill=function_background_color, thickness=thickness, rounded_down=rounded, radius=self.title_char_height//2)
 
                 # Writing the function name
                 x_titre = x + function_width // 2
@@ -337,9 +338,9 @@ class Window:
     def draw_lines(self):
         """ Draw the connections between the points: Vertical or horizontal lines.
         """
-        thikness = int(self.preferences["line_thikness"])
-        color = self.preferences["line_color"]
-        smooth = True if self.preferences["smooth_lines_bool"] == "True" else False
+        thikness = int(self.preferences["line thikness_int"])
+        color = self.preferences["line color_color"]
+        smooth = True if self.preferences["smooth lines_bool"] == 1 else False
         self.diagram.update_links()
         lines_ok = set()  # Set of tuples (point_of_departure, point_of_arrival)
         for link in self.diagram.links:
@@ -372,17 +373,17 @@ class Window:
 
     def draw_destination_outine(self, color=COLOR_OUTLINE):
         if type(self.destination) == Link:
-            d = 2 * int(self.preferences["text_size"]) // 3
+            d = 2 * int(self.preferences["text size_int"]) // 3
             x, y = self.destination.position
             self.can.create_rectangle(x-2, y-2, x+2, y+2, width=2,
                                       outline=color)
         if type(self.destination) == Node:
-            d = 2 * int(self.preferences["text_size"]) // 3
+            d = 2 * int(self.preferences["text size_int"]) // 3
             x, y = self.destination.position
             if self.destination.free:
                 self.can.create_oval(x-d, y-d, x+d, y+d, fill=color)
             else:
-                scale = int(self.preferences["text_size"]) // 3
+                scale = int(self.preferences["text size_int"]) // 3
                 self.draw_triangle(
                     x-scale//2, y, 0, color, scale)
         elif type(self.destination) == Function_block:
@@ -551,9 +552,14 @@ class Window:
     def cmd_add_link(self):
         """ Adds a link between two nodes.
         """
-        message('Select the first node.', self.text_message)
-        self.can.config(cursor="plus")
-        self.state = 6
+        if len(self.diagram.nodes) > 0 or len(self.diagram.functions) > 0:
+            message('Select the first node.', self.text_message)
+            self.can.config(cursor="plus")
+            self.state = 6
+        else:
+            self.state = 1
+            message('No object to edit.', self.text_message)
+            self.lift_window(self.window_edition.window)
 
     @Decorators.disable_if_editing
     def cmd_move(self):
@@ -567,13 +573,14 @@ class Window:
     def cmd_edit(self):
         """ Initiates the editing of the selected object.
         """
-        if self.edition_in_progress == False:
+        if len(self.diagram.nodes) > 0 or len(self.diagram.functions) > 0:
             message('Select the free node or the function to edit.',
                     self.text_message)
             self.can.config(cursor="pencil")
             self.state = 5
         else:
-            message('The editing window is already open.', self.text_message)
+            self.state = 1
+            message('No object to edit.', self.text_message)
             self.lift_window(self.window_edition.window)
 
     def edit(self, destination):
@@ -622,6 +629,7 @@ class Window:
         self.auto_resize_blocks()
         self.update_positions()
         self.draw()
+        self.memory.add(self.diagram.export_to_text())
 
     @Decorators.disable_if_editing
     def cmd_undo(self):
@@ -674,6 +682,9 @@ class Window:
             self.memory.add(self.diagram.export_to_text())
             self.draw()
         elif self.state == 5:  # Destination to edit selected
+            if self.destination is None:
+                self.state = 1
+                message('No object to edit.', self.text_message)
             self.edit(self.destination)
             message('', self.text_message)
             self.draw()
