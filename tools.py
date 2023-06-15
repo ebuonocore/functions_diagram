@@ -141,7 +141,10 @@ def create_node_description(node):
             description += ',('
             description += str(int(node.position[0])) + ','
             description += str(int(node.position[1])) + ')'
-        description += ')\n'
+        description += ')'
+        if node.fixed:
+            description += '  # fixed'
+        description += '\n'
         return description
     else:
         return ''

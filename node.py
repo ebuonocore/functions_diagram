@@ -13,7 +13,7 @@ class Node:
         self.visible = True
         self.position = [None, None]  # [pos_x, pos_y]
         self.connections = []  # List of nodes connected
-        self.fixed = False  # True if the position is fixed (can't be moved).
+        self.fixed = False  # True if the position is fixed.
         for k, v in kwargs.items():
             if k in self.__dict__:
                 self.__dict__[k] = v

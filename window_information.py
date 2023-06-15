@@ -52,7 +52,7 @@ class Window_information():
                                 anchor='w')
             lbl_img.pack(side=tki.LEFT, fill='both')
             lbl_txt.pack(fill='both')
-            line.pack(fill='both', expand=True)
+            line.pack(fill='both', expand=False)
         title = tki.Label(frame.scrollable_frame,
                           text="function_diagram by Eric Buonocore\n2023",
                           anchor='w')

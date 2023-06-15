@@ -1,6 +1,8 @@
 """
 DONE:
-
+  Touches Entrée ou Esc abandonne les commandes (hors edition)
+  Noeuds fixés : Sauvegarde en commentaire dans la description
+  Résolution problème : Fixation des noeuds lors de Undo.
 
 TODO:
   Fenêtres : Vérifier les mises en forme (taille des boutons)
@@ -11,7 +13,7 @@ TODO:
   GUI.py
     mettre en place .scale sur self.can ? 
     et un drag pour déplacer l'ensemble du diagram ? avec scrollregion ?
-
+  OS : Vérifier si accès aux chemins correct sur Windows
 Alternative/Existant : https://app.diagrams.net/
 """
 
