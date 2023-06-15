@@ -14,6 +14,7 @@ from window_export_image import *
 from window_information import *
 from window_configuration import *
 from PIL import Image
+from pynput import keyboard
 
 COLOR_OUTLINE = "#FFFF00"
 
@@ -101,6 +102,8 @@ class Window:
         self.update_positions()
         message("Function_diagram v1.0", self.text_message)
         self.edition_in_progress = False
+        self.listener = keyboard.Listener(on_press=self.cmd_keyboard_event)
+        self.listener.start()
         self.engine()  # Starts state management
 
     def screen_dimensions(self):
@@ -192,45 +195,40 @@ class Window:
         # Calculates the position of free nodes based on the positions of related non-free nodes.
         for node in self.diagram.nodes.values():
             if node.free and not node.fixed:
-                output_abscissas = None
-                output_ordinate = None
-                max_abscissas = None
+                max_abscissas = self.WIDTH - self.MARGIN
+                min_abscissas = self.MARGIN
                 ordinates = []
                 for connected_node in node.connections:
                     # This point is a function input
                     if '<' in connected_node.name:
                         ordinates.append(connected_node.position[1])
-                        if max_abscissas is None:
-                            max_abscissas = connected_node.position[0]
-                        elif connected_node.position[0] < max_abscissas:
-                            max_abscissas = connected_node.position[0]
+                        max_abscissas = min(
+                            max_abscissas, connected_node.position[0])
                     # This point is a function output
-                    elif '>' in connected_node.name or '<' in connected_node.name:
-                        output_abscissas = connected_node.position[0]
-                        output_ordinate = connected_node.position[1]
-                if output_abscissas is None:
-                    output_abscissas = self.MARGIN + interval_width//2
-                if max_abscissas is None:
-                    max_abscissas = self.WIDTH - \
-                        (self.MARGIN + interval_width//2)
-                node.position[0] = (output_abscissas + max_abscissas) // 2
+                    elif '>' in connected_node.name:
+                        ordinates.append(connected_node.position[1])
+                        min_abscissas = max(
+                            min_abscissas, connected_node.position[0])
+                node.position[0] = (min_abscissas + max_abscissas)//2
                 if len(ordinates) == 0:
                     node.position[1] = self.MARGIN_UP + free_height//2
-                elif output_ordinate is not None:
-                    node.position[1] = output_ordinate
                 else:
                     node.position[1] = sum(ordinates) / len(ordinates)
 
     def draw(self):
         """ Updates the system display in the Tkinter window
         """
-        # Deletes all objects from the canvas before recreating them
-        self.can.delete("all")
-        self.can.configure(bg=self.preferences["main background color_color"])
-        # Draws all the elements of the system
-        self.draw_function()
-        self.draw_nodes()
-        self.draw_lines()
+        try:
+            # Deletes all objects from the canvas before recreating them
+            self.can.delete("all")
+            self.can.configure(
+                bg=self.preferences["main background color_color"])
+            # Draws all the elements of the system
+            self.draw_function()
+            self.draw_nodes()
+            self.draw_lines()
+        except:
+            pass
 
     def draw_nodes(self):
         """ Draws discs for isolated points and arrows for points linked to blocks.
@@ -724,6 +722,13 @@ class Window:
     def fermer_fenêtre(self):
         self.tk.quit()
         self.tk.destroy()
+
+    def cmd_keyboard_event(self, key):
+        """ Cancels operation if the user press Enter or Escape.
+        """
+        if key in (keyboard.Key.esc, keyboard.Key.enter):
+            if not self.edition_in_progress:
+                self.state = 1
 
     def engine(self):
         """ State management :

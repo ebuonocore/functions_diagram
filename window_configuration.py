@@ -47,7 +47,7 @@ class Window_configuration():
         self.validate_button = tki.Button(self.bt_frame, text="Ok",
                                           command=self.cmd_commit)
         self.validate_button.pack(side=tki.RIGHT, padx=5, pady=5)
-        self.bt_frame.pack(fill=tki.BOTH, expand=False)
+        self.bt_frame.pack(side=tki.BOTTOM, fill=tki.BOTH, expand=False)
 
     def build_frame(self):
         lines = tki.Canvas(self.frame.scrollable_frame)

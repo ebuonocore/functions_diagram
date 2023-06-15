@@ -182,9 +182,12 @@ def function_definition(line):
 
 def node_definition(line):
     """ In the diagram, create the node describe in the line.
-        Syntax : node(A) or node(B:float) or node(C:int, (x,y))
+        Syntax : node(A) or node(B:float) or node(C:int, (x,y))  # fixed
     """
-    fixed = False  # A priori the point is not fixed
+    if '#fixed' in line:
+        fixed = True
+    else:
+        fixed = False
     line = line.replace(' ', '')
     first_open_parentheses = tl.index_occurrence('(', line)[0]
     last_closed_parentheses = tl.index_occurrence(')', line)[-1]
@@ -199,7 +202,6 @@ def node_definition(line):
         annotation = ''
     if len(parameters) > 1:
         position = tl.coordinates(parameters[1])
-        fixed = True
     else:
         position = [0, 0]
     label = node_name.split('*')[0]

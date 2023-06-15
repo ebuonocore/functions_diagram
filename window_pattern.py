@@ -32,14 +32,14 @@ class Window_pattern():
         self.frame.columnconfigure(1, weight=1)
         self.frame.columnconfigure(2, weight=1)
         self.frame.columnconfigure(3, weight=0)
-        self.frame.pack(fill=tki.BOTH, expand=True)
+        self.frame.pack(fill=tki.BOTH, expand=False)
         self.cancel_button = tki.Button(self.bt_frame, text="Cancel",
                                         command=self.cmd_cancel)
         self.cancel_button.pack(side=tki.RIGHT, padx=5, pady=5)
         self.validate_button = tki.Button(self.bt_frame, text="Ok",
                                           command=self.cmd_commit)
         self.validate_button.pack(side=tki.RIGHT, padx=5, pady=5)
-        self.bt_frame.pack(side=tki.BOTTOM, fill=tki.BOTH, expand=True)
+        self.bt_frame.pack(side=tki.BOTTOM, fill=tki.BOTH, expand=False)
         # self.bt_frame.pack_propagate(False)
 
         self.window.protocol("WM_DELETE_WINDOW", self.cmd_cancel)
