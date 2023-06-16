@@ -103,7 +103,6 @@ class Window_configuration():
         for pref_key, entry_cell in self.pref_cells.items():
             if type(entry_cell) == tki.Checkbutton:
                 pref_value = self.box_vars[pref_key].get()
-                print(pref_key, pref_value)
             else:
                 pref_value = entry_cell.get()
             self.preferences[pref_key] = pref_value

@@ -1,13 +1,13 @@
+import matplotlib.colors as mcolors
+from math import sqrt
 from tkinter import font as tkfont
 import tkinter as tki
+from math import cos, sin, pi
+import json
 import diagram as dia
-from math import sqrt
 from node import *
 from link import *
 from function_block import *
-import matplotlib.colors as mcolors
-from math import cos, sin, pi
-import json
 
 
 def index_occurrence(char, string):
