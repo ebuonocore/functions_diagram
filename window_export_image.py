@@ -1,10 +1,10 @@
-import tkinter as tki
-from PIL import Image, ImageTk
-from diagram import *
-import tools as tl
-from tkinter import filedialog as fd
 from canvasvg import saveall
 from os import remove
+from PIL import Image, ImageTk
+from tkinter import filedialog as fd
+import tkinter as tki
+from diagram import *
+import tools as tl
 from window_pattern import *
 
 

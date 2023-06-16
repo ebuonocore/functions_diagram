@@ -1,5 +1,5 @@
-import tkinter as tki
 from PIL import Image, ImageTk
+import tkinter as tki
 from diagram import *
 import tools as tl
 

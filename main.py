@@ -1,12 +1,10 @@
 """
 DONE:
-  Touches Entrée ou Esc abandonne les commandes (hors edition)
-  Noeuds fixés : Sauvegarde en commentaire dans la description
-  Résolution problème : Fixation des noeuds lors de Undo.
+  requirements.txt
+  Fenêtre info : Redimensionner les images des boutons pour l'aide. 
 
 TODO:
   Fenêtres : Vérifier les mises en forme (taille des boutons)
-  Fenêtre info : Minimiser hauteur
   Options : 
     Espace par étage (si rien, auto) => centrer le diagramme (offset)
 
@@ -17,10 +15,10 @@ TODO:
 Alternative/Existant : https://app.diagrams.net/
 """
 
+import tkinter as tki
 from diagram import *
 from files import *
 from GUI import *
-import tkinter as tki
 
 if __name__ == "__main__":
     #diag = open_file("diagrams/diag2.txt")

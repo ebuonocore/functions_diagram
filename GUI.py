@@ -1,20 +1,20 @@
+from pynput import keyboard
+from PIL import Image, ImageTk
+from math import pi, cos, sin
+from os import path
 from tkinter import filedialog as fd
 from tkinter import font as tkfont
 import tkinter as tki
-from PIL import Image, ImageTk
 import tools as tl
 from diagram import *
 from node import *
 from files import *
 from memory import *
-from math import pi, cos, sin
-from os import path
 from window_edition import *
 from window_export_image import *
 from window_information import *
 from window_configuration import *
-from PIL import Image
-from pynput import keyboard
+
 
 COLOR_OUTLINE = "#FFFF00"
 
@@ -89,7 +89,7 @@ class Window:
         self.message = tki.Label(
             self.menu, textvariable=self.text_message, bg='#F0F0F0', justify=tki.LEFT)
         self.message.pack(side=tki.LEFT)
-        self.images = self.build_images_bank()
+        self.images, self.images_mini = self.build_images_bank()
         self.buttons = {}
         self.add_buttons()
         self.menu.pack(fill=tki.X)
@@ -390,32 +390,24 @@ class Window:
             self.can.create_rectangle(x-2, y-2, x+width+2, y+self.title_char_height+height+2, width=2,
                                       outline=color)
 
-    def import_image(self, banque, name):
+    def import_image(self, name):
         """ Imports the image according to the name passed in parameter
-            and associates it with a key in the bank dictionary.
+            Returns the refernces of the original image and the resized image.
         """
         file = 'images/' + name + '.png'
-        image = Image.open(file)
-        banque[name] = ImageTk.PhotoImage(image)
+        image_source = Image.open(file)
+        image = ImageTk.PhotoImage(image_source)
+        resized_image = image_source.resize((25, 25), Image.ANTIALIAS)
+        image_mini = ImageTk.PhotoImage(resized_image)
+        return image, image_mini
 
     def build_images_bank(self):
-        banque = dict()
-        self.import_image(banque, 'new')
-        self.import_image(banque, 'open')
-        self.import_image(banque, 'save')
-        self.import_image(banque, 'move')
-        self.import_image(banque, 'add_function')
-        self.import_image(banque, 'add_node')
-        self.import_image(banque, 'add_link')
-        self.import_image(banque, 'edit')
-        self.import_image(banque, 'erase')
-        self.import_image(banque, 'auto')
-        self.import_image(banque, 'undo')
-        self.import_image(banque, 'redo')
-        self.import_image(banque, 'export')
-        self.import_image(banque, 'configuration')
-        self.import_image(banque, 'information')
-        return banque
+        bank = dict()
+        bank_mini = dict()
+        for button_name in ['new', 'open', 'save', 'export', 'move', 'add_function', 'add_node', 'add_link', 'edit', 'erase', 'auto', 'undo', 'redo', 'configuration', 'information']:
+            bank[button_name], bank_mini[button_name] = self.import_image(
+                button_name)
+        return bank, bank_mini
 
     def create_button(self, name, command):
         self.buttons[name] = tki.Button(self.menu_label,
@@ -665,7 +657,7 @@ class Window:
     def cmd_information(self):
         """
         """
-        Window_information(self, self.images)
+        Window_information(self, self.images_mini)
 
     def left_click(self, event):
         Xpix = event.x
