@@ -16,7 +16,7 @@ class Window_information():
         self.MARGE = 4
         rootx = self.parent.can.winfo_rootx()
         rooty = self.parent.can.winfo_rooty()
-        can_height = self.parent.can.winfo_height()
+        can_height = self.parent.can.winfo_height()*2//3
         win_width, win_height = self.window_dimension(
             self.parent.tk.geometry())
         self.window.geometry(
@@ -52,7 +52,7 @@ class Window_information():
                                 anchor='w')
             lbl_img.pack(side=tki.LEFT, fill='both')
             lbl_txt.pack(fill='both')
-            line.pack(fill='both', expand=False)
+            line.pack(fill='both', expand=True)
         title = tki.Label(frame.scrollable_frame,
                           text="function_diagram by Eric Buonocore\n2023",
                           anchor='w')
