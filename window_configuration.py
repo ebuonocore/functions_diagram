@@ -117,9 +117,9 @@ class Window_configuration():
         self.update_preferences(None)
 
     def window_dimension(self, geometry: str) -> tuple:
-        """ Takes the geometry string as a parameter.
-            Returns the tuple (width, height) corresponding to the dimension of the window.
-            Returns (0, 0) if the the dimension is not find.
+        """ Take the geometry string as a parameter.
+            Return the tuple (width, height) corresponding to the dimension of the window.
+            Return (0, 0) if the the dimension is not find.
         """
         settings = geometry.split('+')
         if len(settings) == 3:

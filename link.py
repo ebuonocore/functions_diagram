@@ -16,7 +16,7 @@ class Link:
         self.update_positions()
 
     def update_positions(self):
-        """ Updates the position of the link."""
+        """ Update the position of the link."""
         if len(self.nodes) == 2:
             if self.nodes[0].position == [None, None]:
                 return list()

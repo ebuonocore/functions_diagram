@@ -23,7 +23,7 @@ class Window_export_image(Window_pattern):
         self.draw_grid()
 
     def draw_grid(self):
-        """ Draws the grid to put the buttons and the labels in the Window.
+        """ Draw the grid to put the buttons and the labels in the Window.
         """
         # SVG cell : Marge
         self.create_entry(self.SVG_labels, "Marge",
@@ -37,7 +37,7 @@ class Window_export_image(Window_pattern):
         opacity_label.pack(side=tki.LEFT)
 
     def create_entry(self, dico_labels, name, **kwargs):
-        """ Creates the label and cell, places them in the grid, and adds them to the dictionary.
+        """ Create the label and cell, places them in the grid, and adds them to the dictionary.
         """
         row = 0
         cell_type = "Label"
@@ -75,7 +75,7 @@ class Window_export_image(Window_pattern):
         self.window.destroy()
 
     def cmd_commit(self):
-        """ Launches the rendering function according to the choice made between the PNG or SVG format.
+        """ Launche the rendering function according to the choice made between the PNG or SVG format.
         """
         if not self.diagram.is_empty():
             selected_file = fd.asksaveasfile(
@@ -85,7 +85,7 @@ class Window_export_image(Window_pattern):
         self.window.destroy()
 
     def export_SVG(self, selected_file):
-        """ Exports the diagram in the SVG format.
+        """ Export the diagram in the SVG format.
         """
         marge_str = self.SVG_labels["Marge"].get()
         marge = tl.cast_to_int(marge_str)

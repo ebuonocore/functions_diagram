@@ -11,12 +11,12 @@ from function_block import *
 
 
 def index_occurrence(char, string):
-    """ Returns the list of indexes of occurrences of char in the string."""
+    """ Return the list of indexes of occurrences of char in the string."""
     return [i for i, j in enumerate(string) if j == char]
 
 
 def function_rank(function, function_list):
-    """ Returns the index of occurrence of the function in the function_list."""
+    """ Return the index of occurrence of the function in the function_list."""
     rank = 0
     while rank < len(function_list):
         if function is function_list[rank]:
@@ -26,7 +26,7 @@ def function_rank(function, function_list):
 
 
 def parameters_in(line):
-    """ Returns the list of strings in line separated by commas except those enclosed in parentheses.
+    """ Return the list of strings in line separated by commas except those enclosed in parentheses.
     Example :
     >>> parameters_in("param1, param2, (2,4), param3, (5, 7)")
     (["param1", "param2", "(2,4)", "param3", "(5, 7)"]
@@ -49,7 +49,7 @@ def parameters_in(line):
 
 
 def coordinates(parameters):
-    """ If parameters is a pair of integer-castable strings, then returns the list of matching integers.
+    """ If parameters is a pair of integer-castable strings, then return the list of matching integers.
         Otherwise returns None.
         >>> coordinates("(12, 43)")
         [12,43]
@@ -69,7 +69,7 @@ def coordinates(parameters):
 
 
 def character_dimensions(police, size):
-    """ Returns the (width, height) of a character of a mono-spaced font."""
+    """ Return the (width, height) of a character of a mono-spaced font."""
     nb_pixels_height = tkfont.Font(
         size=size, family=police).metrics('linespace')
     nb_pixels_width = tkfont.Font(size=size, family=police).measure('X')
@@ -77,7 +77,7 @@ def character_dimensions(police, size):
 
 
 def key_of(dictionary, value):
-    """ Returns the first dictionary key that matches the searched value. Otherwise, returns None.
+    """ Return the first dictionary key that matches the searched value. Otherwise, return None.
     """
     for k, v in dictionary.items():
         if v == value:
@@ -86,7 +86,7 @@ def key_of(dictionary, value):
 
 
 def create_definition_description(function):
-    """ Creates the string description of a function.
+    """ Create the string description of a function.
         Example : "def my_function(a:int, b:float)->float"
     """
     description = "def " + function.name + '('
@@ -123,7 +123,7 @@ def create_definition_description(function):
 
 
 def create_node_description(node):
-    """ Creates the string description of a free node (not in a function).
+    """ Create the string description of a free node (not in a function).
         Example for the A node at position (800, 200): "node (A:str,(800,200))"
     """
     if node.position is None:
@@ -151,7 +151,7 @@ def create_node_description(node):
 
 
 def reverse(link_description):
-    """ Creates the symmetric expression of the link between two nodes.
+    """ Create the symmetric expression of the link between two nodes.
         Example for "A---B" : "B---A"
     """
     nodes = link_description.split('---')
@@ -168,7 +168,7 @@ def distance(origin_position, target_position):
 
 
 def nearest(mouse_position, targets):
-    """ Returns the nearest object (and the distance) from the mouse_position.
+    """ Return the nearest object (and the distance) from the mouse_position.
     """
     nearest_target = None
     nearest_target_distance = None
@@ -196,7 +196,7 @@ def nearest(mouse_position, targets):
 
 
 def nearest_objet(mouse_position, diagram, target_types="movable"):
-    """ Returns the nearest object from the cursor.
+    """ Return the nearest object from the cursor.
         target_types can be "all" (default), "function" or "node"
     """
     population = []
@@ -213,7 +213,7 @@ def nearest_objet(mouse_position, diagram, target_types="movable"):
 
 
 def pointer_position(window):
-    """ Returns the pointer position relative to the origin of the main canvas.
+    """ Return the pointer position relative to the origin of the main canvas.
     """
     mouse_x = window.winfo_pointerx() - window.winfo_rootx()
     mouse_y = window.winfo_pointery() - window.winfo_rooty()
@@ -221,7 +221,7 @@ def pointer_position(window):
 
 
 def new_label(previous_labels, label=None):
-    """ Returns the next_label who's not in previous label.
+    """ Return the next_label who's not in previous label.
         label (optional) is the current label.
     """
     if label is None:
@@ -232,7 +232,7 @@ def new_label(previous_labels, label=None):
 
 
 def next_label(previous_label):
-    """ Increments the last character of the previous_label string.
+    """ Increment the last character of the previous_label string.
     """
     alphabet = [chr(i) for i in range(97, 123, 1)]
     parts = previous_label.split('*')
@@ -262,7 +262,7 @@ def next_label(previous_label):
 
 
 def change_str(string_source, index, char):
-    """ Returns the string source with char at the index.
+    """ Return the string source with char at the index.
     """
     source = list(string_source)
     if index > len(source):
@@ -272,7 +272,7 @@ def change_str(string_source, index, char):
 
 
 def cast_to_float(value_str: str, shape=None) -> float:
-    """ Takes a value (str) in parameter.
+    """ Take a value (str) in parameter.
     if value is castable to float, returns the float value.
     Otherwise, returns None.
     if shape is "unit" returns the float value only if it's between 0.0 and 1.0, .
@@ -301,10 +301,10 @@ def cast_to_float(value_str: str, shape=None) -> float:
 
 
 def cast_to_int(value_str: str, format=None) -> int:
-    """ Takes a value (str) in parameter.
-        if value is cast to integer, returns the integer value.
+    """ Take a value (str) in parameter.
+        if value is cast to integer, return the integer value.
         Otherwise, returns None.
-        if format is "8bits" returns the integer value only if it's between 0 and 255, .
+        if format is "8bits" return the integer value only if it's between 0 and 255, .
         >>> cast_to_int("42")
         42
     """
@@ -319,10 +319,10 @@ def cast_to_int(value_str: str, format=None) -> int:
 
 
 def cast_to_color(color_str: str, col_format=None) -> str:
-    """ Takes color_str in parameter : A specific name of mcolors.CSS4_COLORS key or a rgb format.
-        Accepts if col_format is "hex" and colors in hexadecimal digits.
-        Returns the good format to insert the color in the fill setting of the SVG file.
-        Otherwise, returns None.
+    """ Take color_str in parameter : A specific name of mcolors.CSS4_COLORS key or a rgb format.
+        Accept if col_format is "hex" and colors in hexadecimal digits.
+        Return the good format to insert the color in the fill setting of the SVG file.
+        Otherwise, return None.
         >>> cast_to_color("green")
         green
         >>> cast_to_color("(42,0,255)")
@@ -359,8 +359,8 @@ def cast_to_color(color_str: str, col_format=None) -> str:
 
 
 def cast_rgb_to_hex_color(color_str):
-    """ If color_str is a color tuple, it casts and returns this color in an hexadecimal format.
-        Otherwise, it returns the unmodified colour string.
+    """ If color_str is a color tuple, cast and return this color in an hexadecimal format.
+        Otherwise, return the unmodified color string.
     """
     if color_str[0] == '(' and color_str[-1] == ')':
         rgb = color_str[1:-1].replace(' ', '').split(',')
@@ -373,7 +373,7 @@ def cast_rgb_to_hex_color(color_str):
 
 def hex_digit(value_str):
     """ value_str is a string castable to an int , 0 < value < 255
-        Casts value in hex and returns the two hexadecimal digits in a string format
+        Cast value in hex and return the two hexadecimal digits in a string format
     """
     if value_str.isdigit():
         value = int(value_str)
@@ -382,8 +382,8 @@ def hex_digit(value_str):
 
 
 def test_compound(compound: str) -> bool:
-    """Takes a str in parameter.
-        If compound is castable to int and lower than 256, returns True.
+    """Take a str in parameter.
+        If compound is castable to int and lower than 256, return True.
     """
     if compound.isdigit():
         if 0 <= int(compound) < 256:
@@ -459,8 +459,8 @@ def draw_box(can, x_start, y_start, x_end, y_end, **kwargs):
 
 
 def compare(element1, element2):
-    """ Returns None if element1 and element2 are None.
-        Otherwise returns the element who is not None.
+    """ Return None if element1 and element2 are None.
+        Otherwise return the element who is not None.
     """
     if element1 is None and element2 is None:
         return None
@@ -471,7 +471,7 @@ def compare(element1, element2):
 
 
 def load_preferences(file=None):
-    """ Loads the information stored in the preferences.json file.
+    """ Load the information stored in the preferences.json file.
     """
     if file is None:
         file = 'preferences.json'
@@ -484,7 +484,7 @@ def load_preferences(file=None):
 
 
 def write_preferences(preferences: dict):
-    """ Writes the informations stored in preferences dictionary 
+    """ Write the information stored in preferences dictionary 
         in the preferences.json file
     """
     # Serializing json

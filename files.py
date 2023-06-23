@@ -5,7 +5,7 @@ from node import *
 
 
 def open_file(file_name):
-    """ Opens and reads file_name.
+    """ Open and reads file_name.
     """
     with open(file_name) as f:
         file_text = f.read()
@@ -14,8 +14,8 @@ def open_file(file_name):
 
 
 def read_state(file_text, file_name=None):
-    """ Builds the function blocks and the nodes relatives
-        to the different lines of the state text. Returns a diagram.
+    """ Buildsthe function blocks and the nodes relatives
+        to the different lines of the state text. Return a diagram.
     """
     error_message = ""
     diagram = dia.Diagram()
@@ -79,7 +79,7 @@ def read_state(file_text, file_name=None):
 
 
 def test_parentheses(line):
-    """ Returns True if '(' is before ')' in the string.
+    """ Return True if '(' is before ')' in the string.
     """
     open_parentheses = tl.index_occurrence('(', line)
     closed_parentheses = tl.index_occurrence(')', line)
@@ -91,7 +91,7 @@ def test_parentheses(line):
 
 def function_definition(line):
     """
-        Returns the new function_block object described in a def line.
+        Return  the new function_block object described in a def line.
         line starts by "def " string. It includes '(' and ')' after the function's name.
         the function label is identical to the function name except if it contains the '*' character.
         In this case, the characters from '*' are ignored in the label.
@@ -209,9 +209,9 @@ def node_definition(line):
 
 
 def change_parameter(parameter, diagram, line):
-    """ Changes the parameter of the function_block designated in the line.
-        Parameter is 'position' or 'dimension'
-        Returns de function_block object.
+    """ Change the parameter of the function_block designated in the line.
+        parameter is 'position' or 'dimension'
+        Return de function_block object.
         Example : funct1.postion(42, 24)
     """
     line = line.replace(' ', '')
