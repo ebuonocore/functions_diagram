@@ -86,8 +86,8 @@ class Design:
         return None
 
     def merge(self, group1, group2):
-        """ Merges all the elements of group2 in group1.
-            Deletes group2 from the self.groups list.
+        """ Merge all the elements of group2 in group1.
+            Delete group2 from the self.groups list.
         """
         # Set of the groups of the next floor.
         group1.next = group1.next.union(group2.next)
@@ -100,8 +100,8 @@ class Design:
 
     def are_reachables(self, origin, destination):
         """ origin and destination are nodes of the diagram.
-            If one of these nodes is not an antecedent of the other, it returns True.
-            Otherwise, returns False.
+            If one of these nodes is not an antecedent of the other, return True.
+            Otherwise, return False.
         """
         if origin not in self.nodes:
             return False
@@ -120,7 +120,7 @@ class Design:
         return destination_group.is_successor(origin)
 
     def report(self):
-        """ Returns a tuple of dictionaries:
+        """ Return a tuple of dictionaries:
             + functions_dict : dictionnary with the functions as keys and their floor as values.
             + floors_dict : dictionnary whose keys are the floors and whose values are the functions that belong to them.
         """
@@ -162,7 +162,7 @@ class Group:
         self.floor = None
 
     def update_floor(self, floor):
-        """ Updates the floors of the group. Recursively call the update floor for each next group.
+        """ Update the floors of the group. Recursively call the update floor for each next group.
         """
         if self.floor is None:
             self.floor = floor

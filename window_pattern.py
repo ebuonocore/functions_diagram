@@ -61,8 +61,8 @@ class Window_pattern():
         self.parent.draw()
 
     def is_like_tuple(self, value):
-        """ Returns True if value is string castable in a tuple.
-        Otherwise, returns False.
+        """ Return True if value is string castable in a tuple.
+        Otherwise, return False.
         """
         couple = tl.coordinates(value)
         if couple is not None and len(couple) == 2:
@@ -81,9 +81,9 @@ class Window_pattern():
             pass
 
     def window_location(self, geometry: str) -> tuple:
-        """ Takes the geometry string as a parameter.
-            Returns the tuple (locx, locy) corresponding to the location of the window.
-            Returns (0, 0) if the the location is not find.
+        """ Take the geometry string as a parameter.
+            Return the tuple (locx, locy) corresponding to the location of the window.
+            Return (0, 0) if the the location is not find.
         """
         locations = geometry.split('+')
         if len(locations) == 3:
@@ -92,9 +92,9 @@ class Window_pattern():
         return (0, 0)
 
     def window_dimension(self, geometry: str) -> tuple:
-        """ Takes the geometry string as a parameter.
-            Returns the tuple (width, height) corresponding to the dimension of the window.
-            Returns (0, 0) if the the dimension is not find.
+        """ Take the geometry string as a parameter.
+            Return the tuple (width, height) corresponding to the dimension of the window.
+            Return (0, 0) if the the dimension is not find.
         """
         settings = geometry.split('+')
         if len(settings) == 3:

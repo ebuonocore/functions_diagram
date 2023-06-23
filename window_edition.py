@@ -230,8 +230,8 @@ class Window_edition(Window_pattern):
         self.parent.draw()
 
     def is_like_tuple(self, value):
-        """ Returns True if value is string castable in a tuple.
-            Otherwise, returns False.
+        """ Return True if value is string castable in a tuple.
+            Otherwise, return False.
         """
         couple = tl.coordinates(value)
         if couple is not None and len(couple) == 2:
@@ -248,7 +248,7 @@ class Window_edition(Window_pattern):
 
     def check_name(self):
         """ Test if this name is already taken by another function.
-            Validates it if this is not the case, otherwise, proposes a new free name.
+            Validate it if this is not the case, otherwise, propose a new free name.
         """
         if type(self.destination) == Node:
             previous_names = self.diagram.nodes.keys()
@@ -367,7 +367,7 @@ class Window_edition(Window_pattern):
         self.update_windows()
 
     def next_entry_name(self, entry_name):
-        """ Returns the name of the next entry: add one on the index after the '<' symbol
+        """ Return the name of the next entry: add one on the index after the '<' symbol
         """
         if '<' in entry_name:
             sep_position = entry_name.index('<')

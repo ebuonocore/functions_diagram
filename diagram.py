@@ -16,7 +16,7 @@ class Diagram:
         self.links = list()  # List of links
 
     def is_empty(self):
-        """ Returns True if there is no function and no nodes
+        """ Return True if there is no function and no nodes
         """
         return len(self.functions) == 0 and len(self.nodes) == 0
 
@@ -35,7 +35,7 @@ class Diagram:
         return new_name
 
     def add_function(self, new_function):
-        """ Adds a new function in the diagram.
+        """ Add a new function in the diagram.
             If the function's name already exist, increment the name and add the modifies function.
         """
         if new_function.name in self.functions.keys():
@@ -46,7 +46,7 @@ class Diagram:
         self.add_node(new_function.output)
 
     def delete_function(self, function_name):
-        """ Deletes the function in the diagram. Remove all the nodes of these function.
+        """ Delete the function in the diagram. Remove all the nodes of these function.
         """
         function = self.functions[function_name]
         pop_result = self.functions.pop(function_name)
@@ -57,7 +57,7 @@ class Diagram:
         return pop_result
 
     def add_node(self, new_node):
-        """ Adds a new node in the diagram.
+        """ Add a new node in the diagram.
         """
         if type(new_node) == Node and new_node.name not in self.nodes.keys():
             self.nodes[new_node.name] = new_node
@@ -66,7 +66,7 @@ class Diagram:
             return False
 
     def delete_node(self, node_name):
-        """ Deletes the node in the diagram and all references of this node in the list of connections of the other node.
+        """ Delete the node in the diagram and all references of this node in the list of connections of the other node.
         """
         pop_result = self.nodes.pop(node_name)
         if pop_result is not None:
@@ -80,7 +80,7 @@ class Diagram:
         return pop_result
 
     def nodes_connection(self, A, B):
-        """ Creates a link between the nodes node_A and node_B designated by the names A and B respectively.
+        """ Create a link between the nodes node_A and node_B designated by the names A and B respectively.
         """
         if A in self.nodes.keys() and B in self.nodes.keys():
             node_A = self.nodes[A]
@@ -93,7 +93,7 @@ class Diagram:
         return False
 
     def disconnect_nodes(self, link):
-        """ Disconnects the two nodes of the link.
+        """ Disconnect the two nodes of the link.
         """
         if len(link.nodes) == 2:
             node_A = link.nodes[0]
@@ -132,10 +132,10 @@ class Diagram:
         return diagram_datas
 
     def change_destination_name(self, destination, new_name):
-        """ Changes the name attribute of the destination (a node or a function).
-            If it is a node, updates the diagram's node dictionnary.
-            If it is a function, updates the diagram's node dictionnary and changes the name of all these nodes.
-            Returns True if change is ok. Otherwise retruns False.
+        """ Change the name attribute of the destination (a node or a function).
+            If it is a node, update the diagram's node dictionnary.
+            If it is a function, update the diagram's node dictionnary and changes the name of all these nodes.
+            Return True if change is ok. Otherwise return False.
         """
         if type(destination) == Node:
             return self.change_node_name(destination, new_name)
@@ -159,8 +159,8 @@ class Diagram:
         return False
 
     def change_node_name(self, node, new_name):
-        """ Changes the name attribute of the node (destination).
-            Updates the diagram's node dictionnary.
+        """ Change the name attribute of the node (destination).
+            Update the diagram's node dictionary.
         """
         if node.name in self.nodes.keys():
             del self.nodes[node.name]

@@ -1,0 +1,19 @@
+def number_of_positive_elements(measurement_report:list)->int  # header_color = "#80FF80"
+number_of_positive_elements.position(187,236)
+number_of_positive_elements.dimension(398,39)
+
+def number_of_negative_elements(measurement_report:list)->int  # header_color = "#8080ff"
+number_of_negative_elements.position(187,482)
+number_of_negative_elements.dimension(398,39)
+
+def comparator(nb_positive:int,nb_negative:int)->bool
+comparator.position(700,349)
+comparator.dimension(180,58)
+
+node(report:list,(98,407))
+node(trend:bool,(1000,407))
+number_of_positive_elements<0---report
+number_of_positive_elements>---comparator<0
+number_of_negative_elements<0---report
+number_of_negative_elements>---comparator<1
+comparator>---trend

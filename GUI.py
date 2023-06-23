@@ -20,7 +20,7 @@ COLOR_OUTLINE = "#FFFF00"
 
 
 def message(message, destination=None):
-    """ Displays the message in the console or in the text box on Tkinter.
+    """ Display the message in the console or in the text box on Tkinter.
     """
     if destination is None:
         print(message)
@@ -117,8 +117,8 @@ class Window:
         return WIDTH, HEIGHT
 
     def auto_resize_blocks(self):
-        """ Scans all function_blocks and automatically resizes those that do not have dimensions (to []).
-            Takes into account the font size.
+        """ Scan all function_blocks and automatically resizes those that do not have dimensions (to []).
+            Take into account the font size.
             height: function of the number of entries + 1
             width: function of the maximum number of characters of the longest entry or title
         """
@@ -138,11 +138,11 @@ class Window:
                 function.dimension = (max_width, max_height)
 
     def position_functions_nodes(self):
-        """ Positions the nodes linked to the functions.
+        """ Position the nodes linked to the functions.
         """
-        # Places the nodes of the functions
+        # Place the nodes of the functions
         for function in self.diagram.functions.values():
-            # Benchmarks: Body frame
+            # Benchmark: Body frame
             if function.position is not None:
                 x, y = function.position
                 function_width, function_height = function.dimension
@@ -150,7 +150,7 @@ class Window:
                 y_entry = y + self.title_char_height + self.MARGIN
 
                 for entry in function.entries:
-                    # Updates the positions of the points in the block
+                    # Update the positions of the points in the block
                     entry.position = [x_entry-self.MARGIN,
                                       y_entry + self.text_char_height//2]
                     entry.free = False
@@ -189,10 +189,10 @@ class Window:
                 function.position[1] = round(
                     free_height * ratio) + self.MARGIN_UP - function.dimension[1]//2
 
-        # Positions the nodes linked to the functions
+        # Position the nodes linked to the functions
         self.position_functions_nodes()
 
-        # Calculates the position of free nodes based on the positions of related non-free nodes.
+        # Calculate the position of free nodes based on the positions of related non-free nodes.
         for node in self.diagram.nodes.values():
             if node.free and not node.fixed:
                 max_abscissas = self.WIDTH - self.MARGIN
@@ -216,14 +216,14 @@ class Window:
                     node.position[1] = sum(ordinates) / len(ordinates)
 
     def draw(self):
-        """ Updates the system display in the Tkinter window
+        """ Update the system display in the Tkinter window
         """
         try:
-            # Deletes all objects from the canvas before recreating them
+            # Delete all objects from the canvas before recreating them
             self.can.delete("all")
             self.can.configure(
                 bg=self.preferences["main background color_color"])
-            # Draws all the elements of the system
+            # Draw all the elements of the system
             self.draw_function()
             self.draw_nodes()
             self.draw_lines()
@@ -231,7 +231,7 @@ class Window:
             pass
 
     def draw_nodes(self):
-        """ Draws discs for isolated points and arrows for points linked to blocks.
+        """ Draw discs for isolated points and arrows for points linked to blocks.
         """
         police = self.preferences["police"]
         text_size = int(self.preferences["text size_int"])
@@ -251,14 +251,14 @@ class Window:
                 else:
                     self.draw_triangle(x, y, 0)
                     if '>' in node.name:
-                        self.print_label(x, y-self.MARGIN,
+                        self.print_label(x+(self.MARGIN)//3, y-self.MARGIN,
                                          node.label, node.annotation, 'w')
                     else:
                         self.print_label(x+2, y, node.label,
                                          node.annotation, 'w')
 
     def draw_triangle(self, x, y, orientation=0, color=None, d=None):
-        """ Draws an isosceles triangle. Origin = H, intersection of the main height and the base.
+        """ Draw an isosceles triangle. Origin = H, intersection of the main height and the base.
             Orientation: 0 = East, 1 = South, 2 = West, 3 = North
         """
         if color is None:
@@ -272,7 +272,7 @@ class Window:
         self.can.create_polygon(perimeter[orientation], fill=color)
 
     def print_label(self, x, y, label, annotation, anchor='nw'):
-        """ Writes the label and if necessary the type annotation separated by :
+        """ Write the label and if necessary the type annotation separated by :
         """
         police = self.preferences["police"]
         text_size = int(self.preferences["text size_int"])
@@ -292,8 +292,8 @@ class Window:
                                  anchor=anchor, fill=type_color)
 
     def draw_function(self):
-        """ Draws the function_block: Header, body frames.
-            Updates the positions of the points in the block: Inputs and outputs
+        """ Draw the function_block: Header, body frames.
+            Update the positions of the points in the block: Inputs and outputs
         """
         police = self.preferences["police"]
         title_size = int(self.preferences["title size_int"])
@@ -391,8 +391,8 @@ class Window:
                                       outline=color)
 
     def import_image(self, name):
-        """ Imports the image according to the name passed in parameter
-            Returns the refernces of the original image and the resized image.
+        """ Import the image according to the name passed in parameter
+            Return the refernces of the original image and the resized image.
         """
         file = 'images/' + name + '.png'
         image_source = Image.open(file)
@@ -415,7 +415,7 @@ class Window:
                                         command=command)
 
     def add_buttons(self):
-        """ Adds the buttons
+        """ Add the buttons
         """
         self.create_button('new', self.cmd_new)  # state:1
         self.create_button('open', self.cmd_open)  # state:1
@@ -436,7 +436,7 @@ class Window:
             button.pack(side=tki.LEFT)
 
     def lift_window(self, child_window):
-        """ Moves the parent window and the child_window in the stack.
+        """ Move the parent window and the child_window in the stack.
         """
         try:
             child_window.lift()
@@ -447,7 +447,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_new(self):
-        """ Clears the list of points and functions.
+        """ Clear the list of points and functions.
         """
         message('New diagram.', self.text_message)
         self.state = 1
@@ -456,9 +456,9 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_open(self):
-        """ Opens the selected JSON file and rebuilds the system instance.
-            Allows to choose the JSON format or the TXT
-            Returns True if the procedure succeeds otherwise False
+        """ Open the selected JSON file and rebuilds the system instance.
+            Allow to choose the JSON format or the TXT
+            Return True if the procedure succeeds otherwise False
         """
         self.can.config(cursor="arrow")
         message('Open file.', self.text_message)
@@ -482,7 +482,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_save(self):
-        """ Saves the configuration of the diagram as a file.
+        """ Save the configuration of the diagram as a file.
         """
         self.can.config(cursor="arrow")
         message('Save diagram.', self.text_message)
@@ -500,7 +500,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_add_function(self):
-        """ Adds a nex function block.
+        """ Add a nex function block.
         """
         if self.edition_in_progress == False:
             message('Create a new function.', self.text_message)
@@ -521,7 +521,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_add_node(self):
-        """ Adds a new node.
+        """ Add a new node.
         """
         if self.edition_in_progress == False:
             message('Create a new node.', self.text_message)
@@ -540,7 +540,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_add_link(self):
-        """ Adds a link between two nodes.
+        """ Add a link between two nodes.
         """
         if len(self.diagram.nodes) > 0 or len(self.diagram.functions) > 0:
             message('Select the first node.', self.text_message)
@@ -553,7 +553,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_move(self):
-        """ Allows objects to move.
+        """ Allow objects to move.
         """
         message('Select the free node or the function to move.', self.text_message)
         self.can.config(cursor="fleur")
@@ -561,7 +561,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_edit(self):
-        """ Initiates the editing of the selected object.
+        """ Initiate the editing of the selected object.
         """
         if len(self.diagram.nodes) > 0 or len(self.diagram.functions) > 0:
             message('Select the free node or the function to edit.',
@@ -574,7 +574,7 @@ class Window:
             self.lift_window(self.window_edition.window)
 
     def edit(self, destination):
-        """ Edits the selected object.
+        """ Edit the selected object.
         """
         self.memory.add(self.diagram.export_to_text())
         self.edition_in_progress = True
@@ -583,7 +583,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_erase(self):
-        """ Initiates object deletion.
+        """ Initiate object deletion.
         """
         message('Select the free node or the function to erase.',
                 self.text_message)
@@ -591,7 +591,7 @@ class Window:
         self.state = 4
 
     def erase(self, destination):
-        """ Deletes the destination object from the functions or the nodes dictionary.
+        """ Delete the destination object from the functions or the nodes dictionary.
         """
         if type(destination) == Node:
             node_to_delete = tl.key_of(self.diagram.nodes, destination)
@@ -605,7 +605,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_export(self):
-        """ Initiates exportation to image.
+        """ Initiate exportation to image.
         """
         message('Export diagram to image.', self.text_message)
         self.state = 1
@@ -613,7 +613,7 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_auto(self):
-        """ Updates automaticly the dimensions and positions of functions and nodes.
+        """ Update automatically the dimensions and positions of functions and nodes.
         """
         self.state = 1
         self.auto_resize_blocks()
@@ -716,7 +716,7 @@ class Window:
         self.tk.destroy()
 
     def cmd_keyboard_event(self, key):
-        """ Cancels operation if the user press Enter or Escape.
+        """ Cancel operation if the user press Enter or Escape.
         """
         if key in (keyboard.Key.esc, keyboard.Key.enter):
             if not self.edition_in_progress:

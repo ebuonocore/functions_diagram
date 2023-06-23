@@ -24,7 +24,7 @@ class Function_block:
                 raise Exception("The key " + k + " doesn't exist.")
 
     def search_node(self, name):
-        """ Returns the input node named name.
+        """ Return the input node named name.
         """
         for entry in self.entries:
             if entry.name == name:
@@ -32,7 +32,7 @@ class Function_block:
         return None
 
     def set_output_visibility(self, visible: bool):
-        """ Sets the output visibiliy.
+        """ Set the output visibility.
         """
         self.output.visible = visible
 
