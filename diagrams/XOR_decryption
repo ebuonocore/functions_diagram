@@ -1,0 +1,19 @@
+def xor(a,b)  # header_color = "#104010"
+xor.position(405,105)
+xor.dimension(62,58)
+
+def xor*(a,b)  # header_color = "#101040"
+xor*.position(639,189)
+xor*.dimension(62,58)
+
+node(key,(255,256))
+node(deciphered_text,(795,247))
+node(plain_text,(255,90))
+node(cipher_text,(558,163))
+xor<0---plain_text
+xor<1---key
+xor>---cipher_text
+xor*<0---cipher_text
+xor*<1---key
+xor*>---xor*>
+xor*>---deciphered_text

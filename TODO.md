@@ -1,6 +1,5 @@
 # DONE:
-TODO file
-Revue rapide des docstrings
+README
 
 # TODO:
 **Fenêtres** :  
@@ -12,6 +11,7 @@ Revue rapide des docstrings
 **GUI.py** :  
 + Mettre en place .scale sur self.can ?   
 + Un drag pour déplacer l'ensemble du diagram ? avec scrollregion ?  
++ texte alignement : Proposer de justifier le nom des noeuds libres
   
 **OS** : 
 + Vérifier si accès aux chemins correct sur Windows  
