@@ -7,7 +7,7 @@ img[src*='#right'] {
 }
 </style>
 
-![ex1](/assets/logo_fd_dark.svg#right)
+![ex1](/assets/logo_fd_dark_bckgd.svg#right)
 # Functions diagram
 
 Functions-diagram is a Python program for graphically representing functions by specifying the input and output types.  
@@ -17,8 +17,49 @@ The graphical representation can be exported in SVG format.
 
 ## Description
 ### Example of simple diagram
+![example_XOR_simple_encryption](/assets/example_XOR_simple_encryption.svg)  
 
-### Example of associated functions
+This diagram represents of the following code:  
+```{python} 
+cipher_Text = xor(plain_text, key)
+```
+We can gess that the <code>xor</code> function takes two parameters and returns a value.
+### Example of associated functions  
+Another example involving a second call to the <code>xor</code> function.  
+![example_XOR_decryption](/assets/example_XOR_decryption.svg)  
+Here is the corresponding code:
+```{python} 
+cipher_Text = xor(plain_text, key)
+deciphered_text = xor(cipher_Text, key)
+```
+
+The same diagram with type indications and the corresponding code.  
+![example_XOR_decryption](/assets/example_XOR_decryption_type_hints.svg)  
+
+```{python} 
+def xor(a: int, b: int) -> int:
+    """
+    Return the bitwise operation xor on the two positive integers a and b.
+
+    >>> xor(8, 7)
+    15
+
+    >>> xor(7, 3)
+    4
+    """
+    return a ^ b
+
+cipher_Text = xor(plain_text, key)
+deciphered_text = xor(cipher_Text, key)
+```
+
+The code and diagram are consistent with the signature of the <code>xor</code> function.  
+```{python} 
+>>> import inspect
+>>> inspect.signature(xor)
+<Signature (a: int, b: int) -> int>
+```
+
 
 ### The buttons
 ![new](/images/new.png) Create a new file  
@@ -53,8 +94,10 @@ The programme is now operational.
 + Automatic positioning of elements
 + Settings and help
 
-Still to do :
+## Roadmap
 + Enable zooming and shifting of the whole layout 
++ Set the spacing of elements during automatic placement
++ Allow the names of free noueds to be justified
 
 ## License
 
