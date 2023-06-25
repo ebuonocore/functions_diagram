@@ -2,6 +2,12 @@
 README
 
 # TODO:
+**ReadMe**
+Mettre en place l'alternative d'insertion d'image selon le background
+https://github.blog/changelog/2022-05-19-specify-theme-context-for-images-in-markdown-beta/
+
+A*Justifier le logo à droite à côté du titre.
+
 **Fenêtres** :  
 + Vérifier les mises en forme (taille des boutons)  
   
