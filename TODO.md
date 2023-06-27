@@ -8,7 +8,8 @@ https://github.blog/changelog/2022-05-19-specify-theme-context-for-images-in-mar
 
 A*Justifier le logo à droite à côté du titre.
 
-**Fenêtres** :  
+**Fenêtres** :
++ Export to SVG : Changer 'MArge' pour 'Margin'. Veiller à ce que les assets du readme soient bons.
 + Vérifier les mises en forme (taille des boutons)  
   
 **Options** :  

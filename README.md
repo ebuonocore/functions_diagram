@@ -1,13 +1,16 @@
-# Functions diagram 
- 
- Functions-diagram is a Python program for graphically representing functions by specifying the input and output types.  
- Elements (nodes and functions) can be linked and connected to each other.  
- The graphical representation can be exported in SVG format.  
+<div style="width:100%;border-collapse:separate;border:solid 2px;border-radius:14px;">
+  <div style="text-align: center; vertical-align: middle;"><h2>Functions diagram</h2></div>
+</div>
+<br>
+
+Functions-diagram is a Python program for graphically representing functions by specifying the input and output names and types.  
+Elements (nodes and functions) can be linked and connected to each other.   
+The graphical representation can be exported in SVG format.  
  
 <div style="text-align: center">
-<a href="https://github.com/ebuonocore/functions_diagram">
-<img src="assets/logo_fd_dark_bckgd.svg">
-</a>
+    <a href="https://github.com/ebuonocore/functions_diagram">
+        <img src="readme/assets/logo_fd_dark_bckgd.svg">
+    </a>
 </div>
 
 
@@ -15,7 +18,9 @@
 * [Description](#description)
   * [Example of simple diagram](#example-of-simple-diagram)
   * [Example of associated functions](#example-of-associated-functions)
+  * [A more complete example](#a-more-complete-example)
 * [Buttons](#buttons)
+  * [Export diagram to image (.SVG)](readme/export_SVG.md)
 * [Backup file format](#backup-file-format)
 * [Author](#author)
 * [Project status](#project-status)
@@ -24,16 +29,16 @@
 
 ## Description
 ### Example of simple diagram
-![example_XOR_simple_encryption](/assets/example_XOR_simple_encryption.svg)  
+![example_XOR_simple_encryption](/readme/assets/example_XOR_simple_encryption.svg)  
 
 This diagram represents the call of a <code>xor</code> function:  
 ```{python} 
-cipher_Text = xor(plain_text, key)
+cipher_text = xor(plain_text, key)
 ```
 We can gess that this function takes two parameters and returns a value.
 ### Example of associated functions  
 Another example involving a second call to the <code>xor</code> function.  
-![example_XOR_decryption](/assets/example_XOR_decryption.svg)  
+![example_XOR_decryption](/readme/assets/example_XOR_decryption.svg)  
 Here is the corresponding code:
 ```{python} 
 cipher_Text = xor(plain_text, key)
@@ -41,7 +46,7 @@ deciphered_text = xor(cipher_Text, key)
 ```
 
 The same diagram with type indications and the corresponding code.  
-![example_XOR_decryption](/assets/example_XOR_decryption_type_hints.svg)  
+![example_XOR_decryption](/readme/assets/example_XOR_decryption_type_hints.svg)  
 
 ```{python} 
 def xor(a: int, b: int) -> int:
@@ -67,12 +72,14 @@ The code and diagram are consistent with the signature of the <code>xor</code> f
 <Signature (a: int, b: int) -> int>
 ```
 
+### A more complete example
+
 
 ## Buttons
 ![new](/images/new.png) Create a new file  
 ![open](/images/open.png) Open a file  
 ![save](/images/save.png) Save file. See "Backup file format" below.    
-![export](/images/export.png) Export diagram to image (.SVG)  
+![export](/images/export.png) [Export diagram to image (.SVG)](readme/export_SVG.md)  
 ![move](/images/move.png) Move function or node  
 ![add_function](/images/add_function.png) Add a function  
 ![add_node](/images/add_node.png) Add a free node  
@@ -103,8 +110,9 @@ The programme is operational.
 
 ## Roadmap
 - [ ] Enable zooming and shifting of the whole layout 
-- [ ] ESet the spacing of elements during automatic placement
-- [ ] EAllow the names of free noueds to be justified
+- [ ] Multi-select items to move or delete them
+- [ ] Set the spacing of elements for automatic placement
+- [ ] Allow the names of free nodes to be justified
 
 ## License
 

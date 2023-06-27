@@ -1,8 +1,8 @@
-def number_of_positive_elements(measurement_report:list)->int  # header_color = "#80FF80"
+def number_of_positive_elements(measurement_report:list)->int  # header_color = "#40A040"
 number_of_positive_elements.position(187,236)
 number_of_positive_elements.dimension(398,39)
 
-def number_of_negative_elements(measurement_report:list)->int  # header_color = "#8080ff"
+def number_of_negative_elements(measurement_report:list)->int  # header_color = "#4040A0"
 number_of_negative_elements.position(187,482)
 number_of_negative_elements.dimension(398,39)
 
