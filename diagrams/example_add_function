@@ -1,0 +1,4 @@
+def my_function(param1:int,param2:float,param3:str)->list
+my_function.position(100,100)
+my_function.dimension(174,77)
+

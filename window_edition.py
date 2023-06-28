@@ -15,38 +15,43 @@ class Window_edition(Window_pattern):
             self.cmd_cancel()
         self.parameters = dict()
         self.entries = dict()
-        self.widget_grid = dict()  # keys: widget / values : tuple(line, column on the grid)
+        self.widget_grid = (
+            dict()
+        )  # keys: widget / values : tuple(line, column on the grid)
         self.next_entry_to_add = ""  # Name of the next node to add
         self.draw_grid()
         rootx = self.parent.can.winfo_rootx()
         rooty = self.parent.can.winfo_rooty()
-        win_width, win_height = self.window_dimension(
-            self.parent.tk.geometry())
+        win_width, win_height = self.window_dimension(self.parent.tk.geometry())
         if type(self.destination) == Node:
             self.window.geometry(
-                "300x140+{}+{}".format(rootx+win_width-300-self.MARGE, rooty+self.MARGE))
+                "300x140+{}+{}".format(
+                    rootx + win_width - 300 - self.MARGE, rooty + self.MARGE
+                )
+            )
         elif type(self.destination) == Function_block:
-            height = (len(self.widget_grid)+1) * \
-                self.parent.text_char_height + 40
+            height = (len(self.widget_grid) + 1) * self.parent.text_char_height + 40
             self.window.geometry(
-                "300x{}+{}+{}".format(height, rootx+win_width-300-self.MARGE, rooty+self.MARGE))
+                "300x{}+{}+{}".format(
+                    height, rootx + win_width - 300 - self.MARGE, rooty + self.MARGE
+                )
+            )
         self.resize_height()
 
     def draw_grid(self):
-        position = str(
-            self.destination.position[0]) + ',' + str(self.destination.position[1])
-        self.parameters["name"] = self.create_entry(
-            0, "Name", self.destination.name)
-        self.parameters["name"].configure(state='disabled')
+        position = (
+            str(self.destination.position[0]) + "," + str(self.destination.position[1])
+        )
+        self.parameters["name"] = self.create_entry(0, "Name", self.destination.name)
+        self.parameters["name"].configure(state="disabled")
         self.parameters["name"].config(bg=self.colors["LABEL"])
-        self.parameters["label"] = self.create_entry(
-            1, "Label", self.destination.label)
+        self.parameters["label"] = self.create_entry(1, "Label", self.destination.label)
         self.parameters["label"].bind("<FocusOut>", self.check_label)
-        self.parameters["position"] = self.create_entry(
-            2, "Position", str(position))
+        self.parameters["position"] = self.create_entry(2, "Position", str(position))
         self.parameters["position"].bind("<FocusOut>", self.check_position)
         self.parameters["fixed"] = self.create_box(
-            3, "Auto/Fixed", int(self.destination.fixed))
+            3, "Auto/Fixed", int(self.destination.fixed)
+        )
         # Add specfic lines for function or node
         if type(self.destination) == Node:
             self.node_parameters()
@@ -56,36 +61,47 @@ class Window_edition(Window_pattern):
 
     def function_parameters(self):
         self.entries = dict()
-        self.window.title('Edit function')
-        dimension = str(
-            self.destination.dimension[0]) + ',' + str(self.destination.dimension[1])
-        self.parameters["dimension"] = self.create_entry(
-            4, "Dimension", str(dimension))
+        self.window.title("Edit function")
+        dimension = (
+            str(self.destination.dimension[0])
+            + ","
+            + str(self.destination.dimension[1])
+        )
+        self.parameters["dimension"] = self.create_entry(4, "Dimension", str(dimension))
         self.parameters["dimension"].bind("<FocusOut>", self.check_dimension)
         if not self.destination.fixed:
-            self.parameters["dimension"].configure(state='disabled')
+            self.parameters["dimension"].configure(state="disabled")
             self.parameters["dimension"].config(bg=self.colors["LABEL"])
         self.parameters["output"] = self.create_entry(
-            5, "Output", str(self.destination.output.annotation))
+            5, "Output", str(self.destination.output.annotation)
+        )
         self.parameters["output"].bind(
-            "<FocusOut>", lambda event: self.change_node_attribut(self.destination.output, "annotation", self.parameters["output"].get()))
+            "<FocusOut>",
+            lambda event: self.change_node_attribut(
+                self.destination.output, "annotation", self.parameters["output"].get()
+            ),
+        )
         self.parameters["output_visible"] = self.create_box(
-            6, "Show/Hide Output", int(self.destination.output.visible))
+            6, "Hide/Show output", int(self.destination.output.visible)
+        )
         if self.destination.header_color is None:
             header_color = ""
         else:
             header_color = self.destination.header_color
         self.parameters["header_color"] = self.create_entry(
-            7, "Header_color", header_color)
+            7, "Header color", header_color
+        )
         self.parameters["header_color"].bind("<FocusOut>", self.check_color)
-        bt = tki.Button(self.frame, image=self.painting_can_image,
-                        command=self.colorchooser)
+        bt = tki.Button(
+            self.frame, image=self.painting_can_image, command=self.colorchooser
+        )
         bt.grid(row=7, column=2, ipadx=16)
         line_number = 8
         entry = None
         for entry in self.destination.entries:
             label_field, value_field, bt = self.create_parameter(
-                line_number, entry, button="delete")
+                line_number, entry, button="delete"
+            )
             self.entries[entry.name] = (label_field, value_field, bt)
             label_field.bind("<FocusOut>", self.update_all_entries)
             value_field.bind("<FocusOut>", self.update_all_entries)
@@ -98,16 +114,22 @@ class Window_edition(Window_pattern):
         label = tl.new_label(previous_labels)
         next_entry = Node(name=name, label=label, annotation="")
         label_field, value_field, bt = self.create_parameter(
-            line_number, next_entry, button="add")
+            line_number, next_entry, button="add"
+        )
         self.next_entry_to_add = next_entry.name
         self.entries[next_entry.name] = (label_field, value_field, bt)
 
     def node_parameters(self):
-        self.window.title('Edit node')
+        self.window.title("Edit node")
         self.parameters["annotation"] = self.create_entry(
-            4, "Annotation", self.destination.annotation)
-        self.parameters["annotation"].bind("<FocusOut>", lambda event: self.change_destination_attribut(
-            "annotation", self.parameters["annotation"].get()))
+            4, "Annotation", self.destination.annotation
+        )
+        self.parameters["annotation"].bind(
+            "<FocusOut>",
+            lambda event: self.change_destination_attribut(
+                "annotation", self.parameters["annotation"].get()
+            ),
+        )
 
     def create_entry(self, line_number, key, default_value, **kwargs):
         self.button = ""
@@ -116,8 +138,9 @@ class Window_edition(Window_pattern):
                 self.__dict__[k] = v
             else:
                 raise Exception("The key " + k + " doesn't exist.")
-        tki.Label(self.frame, text=key, anchor='w').grid(
-            row=line_number, column=0, sticky=tki.W)
+        tki.Label(self.frame, text=key, anchor="w").grid(
+            row=line_number, column=0, sticky=tki.W
+        )
         value = tki.StringVar()
         value.set(default_value)
         entry = tki.Entry(self.frame, textvariable=value)
@@ -134,8 +157,7 @@ class Window_edition(Window_pattern):
                 raise Exception("The key " + k + " doesn't exist.")
         label_var = tki.StringVar()
         label_var.set(entry.label)
-        label_field = tki.Entry(self.frame, textvariable=label_var,
-                                justify=tki.CENTER)
+        label_field = tki.Entry(self.frame, textvariable=label_var, justify=tki.CENTER)
         label_field.config(bg=self.colors["LABEL"])
         label_field.grid(row=line_number, column=0)
         self.widget_grid[label_field] = (line_number, 0)
@@ -146,12 +168,18 @@ class Window_edition(Window_pattern):
         self.widget_grid[value_field] = (line_number, 1)
         bt = None
         if self.button == "delete":
-            bt = tki.Button(self.frame, image=self.garbage_image,
-                            command=lambda: self.delete_line(line_number, entry))
+            bt = tki.Button(
+                self.frame,
+                image=self.garbage_image,
+                command=lambda: self.delete_line(line_number, entry),
+            )
             bt.grid(row=line_number, column=2, ipadx=16)
         elif self.button == "add":
-            bt = tki.Button(self.frame, image=self.add_image,
-                            command=lambda: self.add_line(line_number))
+            bt = tki.Button(
+                self.frame,
+                image=self.add_image,
+                command=lambda: self.add_line(line_number),
+            )
             bt.grid(row=line_number, column=2, ipadx=16)
         return label_field, value_field, bt
 
@@ -162,12 +190,18 @@ class Window_edition(Window_pattern):
                 self.__dict__[k] = v
             else:
                 raise Exception("The key " + k + " doesn't exist.")
-        tki.Label(self.frame, text=key, anchor='w').grid(
-            row=line_number, column=0, sticky=tki.W)
+        tki.Label(self.frame, text=key, anchor="w").grid(
+            row=line_number, column=0, sticky=tki.W
+        )
         value = tki.IntVar()
         value.set(default_value)
         box = tki.Checkbutton(
-            self.frame, variable=value, onvalue=1, offvalue=0, command=lambda: self.check_box(key, value.get()))
+            self.frame,
+            variable=value,
+            onvalue=1,
+            offvalue=0,
+            command=lambda: self.check_box(key, value.get()),
+        )
         box.grid(sticky=tki.W, row=line_number, column=1)
         return box
 
@@ -179,8 +213,7 @@ class Window_edition(Window_pattern):
             self.tk.after(20, self.close_window)
 
     def validate_edition(self, grid_position):
-        """ Change focus twice on different entries to ensure changes are committed.
-        """
+        """Change focus twice on different entries to ensure changes are committed."""
         widget_focus = tl.key_of(self.widget_grid, grid_position)
         if widget_focus is not None:
             widget_focus.focus_set()
@@ -230,8 +263,8 @@ class Window_edition(Window_pattern):
         self.parent.draw()
 
     def is_like_tuple(self, value):
-        """ Return True if value is string castable in a tuple.
-            Otherwise, return False.
+        """Return True if value is string castable in a tuple.
+        Otherwise, return False.
         """
         couple = tl.coordinates(value)
         if couple is not None and len(couple) == 2:
@@ -247,8 +280,8 @@ class Window_edition(Window_pattern):
         self.change_destination_attribut("header_color", color)
 
     def check_name(self):
-        """ Test if this name is already taken by another function.
-            Validate it if this is not the case, otherwise, propose a new free name.
+        """Test if this name is already taken by another function.
+        Validate it if this is not the case, otherwise, propose a new free name.
         """
         if type(self.destination) == Node:
             previous_names = self.diagram.nodes.keys()
@@ -256,20 +289,19 @@ class Window_edition(Window_pattern):
             previous_names = self.diagram.functions.keys()
         label = self.parameters["label"].get()
         name = self.parameters["name"].get()
-        if label != name.split('*')[0]:
+        if label != name.split("*")[0]:
             # name have to be changed
             next_name = label
             if next_name in previous_names:
-                next_name = tl.new_label(previous_names, next_name+'*')
-            self.diagram.change_destination_name(
-                self.destination, next_name)
+                next_name = tl.new_label(previous_names, next_name + "*")
+            self.diagram.change_destination_name(self.destination, next_name)
 
     def check_position(self, event):
         if "position" in self.parameters.keys():
             entry = self.parameters["position"]
             value = entry.get()
             if self.is_like_tuple(value):
-                entry.config(bg='white')
+                entry.config(bg="white")
                 position = tl.coordinates(value)
                 self.change_destination_attribut("position", position)
             else:
@@ -280,7 +312,7 @@ class Window_edition(Window_pattern):
             entry = self.parameters["dimension"]
             value = entry.get()
             if self.is_like_tuple(value):
-                entry.config(bg='white')
+                entry.config(bg="white")
                 dimension = tl.coordinates(value)
                 self.change_destination_attribut("dimension", dimension)
             else:
@@ -290,11 +322,11 @@ class Window_edition(Window_pattern):
         if "label" in self.parameters.keys():
             entry = self.parameters["label"]
             value = entry.get()
-            if '*' in value or value == "":
+            if "*" in value or value == "":
                 entry.config(bg=self.colors["DANGER"])
                 return False
             else:
-                entry.config(bg='white')
+                entry.config(bg="white")
                 self.change_destination_attribut("label", value)
                 self.check_name()
                 return True
@@ -316,7 +348,7 @@ class Window_edition(Window_pattern):
                 entry.config(bg=self.colors["DANGER"])
                 return False
             else:
-                entry.config(bg='white')
+                entry.config(bg="white")
                 self.change_destination_attribut("header_color", color)
                 return True
 
@@ -325,15 +357,13 @@ class Window_edition(Window_pattern):
             if value == 1:
                 self.destination.__dict__["fixed"] = True
                 if "dimension" in self.parameters.keys():
-                    self.parameters["dimension"].configure(state='normal')
-                    self.parameters["dimension"].config(
-                        bg=self.colors["NEUTRAL"])
+                    self.parameters["dimension"].configure(state="normal")
+                    self.parameters["dimension"].config(bg=self.colors["NEUTRAL"])
             else:
                 self.destination.__dict__["fixed"] = False
                 if "dimension" in self.parameters.keys():
-                    self.parameters["dimension"].configure(state='disabled')
-                    self.parameters["dimension"].config(
-                        bg=self.colors["LABEL"])
+                    self.parameters["dimension"].configure(state="disabled")
+                    self.parameters["dimension"].config(bg=self.colors["LABEL"])
         if key == "Show/Hide Output":
             self.destination.set_output_visibility(value)
         self.update_windows()
@@ -367,12 +397,11 @@ class Window_edition(Window_pattern):
         self.update_windows()
 
     def next_entry_name(self, entry_name):
-        """ Return the name of the next entry: add one on the index after the '<' symbol
-        """
-        if '<' in entry_name:
-            sep_position = entry_name.index('<')
-            prefix = entry_name[:sep_position+1]
-            suffix = entry_name[sep_position+1:]
+        """Return the name of the next entry: add one on the index after the '<' symbol"""
+        if "<" in entry_name:
+            sep_position = entry_name.index("<")
+            prefix = entry_name[: sep_position + 1]
+            suffix = entry_name[sep_position + 1 :]
             if suffix.isdigit():
                 next_suffix = str(int(suffix) + 1)
                 return prefix + next_suffix

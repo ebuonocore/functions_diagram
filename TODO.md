@@ -1,15 +1,14 @@
 # DONE:
-README
+
 
 # TODO:
-**ReadMe**
-Mettre en place l'alternative d'insertion d'image selon le background
-https://github.blog/changelog/2022-05-19-specify-theme-context-for-images-in-markdown-beta/
-
-A*Justifier le logo à droite à côté du titre.
+**ReadME**  
+Traduire la zone en fr !!!
++ save_diagram : Format des enregistrements
++ Auto
++ Edit
 
 **Fenêtres** :
-+ Export to SVG : Changer 'MArge' pour 'Margin'. Veiller à ce que les assets du readme soient bons.
 + Vérifier les mises en forme (taille des boutons)  
   
 **Options** :  

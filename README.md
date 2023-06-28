@@ -1,7 +1,4 @@
-<div style="width:100%;border-collapse:separate;border:solid 2px;border-radius:14px;">
-  <div style="text-align: center; vertical-align: middle;"><h2>Functions diagram</h2></div>
-</div>
-<br>
+# Functions diagram
 
 Functions-diagram is a Python program for graphically representing functions by specifying the input and output names and types.  
 Elements (nodes and functions) can be linked and connected to each other.   
@@ -20,7 +17,9 @@ The graphical representation can be exported in SVG format.
   * [Example of associated functions](#example-of-associated-functions)
   * [A more complete example](#a-more-complete-example)
 * [Buttons](#buttons)
+  * [Save file](readme/save_diagram.md)     
   * [Export diagram to image (.SVG)](readme/export_SVG.md)
+  * [Add or edit elements](readme/add_edit_elements.md)  
 * [Backup file format](#backup-file-format)
 * [Author](#author)
 * [Project status](#project-status)
@@ -78,13 +77,13 @@ The code and diagram are consistent with the signature of the <code>xor</code> f
 ## Buttons
 ![new](/images/new.png) Create a new file  
 ![open](/images/open.png) Open a file  
-![save](/images/save.png) Save file. See "Backup file format" below.    
+![save](/images/save.png) [Save file](readme/save_diagram.md)     
 ![export](/images/export.png) [Export diagram to image (.SVG)](readme/export_SVG.md)  
 ![move](/images/move.png) Move function or node  
-![add_function](/images/add_function.png) Add a function  
-![add_node](/images/add_node.png) Add a free node  
+![add_function](/images/add_function.png) [Add a function](readme/add_edit_elements.md#function)  
+![add_node](/images/add_node.png) [Add a free node](readme/add_edit_elements.md#node)    
 ![add_link](/images/add_link.png) Connect two nodes  
-![edit](/images/edit.png) Edit element (node or function)  
+![edit](/images/edit.png) [Edit element (node or function)](readme/add_edit_elements.md)    
 ![erase](/images/erase.png) Delete element (node, function or connexion)  
 ![undo](/images/undo.png) Undo  
 ![redo](/images/redo.png) Redo  
@@ -92,8 +91,7 @@ The code and diagram are consistent with the signature of the <code>xor</code> f
 ![configuration](/images/configuration.png) Edit settings  
 ![information](/images/information.png) Show informations  
 
-## Backup file format
-
+!!! Certaines opérations nécessitent de sé"lection une destination dans un premier temps. Vous pouvez quitter ce mode en cliquant droit ou en appuyant sur les touches Entrée ou Esc.
 
 ## Author
 Eric Buonocore
