@@ -1,12 +1,12 @@
 class Node:
-    """ Associated nodes: Entries or output of function-blocks.
-        Free nodes: Not in functions.
+    """Associated nodes: Entries or output of function-blocks.
+    Free nodes: Not in functions.
     """
 
     def __init__(self, **kwargs):
-        self.name = ''
-        self.label = ''
-        self.annotation = ''
+        self.name = ""
+        self.label = ""
+        self.annotation = ""
         # True if it's a free node (not in a function-block).
         self.free = False
         # False if the node is hided. True if it's visible.

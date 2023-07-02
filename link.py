@@ -1,6 +1,6 @@
 class Link:
-    """ Link between two nodes in self.nodes list.
-        self.position is the middle of the nodes
+    """Link between two nodes in self.nodes list.
+    self.position is the middle of the nodes
     """
 
     def __init__(self, **kwargs):
@@ -16,7 +16,7 @@ class Link:
         self.update_positions()
 
     def update_positions(self):
-        """ Update the position of the link."""
+        """Update the position of the link."""
         if len(self.nodes) == 2:
             if self.nodes[0].position == [None, None]:
                 return list()

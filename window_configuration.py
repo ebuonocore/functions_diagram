@@ -5,29 +5,30 @@ import tools as tl
 from tkinter import colorchooser
 
 
-class Window_configuration():
+class Window_configuration:
     def __init__(self, parent_window):
         self.parent = parent_window
         self.tk = parent_window.tk
         self.window = tki.Toplevel(self.tk)
-        self.window.title('Configuration')
+        self.window.title("Configuration")
         self.window.resizable(height=True, width=True)
         self.window.bind("<Return>", lambda event: self.cmd_commit())
         self.parent.tk.update_idletasks()
         self.MARGE = 4
-        self.colors = {"DANGER": "pink",
-                       "LABEL": "lightgrey", "NEUTRAL": "white"}
-        file = 'images/painting_can.png'
+        self.colors = {"DANGER": "pink", "LABEL": "lightgrey", "NEUTRAL": "white"}
+        file = "images/painting_can.png"
         image = Image.open(file)
         self.painting_can_image = ImageTk.PhotoImage(image)
         rootx = self.parent.can.winfo_rootx()
         rooty = self.parent.can.winfo_rooty()
         can_height = self.parent.can.winfo_height()
-        win_width, win_height = self.window_dimension(
-            self.parent.tk.geometry())
-        height = min(400, can_height-2*self.MARGE-40)
+        win_width, win_height = self.window_dimension(self.parent.tk.geometry())
+        height = min(400, can_height - 2 * self.MARGE - 40)
         self.window.geometry(
-            "400x{}+{}+{}".format(height, rootx+win_width-400-self.MARGE, rooty+self.MARGE))
+            "400x{}+{}+{}".format(
+                height, rootx + win_width - 400 - self.MARGE, rooty + self.MARGE
+            )
+        )
         self.preferences = tl.load_preferences()  # dict()
         self.frame = tl.ScrollableFrame(self.window)
         self.pref_cells = dict()  # keys : pref_key, values : tki.Entry
@@ -36,16 +37,24 @@ class Window_configuration():
         self.lines = self.build_frame()
         self.frame.pack(fill=tki.BOTH, expand=True)
         self.bt_frame = tki.Frame(
-            self.window, relief=tki.RAISED, borderwidth=1, width=300, height=40)
+            self.window, relief=tki.RAISED, borderwidth=1, width=300, height=40
+        )
         # Build the buttons
-        self.dark_default_button = tki.Button(self.bt_frame, text="Default "+chr(0x1F316),
-                                              command=lambda: self.cmd_default('dark'))
+        self.dark_default_button = tki.Button(
+            self.bt_frame,
+            text="Default " + chr(0x1F316),
+            command=lambda: self.cmd_default("dark"),
+        )
         self.dark_default_button.pack(side=tki.RIGHT, padx=5, pady=5)
-        self.light_default_button = tki.Button(self.bt_frame, text="Default "+chr(0x263C),
-                                               command=lambda: self.cmd_default('light'))
+        self.light_default_button = tki.Button(
+            self.bt_frame,
+            text="Default " + chr(0x263C),
+            command=lambda: self.cmd_default("light"),
+        )
         self.light_default_button.pack(side=tki.RIGHT, padx=5, pady=5)
-        self.validate_button = tki.Button(self.bt_frame, text="Ok",
-                                          command=self.cmd_commit)
+        self.validate_button = tki.Button(
+            self.bt_frame, text="Ok", command=self.cmd_commit
+        )
         self.validate_button.pack(side=tki.RIGHT, padx=5, pady=5)
         self.bt_frame.pack(side=tki.BOTTOM, fill=tki.BOTH, expand=False)
 
@@ -54,9 +63,8 @@ class Window_configuration():
         for pref_key, pref_value in self.preferences.items():
             line = tki.Frame(lines)
             label_var = tki.StringVar()
-            label_var.set(pref_key.split('_')[0])
-            label_field = tki.Label(
-                line, textvariable=label_var, anchor="w",  width=24)
+            label_var.set(pref_key.split("_")[0])
+            label_field = tki.Label(line, textvariable=label_var, anchor="w", width=24)
             label_field.config(bg=self.colors["LABEL"])
             label_field.pack(side=tki.LEFT)
             if "bool" in pref_key:
@@ -64,19 +72,27 @@ class Window_configuration():
                 value.set(pref_value)
                 self.box_vars[pref_key] = value
                 self.pref_cells[pref_key] = tki.Checkbutton(
-                    line, variable=value, onvalue=1, offvalue=0, command=lambda: self.update_preferences(None))
+                    line,
+                    variable=value,
+                    onvalue=1,
+                    offvalue=0,
+                    command=lambda: self.update_preferences(None),
+                )
                 self.pref_cells[pref_key].pack(side=tki.LEFT)
             else:
                 value = tki.StringVar()
                 value.set(pref_value)
                 self.pref_cells[pref_key] = tki.Entry(
-                    line, textvariable=value, width=14)
-                self.pref_cells[pref_key].bind(
-                    "<FocusOut>", self.update_preferences)
+                    line, textvariable=value, width=14
+                )
+                self.pref_cells[pref_key].bind("<FocusOut>", self.update_preferences)
                 self.pref_cells[pref_key].pack(side=tki.LEFT)
             if "color" in pref_key:
-                bt = tki.Button(line, image=self.painting_can_image,
-                                command=(lambda p=pref_key: self.colorchooser(p)))
+                bt = tki.Button(
+                    line,
+                    image=self.painting_can_image,
+                    command=(lambda p=pref_key: self.colorchooser(p)),
+                )
                 bt.pack(side=tki.LEFT)
 
             line.pack(side=tki.TOP, fill=tki.X)
@@ -117,13 +133,13 @@ class Window_configuration():
         self.update_preferences(None)
 
     def window_dimension(self, geometry: str) -> tuple:
-        """ Take the geometry string as a parameter.
-            Return the tuple (width, height) corresponding to the dimension of the window.
-            Return (0, 0) if the the dimension is not find.
+        """Take the geometry string as a parameter.
+        Return the tuple (width, height) corresponding to the dimension of the window.
+        Return (0, 0) if the the dimension is not find.
         """
-        settings = geometry.split('+')
+        settings = geometry.split("+")
         if len(settings) == 3:
-            dimensions = settings[0].split('x')
+            dimensions = settings[0].split("x")
             if len(dimensions) == 2:
                 if dimensions[0].isdigit() and dimensions[1].isdigit():
                     return (int(dimensions[0]), int(dimensions[1]))

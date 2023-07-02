@@ -1,6 +1,7 @@
 # Functions diagram
 
 Functions-diagram is a Python program for graphically representing functions by specifying the input and output names and types.  
+Its aim is to help learners take their first steps with functions and analyse how a programme works.  
 Elements (nodes and functions) can be linked and connected to each other.   
 The graphical representation can be exported in SVG format.  
  
@@ -72,7 +73,7 @@ The code and diagram are consistent with the signature of the <code>xor</code> f
 ```
 
 ### A more complete example
-
+The example below is based on the [mypy module](https://mypy.readthedocs.io/en/stable/getting_started.html).
 
 ## Buttons
 ![new](/images/new.png) Create a new file  
@@ -91,7 +92,7 @@ The code and diagram are consistent with the signature of the <code>xor</code> f
 ![configuration](/images/configuration.png) Edit settings  
 ![information](/images/information.png) Show informations  
 
-!!! Certaines opérations nécessitent de sé"lection une destination dans un premier temps. Vous pouvez quitter ce mode en cliquant droit ou en appuyant sur les touches Entrée ou Esc.
+Some operations require you to select a destination first. You can exit this mode by right-clicking or by pressing Enter or Esc.
 
 ## Author
 Eric Buonocore
@@ -107,7 +108,7 @@ The programme is operational.
 - [x] Settings and help
 
 ## Roadmap
-- [ ] Enable zooming and shifting of the whole layout 
+- [ ] Enable zooming and shifting of the whole layout
 - [ ] Multi-select items to move or delete them
 - [ ] Set the spacing of elements for automatic placement
 - [ ] Allow the names of free nodes to be justified

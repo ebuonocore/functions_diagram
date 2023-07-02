@@ -4,7 +4,7 @@ from diagram import *
 import tools as tl
 
 
-class Window_pattern():
+class Window_pattern:
     def __init__(self, parent_window, diagram):
         self.parent = parent_window
         self.tk = parent_window.tk
@@ -14,30 +14,32 @@ class Window_pattern():
         self.window.bind("<Return>", lambda event: self.cmd_commit())
         self.parent.tk.update_idletasks()
         self.MARGE = 4
-        file = 'images/painting_can.png'
+        file = "images/painting_can.png"
         image = Image.open(file)
         self.painting_can_image = ImageTk.PhotoImage(image)
-        file = 'images/garbage.png'
+        file = "images/garbage.png"
         image = Image.open(file)
         self.garbage_image = ImageTk.PhotoImage(image)
-        file = 'images/add.png'
+        file = "images/add.png"
         image = Image.open(file)
         self.add_image = ImageTk.PhotoImage(image)
-        self.colors = {"DANGER": "pink",
-                       "LABEL": "lightgrey", "NEUTRAL": "white"}
+        self.colors = {"DANGER": "pink", "LABEL": "lightgrey", "NEUTRAL": "white"}
         self.frame = tki.Frame(self.window, width=300, height=200)
         self.bt_frame = tki.Frame(
-            self.window, relief=tki.RAISED, borderwidth=1, width=300, height=40)
+            self.window, relief=tki.RAISED, borderwidth=1, width=300, height=40
+        )
         self.frame.columnconfigure(0, weight=1)
         self.frame.columnconfigure(1, weight=1)
         self.frame.columnconfigure(2, weight=1)
         self.frame.columnconfigure(3, weight=0)
         self.frame.pack(fill=tki.BOTH, expand=False)
-        self.cancel_button = tki.Button(self.bt_frame, text="Cancel",
-                                        command=self.cmd_cancel)
+        self.cancel_button = tki.Button(
+            self.bt_frame, text="Cancel", command=self.cmd_cancel
+        )
         self.cancel_button.pack(side=tki.RIGHT, padx=5, pady=5)
-        self.validate_button = tki.Button(self.bt_frame, text="Ok",
-                                          command=self.cmd_commit)
+        self.validate_button = tki.Button(
+            self.bt_frame, text="Ok", command=self.cmd_commit
+        )
         self.validate_button.pack(side=tki.RIGHT, padx=5, pady=5)
         self.bt_frame.pack(side=tki.BOTTOM, fill=tki.BOTH, expand=False)
         # self.bt_frame.pack_propagate(False)
@@ -61,7 +63,7 @@ class Window_pattern():
         self.parent.draw()
 
     def is_like_tuple(self, value):
-        """ Return True if value is string castable in a tuple.
+        """Return True if value is string castable in a tuple.
         Otherwise, return False.
         """
         couple = tl.coordinates(value)
@@ -81,24 +83,24 @@ class Window_pattern():
             pass
 
     def window_location(self, geometry: str) -> tuple:
-        """ Take the geometry string as a parameter.
-            Return the tuple (locx, locy) corresponding to the location of the window.
-            Return (0, 0) if the the location is not find.
+        """Take the geometry string as a parameter.
+        Return the tuple (locx, locy) corresponding to the location of the window.
+        Return (0, 0) if the the location is not find.
         """
-        locations = geometry.split('+')
+        locations = geometry.split("+")
         if len(locations) == 3:
             if locations[1].isdigit() and locations[2].isdigit():
                 return (int(locations[1]), int(locations[2]))
         return (0, 0)
 
     def window_dimension(self, geometry: str) -> tuple:
-        """ Take the geometry string as a parameter.
-            Return the tuple (width, height) corresponding to the dimension of the window.
-            Return (0, 0) if the the dimension is not find.
+        """Take the geometry string as a parameter.
+        Return the tuple (width, height) corresponding to the dimension of the window.
+        Return (0, 0) if the the dimension is not find.
         """
-        settings = geometry.split('+')
+        settings = geometry.split("+")
         if len(settings) == 3:
-            dimensions = settings[0].split('x')
+            dimensions = settings[0].split("x")
             if len(dimensions) == 2:
                 if dimensions[0].isdigit() and dimensions[1].isdigit():
                     return (int(dimensions[0]), int(dimensions[1]))

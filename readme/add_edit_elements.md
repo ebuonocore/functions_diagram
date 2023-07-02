@@ -1,7 +1,7 @@
 ## [Functions diagram](../README.md)
 # Add or edit elements
 
-You can directly create nodes or functions.  
+You can create nodes or functions.  
 ![add_function](../images/add_node.png)
 ![add_function](../images/add_function.png)
 

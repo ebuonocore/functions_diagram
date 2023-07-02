@@ -2,8 +2,7 @@ from node import *
 
 
 class Function_block:
-    """ Functions of a diagram.
-    """
+    """Functions of a diagram."""
 
     def __init__(self, **kwargs):
         self.name = None  # Unique reference of the function block
@@ -24,16 +23,14 @@ class Function_block:
                 raise Exception("The key " + k + " doesn't exist.")
 
     def search_node(self, name):
-        """ Return the input node named name.
-        """
+        """Return the input node named name."""
         for entry in self.entries:
             if entry.name == name:
                 return entry
         return None
 
     def set_output_visibility(self, visible: bool):
-        """ Set the output visibility.
-        """
+        """Set the output visibility."""
         self.output.visible = visible
 
     def __repr__(self):
