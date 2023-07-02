@@ -6,7 +6,7 @@ import tools as tl
 
 
 class Diagram:
-    """ Container of de function-blocks and the nodes."""
+    """Container of de function-blocks and the nodes."""
 
     def __init__(self):
         self.functions = dict()  # keys = functions names, values = functions objects
@@ -16,27 +16,26 @@ class Diagram:
         self.links = list()  # List of links
 
     def is_empty(self):
-        """ Return True if there is no function and no nodes
-        """
+        """Return True if there is no function and no nodes"""
         return len(self.functions) == 0 and len(self.nodes) == 0
 
     def object_new_name(self, name):
-        if '*' in name:
-            star_pos = name.index('*')
+        if "*" in name:
+            star_pos = name.index("*")
             suffix = name[star_pos:]
             if suffix == "*":
-                suffix = '*0'
+                suffix = "*0"
             last_char = suffix[-1]
-            new_last_char = chr(ord(last_char)+1)
+            new_last_char = chr(ord(last_char) + 1)
             new_suffix = suffix[:-1] + new_last_char
             new_name = name[:star_pos] + new_suffix
         else:
-            new_name = name + '*0'
+            new_name = name + "*0"
         return new_name
 
     def add_function(self, new_function):
-        """ Add a new function in the diagram.
-            If the function's name already exist, increment the name and add the modifies function.
+        """Add a new function in the diagram.
+        If the function's name already exist, increment the name and add the modifies function.
         """
         if new_function.name in self.functions.keys():
             new_function.name = self.object_new_name(new_function.name)
@@ -46,8 +45,7 @@ class Diagram:
         self.add_node(new_function.output)
 
     def delete_function(self, function_name):
-        """ Delete the function in the diagram. Remove all the nodes of these function.
-        """
+        """Delete the function in the diagram. Remove all the nodes of these function."""
         function = self.functions[function_name]
         pop_result = self.functions.pop(function_name)
         if pop_result is not None:
@@ -57,8 +55,7 @@ class Diagram:
         return pop_result
 
     def add_node(self, new_node):
-        """ Add a new node in the diagram.
-        """
+        """Add a new node in the diagram."""
         if type(new_node) == Node and new_node.name not in self.nodes.keys():
             self.nodes[new_node.name] = new_node
             return True
@@ -66,8 +63,7 @@ class Diagram:
             return False
 
     def delete_node(self, node_name):
-        """ Delete the node in the diagram and all references of this node in the list of connections of the other node.
-        """
+        """Delete the node in the diagram and all references of this node in the list of connections of the other node."""
         pop_result = self.nodes.pop(node_name)
         if pop_result is not None:
             for node in self.nodes.values():
@@ -80,8 +76,7 @@ class Diagram:
         return pop_result
 
     def nodes_connection(self, A, B):
-        """ Create a link between the nodes node_A and node_B designated by the names A and B respectively.
-        """
+        """Create a link between the nodes node_A and node_B designated by the names A and B respectively."""
         if A in self.nodes.keys() and B in self.nodes.keys():
             node_A = self.nodes[A]
             node_B = self.nodes[B]
@@ -93,8 +88,7 @@ class Diagram:
         return False
 
     def disconnect_nodes(self, link):
-        """ Disconnect the two nodes of the link.
-        """
+        """Disconnect the two nodes of the link."""
         if len(link.nodes) == 2:
             node_A = link.nodes[0]
             node_B = link.nodes[1]
@@ -118,24 +112,23 @@ class Diagram:
     def export_to_text(self):
         diagram_datas = ""
         for function in self.functions.values():
-            diagram_datas += tl.create_definition_description(
-                function) + '\n'
+            diagram_datas += tl.create_definition_description(function) + "\n"
         for node in self.nodes.values():
             diagram_datas += tl.create_node_description(node)
         links = []  # list of str : descriptions of the links
         for node in self.nodes.values():
             for connection in node.connections:
-                link_description = node.name + '---' + connection.name
+                link_description = node.name + "---" + connection.name
                 if tl.reverse(link_description) not in links:
-                    diagram_datas += link_description + '\n'
+                    diagram_datas += link_description + "\n"
                     links.append(link_description)
         return diagram_datas
 
     def change_destination_name(self, destination, new_name):
-        """ Change the name attribute of the destination (a node or a function).
-            If it is a node, update the diagram's node dictionnary.
-            If it is a function, update the diagram's node dictionnary and changes the name of all these nodes.
-            Return True if change is ok. Otherwise return False.
+        """Change the name attribute of the destination (a node or a function).
+        If it is a node, update the diagram's node dictionnary.
+        If it is a function, update the diagram's node dictionnary and changes the name of all these nodes.
+        Return True if change is ok. Otherwise return False.
         """
         if type(destination) == Node:
             return self.change_node_name(destination, new_name)
@@ -149,18 +142,18 @@ class Diagram:
             function.name = new_name
             self.functions[function.name] = function
             for entry in function.entries:
-                parts = entry.name.split('<')
+                parts = entry.name.split("<")
                 if len(parts) > 0:
                     entry_prefix = parts[0]
-                    entry_suffix = '<' + parts[1]
-                self.change_node_name(entry, new_name+entry_suffix)
-            self.change_node_name(function.output, new_name+'>')
+                    entry_suffix = "<" + parts[1]
+                self.change_node_name(entry, new_name + entry_suffix)
+            self.change_node_name(function.output, new_name + ">")
             return True
         return False
 
     def change_node_name(self, node, new_name):
-        """ Change the name attribute of the node (destination).
-            Update the diagram's node dictionary.
+        """Change the name attribute of the node (destination).
+        Update the diagram's node dictionary.
         """
         if node.name in self.nodes.keys():
             del self.nodes[node.name]

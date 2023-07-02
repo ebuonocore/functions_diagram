@@ -11,12 +11,12 @@ from function_block import *
 
 
 def index_occurrence(char, string):
-    """ Return the list of indexes of occurrences of char in the string."""
+    """Return the list of indexes of occurrences of char in the string."""
     return [i for i, j in enumerate(string) if j == char]
 
 
 def function_rank(function, function_list):
-    """ Return the index of occurrence of the function in the function_list."""
+    """Return the index of occurrence of the function in the function_list."""
     rank = 0
     while rank < len(function_list):
         if function is function_list[rank]:
@@ -26,7 +26,7 @@ def function_rank(function, function_list):
 
 
 def parameters_in(line):
-    """ Return the list of strings in line separated by commas except those enclosed in parentheses.
+    """Return the list of strings in line separated by commas except those enclosed in parentheses.
     Example :
     >>> parameters_in("param1, param2, (2,4), param3, (5, 7)")
     (["param1", "param2", "(2,4)", "param3", "(5, 7)"]
@@ -35,12 +35,12 @@ def parameters_in(line):
     parameter = ""
     parenthesis = 0
     for char in line:
-        if parenthesis == 0 and char == ',':
+        if parenthesis == 0 and char == ",":
             parameters.append(parameter)
             parameter = ""
-        elif char == '(':
+        elif char == "(":
             parenthesis += 1
-        elif char == ')':
+        elif char == ")":
             parenthesis -= 1
         else:
             parameter += char
@@ -49,19 +49,19 @@ def parameters_in(line):
 
 
 def coordinates(parameters):
-    """ If parameters is a pair of integer-castable strings, then return the list of matching integers.
-        Otherwise returns None.
-        >>> coordinates("(12, 43)")
-        [12,43]
-        >>> coordinates("12, 43")
-        [12,43]
+    """If parameters is a pair of integer-castable strings, then return the list of matching integers.
+    Otherwise returns None.
+    >>> coordinates("(12, 43)")
+    [12,43]
+    >>> coordinates("12, 43")
+    [12,43]
     """
-    parameters = parameters.replace(' ', '')
-    if parameters[0] == '(' and parameters[-1] == ')':
+    parameters = parameters.replace(" ", "")
+    if parameters[0] == "(" and parameters[-1] == ")":
         parameters = parameters[1:-1]
-    pos_comma = index_occurrence(',', parameters)
+    pos_comma = index_occurrence(",", parameters)
     if len(pos_comma) == 1:
-        x_str, y_str = parameters.split(',')
+        x_str, y_str = parameters.split(",")
         if x_str.isdigit() and y_str.isdigit():
             x, y = int(x_str), int(y_str)
             return [x, y]
@@ -69,16 +69,14 @@ def coordinates(parameters):
 
 
 def character_dimensions(police, size):
-    """ Return the (width, height) of a character of a mono-spaced font."""
-    nb_pixels_height = tkfont.Font(
-        size=size, family=police).metrics('linespace')
-    nb_pixels_width = tkfont.Font(size=size, family=police).measure('X')
+    """Return the (width, height) of a character of a mono-spaced font."""
+    nb_pixels_height = tkfont.Font(size=size, family=police).metrics("linespace")
+    nb_pixels_width = tkfont.Font(size=size, family=police).measure("X")
     return (nb_pixels_width, nb_pixels_height)
 
 
 def key_of(dictionary, value):
-    """ Return the first dictionary key that matches the searched value. Otherwise, return None.
-    """
+    """Return the first dictionary key that matches the searched value. Otherwise, return None."""
     for k, v in dictionary.items():
         if v == value:
             return k
@@ -86,77 +84,77 @@ def key_of(dictionary, value):
 
 
 def create_definition_description(function):
-    """ Create the string description of a function.
-        Example : "def my_function(a:int, b:float)->float"
+    """Create the string description of a function.
+    Example : "def my_function(a:int, b:float)->float"
     """
-    description = "def " + function.name + '('
+    description = "def " + function.name + "("
     one_entry_or_more = False
     for entry in function.entries:
         one_entry_or_more = True
         description += entry.label
-        if entry.annotation != '':
-            description += ':' + entry.annotation
-        description += ','
+        if entry.annotation != "":
+            description += ":" + entry.annotation
+        description += ","
     if one_entry_or_more:
         description = description[:-1]
-    description += ')'
+    description += ")"
     if function.output is not None:
-        if function.output.visible == False or function.output.annotation != '':
-            description += '->'
+        if function.output.visible == False or function.output.annotation != "":
+            description += "->"
         if function.output.visible == False:
-            description += '*'
-        if function.output.annotation != '':
+            description += "*"
+        if function.output.annotation != "":
             description += function.output.annotation
     if function.header_color is not None:
-        description += "  # header_color = \"" + function.header_color + "\""
-    description += '\n'
+        description += '  # header_color = "' + function.header_color + '"'
+    description += "\n"
     # Add the position
     description += function.name + ".position("
-    description += str(int(function.position[0])) + ','
-    description += str(int(function.position[1])) + ')\n'
+    description += str(int(function.position[0])) + ","
+    description += str(int(function.position[1])) + ")\n"
     # Add the dimension
     if function.dimension != []:
         description += function.name + ".dimension("
-        description += str(int(function.dimension[0])) + ','
-        description += str(int(function.dimension[1])) + ')\n'
+        description += str(int(function.dimension[0])) + ","
+        description += str(int(function.dimension[1])) + ")\n"
     return description
 
 
 def create_node_description(node):
-    """ Create the string description of a free node (not in a function).
-        Example for the A node at position (800, 200): "node (A:str,(800,200))"
+    """Create the string description of a free node (not in a function).
+    Example for the A node at position (800, 200): "node (A:str,(800,200))"
     """
     if node.position is None:
-        return ''
+        return ""
     if len(node.position) < 2:
-        return ''
+        return ""
     elif node.position[0] is None and node.position[1] is None:
-        return ''
+        return ""
     elif node.free:
-        description = "node" + '(' + node.name
-        if node.annotation != '':
-            description += ':' + node.annotation
+        description = "node" + "(" + node.name
+        if node.annotation != "":
+            description += ":" + node.annotation
         # Add the position
         if node.position != [0, 0]:
-            description += ',('
-            description += str(int(node.position[0])) + ','
-            description += str(int(node.position[1])) + ')'
-        description += ')'
+            description += ",("
+            description += str(int(node.position[0])) + ","
+            description += str(int(node.position[1])) + ")"
+        description += ")"
         if node.fixed:
-            description += '  # fixed'
-        description += '\n'
+            description += "  # fixed"
+        description += "\n"
         return description
     else:
-        return ''
+        return ""
 
 
 def reverse(link_description):
-    """ Create the symmetric expression of the link between two nodes.
-        Example for "A---B" : "B---A"
+    """Create the symmetric expression of the link between two nodes.
+    Example for "A---B" : "B---A"
     """
-    nodes = link_description.split('---')
+    nodes = link_description.split("---")
     if len(nodes) == 2:
-        return nodes[1] + '---' + nodes[0]
+        return nodes[1] + "---" + nodes[0]
 
 
 def distance(origin_position, target_position):
@@ -164,20 +162,19 @@ def distance(origin_position, target_position):
     x2, y2 = target_position
     if x1 is None or y1 is None or x2 is None or y2 is None:
         return None
-    return sqrt((x2-x1)**2+(y2-y1)**2)
+    return sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 
 
 def nearest(mouse_position, targets):
-    """ Return the nearest object (and the distance) from the mouse_position.
-    """
+    """Return the nearest object (and the distance) from the mouse_position."""
     nearest_target = None
     nearest_target_distance = None
     for target in targets:
         compliant_target = False
         if type(target) == Function_block and target.position is not None:
             compliant_target = True
-            position_x = target.position[0] + target.dimension[0]//2
-            position_y = target.position[1] + target.dimension[1]//2
+            position_x = target.position[0] + target.dimension[0] // 2
+            position_y = target.position[1] + target.dimension[1] // 2
             position = (position_x, position_y)
         if type(target) == Node or type(target) == Link:
             compliant_target = True
@@ -196,8 +193,8 @@ def nearest(mouse_position, targets):
 
 
 def nearest_objet(mouse_position, diagram, target_types="movable"):
-    """ Return the nearest object from the cursor.
-        target_types can be "all" (default), "function" or "node"
+    """Return the nearest object from the cursor.
+    target_types can be "all" (default), "function" or "node"
     """
     population = []
     if target_types != "node":
@@ -207,22 +204,20 @@ def nearest_objet(mouse_position, diagram, target_types="movable"):
     if target_types == "erasable":
         population += diagram.links
 
-    nearest_target, nearest_target_distance = nearest(
-        mouse_position, population)
+    nearest_target, nearest_target_distance = nearest(mouse_position, population)
     return nearest_target
 
 
 def pointer_position(window):
-    """ Return the pointer position relative to the origin of the main canvas.
-    """
+    """Return the pointer position relative to the origin of the main canvas."""
     mouse_x = window.winfo_pointerx() - window.winfo_rootx()
     mouse_y = window.winfo_pointery() - window.winfo_rooty()
     return mouse_x, mouse_y
 
 
 def new_label(previous_labels, label=None):
-    """ Return the next_label who's not in previous label.
-        label (optional) is the current label.
+    """Return the next_label who's not in previous label.
+    label (optional) is the current label.
     """
     if label is None:
         label = "a"
@@ -232,38 +227,36 @@ def new_label(previous_labels, label=None):
 
 
 def next_label(previous_label):
-    """ Increment the last character of the previous_label string.
-    """
+    """Increment the last character of the previous_label string."""
     alphabet = [chr(i) for i in range(97, 123, 1)]
-    parts = previous_label.split('*')
+    parts = previous_label.split("*")
     substring = parts[-1]  # Part of the string to increment
     if substring == "" and len(parts) == 0:
-        return 'a'
+        return "a"
     elif substring == "" and len(parts) > 0:
-        return parts[0]+'*a'
+        return parts[0] + "*a"
     # Increment the last character of the substring
     last_char = substring[-1]
     if last_char not in alphabet:
-        last_char = 'a'
-    last_char = chr(ord(last_char)+1)
+        last_char = "a"
+    last_char = chr(ord(last_char) + 1)
     substring = substring[:-1] + last_char
-    for i in range(len(substring)-1, 0, -1):
+    for i in range(len(substring) - 1, 0, -1):
         if ord(substring[i]) >= 123:
-            substring = change_str(substring, i, 'a')
-            carry = chr(ord(substring[i-1])+1)
-            substring = change_str(substring, i-1, carry)
+            substring = change_str(substring, i, "a")
+            carry = chr(ord(substring[i - 1]) + 1)
+            substring = change_str(substring, i - 1, carry)
     if ord(substring[0]) >= 123:
-        substring = change_str(substring, len(substring)-1, 'a')
-        substring = 'a' + substring
+        substring = change_str(substring, len(substring) - 1, "a")
+        substring = "a" + substring
     if len(parts) == 1:
         return substring
     else:
-        return parts[0]+'*'+substring
+        return parts[0] + "*" + substring
 
 
 def change_str(string_source, index, char):
-    """ Return the string source with char at the index.
-    """
+    """Return the string source with char at the index."""
     source = list(string_source)
     if index > len(source):
         return string_source
@@ -272,7 +265,7 @@ def change_str(string_source, index, char):
 
 
 def cast_to_float(value_str: str, shape=None) -> float:
-    """ Take a value (str) in parameter.
+    """Take a value (str) in parameter.
     if value is castable to float, returns the float value.
     Otherwise, returns None.
     if shape is "unit" returns the float value only if it's between 0.0 and 1.0, .
@@ -284,9 +277,9 @@ def cast_to_float(value_str: str, shape=None) -> float:
     if value_str == "":
         value_str = "0"
     good_format = True
-    if len(index_occurrence('.', value_str)) < 2:
+    if len(index_occurrence(".", value_str)) < 2:
         for element in value_str:
-            if element not in '0123456789.':
+            if element not in "0123456789.":
                 good_format = False
     else:
         good_format = False
@@ -301,12 +294,12 @@ def cast_to_float(value_str: str, shape=None) -> float:
 
 
 def cast_to_int(value_str: str, format=None) -> int:
-    """ Take a value (str) in parameter.
-        if value is cast to integer, return the integer value.
-        Otherwise, returns None.
-        if format is "8bits" return the integer value only if it's between 0 and 255, .
-        >>> cast_to_int("42")
-        42
+    """Take a value (str) in parameter.
+    if value is cast to integer, return the integer value.
+    Otherwise, returns None.
+    if format is "8bits" return the integer value only if it's between 0 and 255, .
+    >>> cast_to_int("42")
+    42
     """
     if value_str.isdigit():
         value_int = int(value_str)
@@ -319,16 +312,16 @@ def cast_to_int(value_str: str, format=None) -> int:
 
 
 def cast_to_color(color_str: str, col_format=None) -> str:
-    """ Take color_str in parameter : A specific name of mcolors.CSS4_COLORS key or a rgb format.
-        Accept if col_format is "hex" and colors in hexadecimal digits.
-        Return the good format to insert the color in the fill setting of the SVG file.
-        Otherwise, return None.
-        >>> cast_to_color("green")
-        green
-        >>> cast_to_color("(42,0,255)")
-        rgb(42,0,255)
-        >>> cast_to_color("42")
-        None
+    """Take color_str in parameter : A specific name of mcolors.CSS4_COLORS key or a rgb format.
+    Accept if col_format is "hex" and colors in hexadecimal digits.
+    Return the good format to insert the color in the fill setting of the SVG file.
+    Otherwise, return None.
+    >>> cast_to_color("green")
+    green
+    >>> cast_to_color("(42,0,255)")
+    rgb(42,0,255)
+    >>> cast_to_color("42")
+    None
     """
     if col_format is None and color_str[0] == "#":
         col_format = "hex"
@@ -337,13 +330,17 @@ def cast_to_color(color_str: str, col_format=None) -> str:
             color_str = "white"
         if color_str in mcolors.CSS4_COLORS.keys():
             return color_str
-        elif color_str[0] == '(' and color_str[-1] == ')':
-            rgb = color_str[1:-1].replace(' ', '').split(',')
+        elif color_str[0] == "(" and color_str[-1] == ")":
+            rgb = color_str[1:-1].replace(" ", "").split(",")
             if len(rgb) == 3:
-                if test_compound(rgb[0]) and test_compound(rgb[1]) and test_compound(rgb[2]):
-                    return 'rgb'+color_str
+                if (
+                    test_compound(rgb[0])
+                    and test_compound(rgb[1])
+                    and test_compound(rgb[2])
+                ):
+                    return "rgb" + color_str
     elif col_format == "hex":
-        if color_str[0] == '#':
+        if color_str[0] == "#":
             if len(color_str) == 7 or len(color_str) == 4:
                 format_ok = True
                 digits = color_str[1:]
@@ -359,31 +356,35 @@ def cast_to_color(color_str: str, col_format=None) -> str:
 
 
 def cast_rgb_to_hex_color(color_str):
-    """ If color_str is a color tuple, cast and return this color in an hexadecimal format.
-        Otherwise, return the unmodified color string.
+    """If color_str is a color tuple, cast and return this color in an hexadecimal format.
+    Otherwise, return the unmodified color string.
     """
-    if color_str[0] == '(' and color_str[-1] == ')':
-        rgb = color_str[1:-1].replace(' ', '').split(',')
+    if color_str[0] == "(" and color_str[-1] == ")":
+        rgb = color_str[1:-1].replace(" ", "").split(",")
         if len(rgb) == 3:
-            if test_compound(rgb[0]) and test_compound(rgb[1]) and test_compound(rgb[2]):
+            if (
+                test_compound(rgb[0])
+                and test_compound(rgb[1])
+                and test_compound(rgb[2])
+            ):
                 R, V, B = map(hex_digit, rgb)
-                return '#'+R+V+B
+                return "#" + R + V + B
     return color_str
 
 
 def hex_digit(value_str):
-    """ value_str is a string castable to an int , 0 < value < 255
-        Cast value in hex and return the two hexadecimal digits in a string format
+    """value_str is a string castable to an int , 0 < value < 255
+    Cast value in hex and return the two hexadecimal digits in a string format
     """
     if value_str.isdigit():
         value = int(value_str)
-        return ('00'+str(hex(value)[2:]))[-2:]
-    return 'FF'
+        return ("00" + str(hex(value)[2:]))[-2:]
+    return "FF"
 
 
 def test_compound(compound: str) -> bool:
     """Take a str in parameter.
-        If compound is castable to int and lower than 256, return True.
+    If compound is castable to int and lower than 256, return True.
     """
     if compound.isdigit():
         if 0 <= int(compound) < 256:
@@ -392,30 +393,30 @@ def test_compound(compound: str) -> bool:
 
 
 def draw_box(can, x_start, y_start, x_end, y_end, **kwargs):
-    """ Create a rectangle in the canvas (can).
-        If rounded is True, create a rounded rectangle.
+    """Create a rectangle in the canvas (can).
+    If rounded is True, create a rounded rectangle.
     """
-    outline = 'black'
-    fill = 'white'
+    outline = "black"
+    fill = "white"
     rounded_up = False
     rounded_down = False
     thickness = 1
     radius = 2  # bending_radius
     step = 20
     for k, v in kwargs.items():
-        if k == 'outline':
+        if k == "outline":
             outline = v
-        elif k == 'fill':
+        elif k == "fill":
             fill = v
-        elif k == 'rounded_up':
+        elif k == "rounded_up":
             rounded_up = v
-        elif k == 'rounded_down':
+        elif k == "rounded_down":
             rounded_down = v
-        elif k == 'thickness':
+        elif k == "thickness":
             thickness = v
-        elif k == 'radius':
+        elif k == "radius":
             radius = v
-        elif k == 'step':
+        elif k == "step":
             step = v
     if rounded_up == True:
         d = max(radius, (y_end - y_start) // 2)
@@ -425,16 +426,20 @@ def draw_box(can, x_start, y_start, x_end, y_end, **kwargs):
         curve_left = []
         curve_right = []
         for i in range(step):
-            a = pi + i*pi/(step*2)
-            curve_left.append(x1+d*cos(a))
-            curve_left.append(ym+d*sin(a))
-            b = a + pi/2
-            curve_right.append(x2+d*cos(b))
-            curve_right.append(ym+d*sin(b))
-        vertices = [x_start, y_end, x_start, ym] + curve_left + [x1,
-                                                                 y_start, x2, y_start] + curve_right + [x_end, ym, x_end, y_end]
-        can.create_polygon(vertices,
-                           outline=outline, fill=fill, width=thickness)
+            a = pi + i * pi / (step * 2)
+            curve_left.append(x1 + d * cos(a))
+            curve_left.append(ym + d * sin(a))
+            b = a + pi / 2
+            curve_right.append(x2 + d * cos(b))
+            curve_right.append(ym + d * sin(b))
+        vertices = (
+            [x_start, y_end, x_start, ym]
+            + curve_left
+            + [x1, y_start, x2, y_start]
+            + curve_right
+            + [x_end, ym, x_end, y_end]
+        )
+        can.create_polygon(vertices, outline=outline, fill=fill, width=thickness)
     elif rounded_down == True:
         d = max(radius, 2)
         x1 = x_start + d
@@ -443,24 +448,29 @@ def draw_box(can, x_start, y_start, x_end, y_end, **kwargs):
         curve_left = []
         curve_right = []
         for i in range(step):
-            a = pi/2 + i*pi/(step*2)
-            curve_left.append(x1+d*cos(a))
-            curve_left.append(ym+d*sin(a))
-            b = i*pi/(step*2)
-            curve_right.append(x2+d*cos(b))
-            curve_right.append(ym+d*sin(b))
-        vertices = [x_start, y_start, x_end, y_start, x_end, ym] + curve_right + [x2,
-                                                                                  y_end, x1, y_end] + curve_left + [x_start, y_start]
-        can.create_polygon(vertices,
-                           outline=outline, fill=fill, width=thickness)
+            a = pi / 2 + i * pi / (step * 2)
+            curve_left.append(x1 + d * cos(a))
+            curve_left.append(ym + d * sin(a))
+            b = i * pi / (step * 2)
+            curve_right.append(x2 + d * cos(b))
+            curve_right.append(ym + d * sin(b))
+        vertices = (
+            [x_start, y_start, x_end, y_start, x_end, ym]
+            + curve_right
+            + [x2, y_end, x1, y_end]
+            + curve_left
+            + [x_start, y_start]
+        )
+        can.create_polygon(vertices, outline=outline, fill=fill, width=thickness)
     else:
-        can.create_rectangle(x_start, y_start, x_end, y_end,
-                             outline=outline, fill=fill, width=thickness)
+        can.create_rectangle(
+            x_start, y_start, x_end, y_end, outline=outline, fill=fill, width=thickness
+        )
 
 
 def compare(element1, element2):
-    """ Return None if element1 and element2 are None.
-        Otherwise return the element who is not None.
+    """Return None if element1 and element2 are None.
+    Otherwise return the element who is not None.
     """
     if element1 is None and element2 is None:
         return None
@@ -471,40 +481,38 @@ def compare(element1, element2):
 
 
 def load_preferences(file=None):
-    """ Load the information stored in the preferences.json file.
-    """
+    """Load the information stored in the preferences.json file."""
     if file is None:
-        file = 'preferences.json'
-    elif file == 'dark':
-        file = 'preferences_default_dark.json'
-    elif file == 'light':
-        file = 'preferences_default_light.json'
-    with open(file, 'r') as f:
+        file = "preferences.json"
+    elif file == "dark":
+        file = "preferences_default_dark.json"
+    elif file == "light":
+        file = "preferences_default_light.json"
+    with open(file, "r") as f:
         return json.load(f)
 
 
 def write_preferences(preferences: dict):
-    """ Write the information stored in preferences dictionary 
-        in the preferences.json file
+    """Write the information stored in preferences dictionary
+    in the preferences.json file
     """
     # Serializing json
     json_object = json.dumps(preferences, indent=4)
-    with open('preferences.json', 'w') as fichier:
+    with open("preferences.json", "w") as fichier:
         fichier.write(json_object)
 
 
 class ScrollableFrame(tki.Frame):
-    """ source: https://blog.teclado.com/tkinter-scrollable-frames/
-    """
+    """source: https://blog.teclado.com/tkinter-scrollable-frames/"""
 
     def __init__(self, container, *args, **kwargs):
         super().__init__(container, *args, **kwargs)
         canvas = tki.Canvas(self)
-        scrollbar = tki.Scrollbar(
-            self, orient="vertical", command=canvas.yview)
+        scrollbar = tki.Scrollbar(self, orient="vertical", command=canvas.yview)
         self.scrollable_frame = tki.Frame(canvas)
         self.scrollable_frame.bind(
-            "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+            "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
         canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
         canvas.configure(yscrollcommand=scrollbar.set)
         canvas.pack(side="left", fill="both", expand=True)
@@ -514,13 +522,12 @@ class ScrollableFrame(tki.Frame):
 if __name__ == "__main__":
     # Tests
     print("index_occurrence : ", index_occurrence("e", "ereieoel"))
-    print("parameters_in", parameters_in(
-        "param1, param2, (2,4), param3, (5, 7)"))
+    print("parameters_in", parameters_in("param1, param2, (2,4), param3, (5, 7)"))
     print("coordinates : ", coordinates("(12, 43)"))
-    d = {1: ['r', 't'], 2: ['a', 'e', 'r'], 3: ['u']}
+    d = {1: ["r", "t"], 2: ["a", "e", "r"], 3: ["u"]}
     print(d.pop(1, None))
     print(d)
     print(new_label([]))
-    print(new_label(['a', 'b']))
-    print(new_label(['a', 'b', 'd']))
+    print(new_label(["a", "b"]))
+    print(new_label(["a", "b", "d"]))
     print(cast_rgb_to_hex_color("(42,06,255)"))

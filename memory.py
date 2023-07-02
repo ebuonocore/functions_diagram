@@ -1,5 +1,4 @@
 class Memory:
-
     def __init__(self, size=10, basic_state=""):
         if size < 5:
             size = 5
@@ -7,14 +6,14 @@ class Memory:
         self.pointer = 0
         self.bottom = size - 1
         self.top = 1
-        self.states = [None]*size
+        self.states = [None] * size
         self.states[0] = basic_state
 
     def after(self, index):
-        return (index+1) % self.size
+        return (index + 1) % self.size
 
     def before(self, index):
-        return (index-1) % self.size
+        return (index - 1) % self.size
 
     def add(self, state):
         self.pointer = self.after(self.pointer)
@@ -46,13 +45,13 @@ class Memory:
         message = ""
         for state in self.states:
             if state is None:
-                message += '_'
+                message += "_"
             else:
-                message += 'X'
-        message += '\n'
-        message += ' '*self.pointer
+                message += "X"
+        message += "\n"
+        message += " " * self.pointer
         message += "|\n"
-        message += "b:"+str(self.bottom)
-        message += " p:"+str(self.pointer)
-        message += " t:"+str(self.top)
+        message += "b:" + str(self.bottom)
+        message += " p:" + str(self.pointer)
+        message += " t:" + str(self.top)
         return message

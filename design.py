@@ -2,10 +2,10 @@ import tools as tl
 
 
 class Design:
-    """ A graph structure fed by a list of nodes and functions.
-        Gathers elements of the same area (directly connected to each other) by group instances.
-        Provides dictionaries (self.nodes_floors and self.functions_floors) to locate nodes and
-        functions by floors for a linear representation of the diagram.
+    """A graph structure fed by a list of nodes and functions.
+    Gathers elements of the same area (directly connected to each other) by group instances.
+    Provides dictionaries (self.nodes_floors and self.functions_floors) to locate nodes and
+    functions by floors for a linear representation of the diagram.
     """
 
     def __init__(self, nodes=None, functions=None):
@@ -25,8 +25,7 @@ class Design:
         self.initialize_groupes()
 
     def initialize_groupes(self):
-        """ Build groups of nodes and functions of the same area: directly connected to each other
-        """
+        """Build groups of nodes and functions of the same area: directly connected to each other"""
         # Creates a group for each node
         for node in self.nodes:
             group = Group(node)
@@ -36,17 +35,16 @@ class Design:
             group = self.group_with_node(node)
             for connected_node in node.connections:
                 if connected_node not in group.nodes:
-                    other_group = self.group_with_node(
-                        connected_node)
+                    other_group = self.group_with_node(connected_node)
                     if other_group is not None:
                         self.merge(group, other_group)
         # Browse all the groups. Search node entries of function and update the function list of the group.
         for group in self.groups:
             leave = True  # True if there is no output function node in this group
             for node in group.nodes:
-                if '>' in node.name:
+                if ">" in node.name:
                     leave = False
-                if '<' in node.name:
+                if "<" in node.name:
                     function = self.function_with_node(node)
                     if function is not None:
                         group.functions.add(function)
@@ -62,46 +60,44 @@ class Design:
             group.update_floor(0)
 
     def group_with_node(self, node):
-        """ If it exists, return the group of the node. Otherwise, returns None
-        """
+        """If it exists, return the group of the node. Otherwise, returns None"""
         for group in self.groups:
             if node in group.nodes:
                 return group
         return None
 
     def group_with_function(self, function):
-        """ If it exists, return the group of the function. Otherwise, returns None
-        """
+        """If it exists, return the group of the function. Otherwise, returns None"""
         for group in self.groups:
             if function in group.functions:
                 return group
         return None
 
     def function_with_node(self, node):
-        """ If it exists, return the function of the node. Otherwise, returns None
-        """
+        """If it exists, return the function of the node. Otherwise, returns None"""
         for function in self.functions:
             if node in function.entries or node == function.output:
                 return function
         return None
 
     def merge(self, group1, group2):
-        """ Merge all the elements of group2 in group1.
-            Delete group2 from the self.groups list.
+        """Merge all the elements of group2 in group1.
+        Delete group2 from the self.groups list.
         """
         # Set of the groups of the next floor.
         group1.next = group1.next.union(group2.next)
         # Set of the nodes of this group
         group1.nodes = group1.nodes.union(group2.nodes)
         group1.functions = group1.functions.union(
-            group2.functions)  # Set of the functions of this group
+            group2.functions
+        )  # Set of the functions of this group
         group1.floor = tl.compare(group2.floor, group2.floor)
         self.groups.remove(group2)
 
     def are_reachables(self, origin, destination):
-        """ origin and destination are nodes of the diagram.
-            If one of these nodes is not an antecedent of the other, return True.
-            Otherwise, return False.
+        """origin and destination are nodes of the diagram.
+        If one of these nodes is not an antecedent of the other, return True.
+        Otherwise, return False.
         """
         if origin not in self.nodes:
             return False
@@ -120,9 +116,9 @@ class Design:
         return destination_group.is_successor(origin)
 
     def report(self):
-        """ Return a tuple of dictionaries:
-            + functions_dict : dictionnary with the functions as keys and their floor as values.
-            + floors_dict : dictionnary whose keys are the floors and whose values are the functions that belong to them.
+        """Return a tuple of dictionaries:
+        + functions_dict : dictionnary with the functions as keys and their floor as values.
+        + floors_dict : dictionnary whose keys are the floors and whose values are the functions that belong to them.
         """
         self.max_floor = 0
         functions_dict = dict()
@@ -144,10 +140,10 @@ class Design:
 
 
 class Group:
-    """ Groups the elements (nodes and functions) of the same area: directly connected to each other.
-        A group can contain only one output function.
-        In this case, self.previous refers to the group of this function.
-        All function entries are used to determine the list self.next: List of groups on the next floor.
+    """Groups the elements (nodes and functions) of the same area: directly connected to each other.
+    A group can contain only one output function.
+    In this case, self.previous refers to the group of this function.
+    All function entries are used to determine the list self.next: List of groups on the next floor.
     """
 
     def __init__(self, node):
@@ -162,8 +158,7 @@ class Group:
         self.floor = None
 
     def update_floor(self, floor):
-        """ Update the floors of the group. Recursively call the update floor for each next group.
-        """
+        """Update the floors of the group. Recursively call the update floor for each next group."""
         if self.floor is None:
             self.floor = floor
         else:
@@ -174,12 +169,12 @@ class Group:
         for node in self.nodes:
             node.floor = self.floor
         for group in self.next:
-            group.update_floor(self.floor+1)
+            group.update_floor(self.floor + 1)
 
     def is_successor(self, node):
-        """ Recursively traverses all subsequent groups.
-            If the node appears in one of the following groups, it returns False.
-            Otherwise, it returns True.
+        """Recursively traverses all subsequent groups.
+        If the node appears in one of the following groups, it returns False.
+        Otherwise, it returns True.
         """
         if node in self.nodes:
             return False
