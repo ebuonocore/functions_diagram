@@ -102,7 +102,7 @@ For example:
 Now that we know the cost table and all the possible routes, all we have to do is find the route with the lowest cost.  
 This is what a global schematic of the problem would look like.  
 
-![Top_diagram](/readme/TSP_example/assets/TSP_diagram.svg)  
+[![Top_diagram](/readme/TSP_example/assets/TSP_diagram.svg)](readme/TSP_example/assets/TSP_diagram.svg)  
 The last function will be responsible for systematically calculating the cost of each journey.  
 After that, we'll just have to take this top-down approach a step further by specifying each of the sub-functions more precisely.  
 Click here to see a [possible resolution](/readme/TSP_example/) and the [associated diagrams](/readme/TSP_example/assets/).  
@@ -141,8 +141,7 @@ The programme is operational.
 
 ## Roadmap
 - [ ] Enable zooming and shifting of the whole layout  
-- [ ] Test  
-- [ ] Multi-select items to move or delete them  
+- [ ] Multi-select items to move or delete them  
 - [ ] Set the spacing of elements for automatic placement  
 - [ ] Allow the names of free nodes to be justified  
 
