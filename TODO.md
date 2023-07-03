@@ -1,13 +1,11 @@
 # DONE:
+ReadMe : Format des enregisrements
 
 # TODO:
 **ReadME**  
 + Version française
 + Bien vérifier le problème de liste dans le RoadMap
-+ save_diagram : Format des enregistrements
-+ Auto
 + Edit
-+ version fr
   
 **Edition noeuds**
 + Hide/Show output ne se déselectionne pas ?!
