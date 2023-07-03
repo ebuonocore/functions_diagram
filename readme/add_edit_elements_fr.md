@@ -1,4 +1,4 @@
-## [Functions diagram](../README.md)
+## [Functions diagram](../README_fr.md)
 # Ajouter ou créer des éléments
 
 Vous pouvez créer des noeuds ou des fonctions.  
@@ -55,4 +55,4 @@ Resultat:
 ![test](assets/example_add_node.svg)
 
 
-[![back](assets/back.png)](../README.md)
+[![back](assets/back.png)](../README_fr.md)
