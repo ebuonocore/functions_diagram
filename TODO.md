@@ -1,14 +1,12 @@
 # DONE:
 ReadMe : Format des enregisrements
+Edition de noeuds : Correction de la boite Hide/Show output
 
 # TODO:
 **ReadME**  
 + Version française
 + Bien vérifier le problème de liste dans le RoadMap
 + Edit
-  
-**Edition noeuds**
-+ Hide/Show output ne se déselectionne pas ?!
 
 **Options** :  
 + Espace par étage (si rien, auto) → centrer le diagramme (offset)  

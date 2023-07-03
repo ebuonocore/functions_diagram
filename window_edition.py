@@ -364,7 +364,7 @@ class Window_edition(Window_pattern):
                 if "dimension" in self.parameters.keys():
                     self.parameters["dimension"].configure(state="disabled")
                     self.parameters["dimension"].config(bg=self.colors["LABEL"])
-        if key == "Show/Hide Output":
+        if key == "Hide/Show output":
             self.destination.set_output_visibility(value)
         self.update_windows()
 
