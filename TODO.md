@@ -9,6 +9,9 @@
 + Edit
 + version fr
   
+**Edition noeuds**
++ Hide/Show output ne se déselectionne pas ?!
+
 **Options** :  
 + Espace par étage (si rien, auto) → centrer le diagramme (offset)  
 + Autoriser les boucles / feedback
