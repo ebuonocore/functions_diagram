@@ -1,12 +1,10 @@
 # DONE:
-ReadMe : Format des enregisrements
-Edition de noeuds : Correction de la boite Hide/Show output
+ReadMe, version fr
 
 # TODO:
 **ReadME**  
 + Version française
 + Bien vérifier le problème de liste dans le RoadMap
-+ Edit
 
 **Options** :  
 + Espace par étage (si rien, auto) → centrer le diagramme (offset)  

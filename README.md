@@ -1,3 +1,5 @@
+[![flag_en](/readme/assets/flag_en.png)](/README.md)
+[![flag_fr](/readme/assets/flag_fr.png)](/README_fr.md)
 # Functions diagram
 
 Functions-diagram is a Python program for graphically representing functions by specifying the input and output names and types.  
@@ -17,11 +19,10 @@ The graphical representation can be exported in SVG format.
   * [Example of simple diagram](#example-of-simple-diagram)
   * [Example of associated functions](#example-of-associated-functions)
   * [A more complete example](#a-more-complete-example)
+* [Backup file format](#backup-file-format)
 * [Buttons](#buttons)
-  * [Save file](readme/save_diagram.md)     
   * [Export diagram to image (.SVG)](readme/export_SVG.md)
   * [Add or edit elements](readme/add_edit_elements.md)  
-* [Backup file format](#backup-file-format)
 * [Author](#author)
 * [Project status](#project-status)
 * [Roadmap](#roadmap)
@@ -93,7 +94,7 @@ cost = {
     ...
 }
 ```
-From this same list of cities, we need to generate all the possible route combinations.  
+From this same list of cities, we need to generate all the possible route combinations back to the city of origin. 
 For example:
 ```{python} 
 ["Paris", "Lyon", "Marseille", ..., "Paris"]
@@ -155,27 +156,27 @@ Function nodes are designated by : ```function_name>``` for the output, and ```f
 ## Buttons
 ![new](/images/new.png) Create a new file  
 ![open](/images/open.png) Open a file  
-![save](/images/save.png) [Save file](readme/save_diagram.md)     
+![save](/images/save.png) [Save file](#backup-file-format)     
 ![export](/images/export.png) [Export diagram to image (.SVG)](readme/export_SVG.md)  
 ![move](/images/move.png) Move function or node  
 ![add_function](/images/add_function.png) [Add a function](readme/add_edit_elements.md#function)  
 ![add_node](/images/add_node.png) [Add a free node](readme/add_edit_elements.md#node)    
 ![add_link](/images/add_link.png) Connect two nodes  
 ![edit](/images/edit.png) [Edit element (node or function)](readme/add_edit_elements.md)    
-![erase](/images/erase.png) Delete element (node, function or connexion)  
+![erase](/images/erase.png) Delete element (node, function or connection)  
 ![undo](/images/undo.png) Undo  
 ![redo](/images/redo.png) Redo  
 ![auto](/images/auto.png) Place automaticly the objects on the screen  
 ![configuration](/images/configuration.png) Edit settings  
 ![information](/images/information.png) Show informations  
 
-Some operations require you to select a destination first. You can exit this mode by right-clicking or by pressing Enter or Esc.
+Some operations require you to select a destination first. You can exit this mode by right-clicking or by pressing *Enter* or *Esc*.
 
 ## Author
 Eric Buonocore
 
 ## Project status
-The programme is operational.
+The program is operational.
 - [x] Adding elements (nodes, functions)
 - [x] Interconnecting elements
 - [x] Opening and saving diagrams
