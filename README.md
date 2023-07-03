@@ -185,8 +185,8 @@ The programme is operational.
 - [x] Settings and help
 
 ## Roadmap
-- [ ] Enable zooming and shifting of the whole layout  
-- [ ] Multi-select items to move or delete them  
+- [ ] Enable zooming and shifting of the whole layout
+- [ ] Multi-select items to move or delete them  
 - [ ] Set the spacing of elements for automatic placement  
 - [ ] Allow the names of free nodes to be justified  
 
