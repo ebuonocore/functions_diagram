@@ -1,0 +1,11 @@
+def intermediate_towns(cities:list[str])->list[str]
+intermediate_towns.position(86,340)
+intermediate_towns.dimension(272,39)
+
+def permutations(stages:list[str])->list[tuple[str,...]]
+permutations.position(513,399)
+permutations.dimension(190,39)
+
+def routes(cities:list[str],permutations_stages:list[tuple[str,...]])->list[list[str]]
+routes.position(851,287)
+routes.dimension(430,58)

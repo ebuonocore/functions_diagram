@@ -126,7 +126,7 @@ def function_definition(line):
     new_function = Function_block(name=function_name, label=function_label)
     entries = []  # list of the differents parameters of the funcion
     parameters_line = line[first_open_parentheses + 1 : last_closed_parentheses]
-    parameters = parameters_line.split(",")
+    parameters = tl.split_unembed(parameters_line, ",")
     if len(parameters) > 0:
         for index, parameter in enumerate(parameters):
             if ":" in parameter:

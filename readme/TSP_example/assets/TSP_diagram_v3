@@ -1,0 +1,12 @@
+def search_minimum(cost:dict[str,dict[str,float]],permutations_routes:list[list[str]])->tuple[float|None,list[str]]
+search_minimum.position(70,226)
+search_minimum.dimension(380,58)
+
+def print_score(score:float|None,best_route:list[str])->None
+print_score.position(70,329)
+print_score.dimension(230,58)
+
+def distance_route(cost:dict[str,dict[str,float]],route:list[str])->float
+distance_route.position(70,124)
+distance_route.dimension(330,58)
+
