@@ -1,4 +1,4 @@
-## [Functions diagram](../README.md)
+## [Functions diagram](../README_fr.md)
 # Exporter un diagramme au format SVG
 
 <br>
@@ -8,8 +8,8 @@
   </div>
     <div style="display:table-cell; vertical-align:top;">
     <ul>
-      <li>Margin: Ajouter des pixels à chacun des quatre côté.</li>
-      <li>Opacity: Régler l'opacité du fond de l'image. De 0, pour une transparence totale, à 1 pour un fond opaque.</li>
+      <li>**Margin:** Ajouter des pixels à chacun des quatre côté.</li>
+      <li>**Opacity:** Régler l'opacité du fond de l'image. De 0, pour une transparence totale, à 1 pour un fond opaque.</li>
     </ul>  
   </div>
 </div>
@@ -23,4 +23,4 @@ La même image avec les paramètres : Margin: 20 / Opacity: 0.5
 
 ![example_export_SVG_2](assets/measurement_report_2.svg)
 
-[![back](assets/back.png)](../README.md)
+[![back](assets/back.png)](../README_fr.md)
