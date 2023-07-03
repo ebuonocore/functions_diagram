@@ -8,8 +8,8 @@
   </div>
     <div style="display:table-cell; vertical-align:top;">
     <ul>
-      <li>**Margin:** Adds pixels to all four sides.</li>
-      <li>**Opacity:** Regulates the opacity of the background. Ranges from 0 for a transparent background to 1 for an opaque background.</li>
+      <li><b>Margin:</b> Adds pixels to all four sides.</li>
+      <li><b>Opacity:</b> Regulates the opacity of the background. Ranges from 0 for a transparent background to 1 for an opaque background.</li>
     </ul>  
   </div>
 </div>

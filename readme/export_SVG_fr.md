@@ -8,8 +8,8 @@
   </div>
     <div style="display:table-cell; vertical-align:top;">
     <ul>
-      <li>**Margin:** Ajouter des pixels à chacun des quatre côté.</li>
-      <li>**Opacity:** Régler l'opacité du fond de l'image. De 0, pour une transparence totale, à 1 pour un fond opaque.</li>
+      <li><b>Margin :</b> Ajouter des pixels à chacun des quatre côté.</li>
+      <li><b>Opacity :</b> Régler l'opacité du fond de l'image. De 0, pour une transparence totale, à 1 pour un fond opaque.</li>
     </ul>  
   </div>
 </div>
