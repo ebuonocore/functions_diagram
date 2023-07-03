@@ -1,0 +1,10 @@
+def create_cost_table(cities:list[str])->dict[str,dict[str,float|None]]
+create_cost_table.position(217,48)
+create_cost_table.dimension(258,39)
+
+def get_city_coord(city: str) -> tuple[float, float] | None
+get_city_coord.position(436,234)
+
+def get_distance_between_cities(city1: str, city2: str) -> float | None
+get_distance_between_cities.position(236,234)
+

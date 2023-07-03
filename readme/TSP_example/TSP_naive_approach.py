@@ -74,12 +74,9 @@ def distance_route(cost: dict[str, dict[str, float]], route: list[str]) -> float
     return distance
 
 
-def intermediate_towns(
-    cost: dict[str, dict[str, float]], town_origine: str
-) -> list[str]:
+def intermediate_towns(cities: list[str]) -> list[str]:
     """Return the list of the intermediate towns of the route."""
-    towns = cost.keys()
-    return [v for v in towns if v != town_origine]
+    return cities[1:-1]
 
 
 def permutations(stages: list[str]) -> list[tuple[str, ...]]:
@@ -88,21 +85,22 @@ def permutations(stages: list[str]) -> list[tuple[str, ...]]:
 
 
 def routes(
-    town_origine: str, permutations_stages: list[tuple[str, ...]]
+    cities: list[str], permutations_stages: list[tuple[str, ...]]
 ) -> list[list[str]]:
     """Return a list of possible routes (starting and ending in the city of origin)."""
+    town_origine = cities[0]
     return [
         [town_origine] + list(stage) + [town_origine] for stage in permutations_stages
     ]
 
 
 def search_minimum(
-    cost: dict[str, dict[str, float]], permutations_routes: list[list[str]]
+    cities: list[str], permutations_routes: list[list[str]]
 ) -> tuple[float | None, list[str]]:
     """Return the tuple consisting of the distance and the shortest path among all possible permutations."""
     distance_min = None
     route_min: list[str] = []
-    town_origine = permutations_routes[0][0]
+    town_origine = cities[0]
     for route in permutations_routes:
         distance = distance_route(cost, route)
         if distance_min is None:
@@ -138,8 +136,15 @@ if __name__ == "__main__":
     for k, v in cost.items():
         print(k, v)
     origin = cities[0]
-    stages = intermediate_towns(cost, origin)
+    stages = intermediate_towns(cities)
     permutations_stages = permutations(stages)
-    permutations_routes = routes(origin, permutations_stages)
-    score, best_route = search_minimum(cost, permutations_routes)
+    permutations_routes = routes(cities, permutations_stages)
+    score, best_route = search_minimum(cities, permutations_routes)
     print_score(score, best_route)
+
+cost = {
+    Paris: {"Paris": 0, "Lyon": 462.941, "Marseille": 772.335, ...},
+    Lyon: {"Paris": 462.941, "Lyon": 0, "Marseille": 312.659, ...},
+    Marseille: {"Paris": 772.335, "Lyon": 312.659, "Marseille": 0, ...},
+    ...
+}

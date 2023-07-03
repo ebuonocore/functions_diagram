@@ -158,6 +158,8 @@ def reverse(link_description):
 
 
 def distance(origin_position, target_position):
+    if origin_position is None or target_position is None:
+        return None
     x1, y1 = origin_position
     x2, y2 = target_position
     if x1 is None or y1 is None or x2 is None or y2 is None:
@@ -480,6 +482,35 @@ def compare(element1, element2):
         return element1
 
 
+def split_unembed(line: str, separator: str = ",") -> list[str]:
+    """Split a string line with the separator when it's not between two brackets or two parenthesis.
+    Return a list of strings."""
+    elements = []
+    last_element = ""
+    nb_opened_brackets = 0
+    nb_opened_parenthesis = 0
+    for char in line:
+        if char == separator and nb_opened_brackets == 0 and nb_opened_parenthesis == 0:
+            elements.append(last_element)
+            last_element = ""
+        elif char == "(":
+            nb_opened_parenthesis += 1
+            last_element += char
+        elif char == ")":
+            nb_opened_parenthesis -= 1
+            last_element += char
+        elif char == "[":
+            nb_opened_brackets += 1
+            last_element += char
+        elif char == "]":
+            nb_opened_brackets -= 1
+            last_element += char
+        else:
+            last_element += char
+    elements.append(last_element)
+    return elements
+
+
 def load_preferences(file=None):
     """Load the information stored in the preferences.json file."""
     if file is None:
@@ -521,6 +552,9 @@ class ScrollableFrame(tki.Frame):
 
 if __name__ == "__main__":
     # Tests
+    print(split_unembed("a, b,(f, g), h", ","))
+    print(split_unembed("a, b, [(c, d), e, (f, g)], i, j", ","))
+    """
     print("index_occurrence : ", index_occurrence("e", "ereieoel"))
     print("parameters_in", parameters_in("param1, param2, (2,4), param3, (5, 7)"))
     print("coordinates : ", coordinates("(12, 43)"))
@@ -531,3 +565,4 @@ if __name__ == "__main__":
     print(new_label(["a", "b"]))
     print(new_label(["a", "b", "d"]))
     print(cast_rgb_to_hex_color("(42,06,255)"))
+    """

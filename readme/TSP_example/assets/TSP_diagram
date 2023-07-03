@@ -1,0 +1,15 @@
+def create_cost_table(cities:list[str])->dict[str,dict[str,float|None]]
+create_cost_table.position(217,48)
+create_cost_table.dimension(258,39)
+
+def all_routes(cities:list[str])->list[list[str]]
+routes.position(851,287)
+routes.dimension(430,58)
+
+def search_minimum(cost:dict[str,dict[str,float]],permutations_routes:list[list[str]])->tuple[float|None,list[str]]
+search_minimum.position(70,226)
+search_minimum.dimension(380,58)
+
+def print_score(score:float|None,best_route:list[str])->None
+print_score.position(70,329)
+print_score.dimension(230,58)
