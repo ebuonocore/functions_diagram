@@ -23,7 +23,7 @@ class Window_configuration:
         rooty = self.parent.can.winfo_rooty()
         can_height = self.parent.can.winfo_height()
         win_width, win_height = self.window_dimension(self.parent.tk.geometry())
-        height = min(400, can_height - 2 * self.MARGE - 40)
+        height = min(460, can_height - 2 * self.MARGE - 40)
         self.window.geometry(
             "400x{}+{}+{}".format(
                 height, rootx + win_width - 400 - self.MARGE, rooty + self.MARGE

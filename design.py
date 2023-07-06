@@ -9,6 +9,7 @@ class Design:
     """
 
     def __init__(self, nodes=None, functions=None):
+        self.status = 100  # 100 = Running, 200 = Success, 300 = Warning, 400 = Error
         self.groups = []  # Group aggregator
         self.leaves = []  # List of groups without output function nodes
         self.max_floor = -1
@@ -56,8 +57,14 @@ class Design:
                 next_group = self.group_with_node(function.output)
                 if next_group is not None:
                     group.next.add(next_group)
+        status = self.status
+        Group.status = 100
         for group in self.leaves:
-            group.update_floor(0)
+            status = group.update_floor(0)
+        if status < 200:
+            self.status = 200
+        else:
+            self.status = status
 
     def group_with_node(self, node):
         """If it exists, return the group of the node. Otherwise, returns None"""
@@ -117,8 +124,8 @@ class Design:
 
     def report(self):
         """Return a tuple of dictionaries:
-        + functions_dict : dictionnary with the functions as keys and their floor as values.
-        + floors_dict : dictionnary whose keys are the floors and whose values are the functions that belong to them.
+        + functions_dict : dictionary with the functions as keys and their floor as values.
+        + floors_dict : dictionary whose keys are the floors and whose values are the functions that belong to them.
         """
         self.max_floor = 0
         functions_dict = dict()
@@ -143,8 +150,10 @@ class Group:
     """Groups the elements (nodes and functions) of the same area: directly connected to each other.
     A group can contain only one output function.
     In this case, self.previous refers to the group of this function.
-    All function entries are used to determine the list self.next: List of groups on the next floor.
+    All function entries are used to determine self.next: List of groups on the next floor.
     """
+
+    status = 100  # 100 = Running, 200 = Success, 300 = Warning, 400 = Error
 
     def __init__(self, node):
         # Previous floor group: Group of the output node function if it exists.
@@ -156,8 +165,9 @@ class Group:
         self.functions = set()
         # floor of this group: Relative position in the diagram, from left (floor 0) to right.
         self.floor = None
+        self.antecedent = set()  # Set of the antecedent groups
 
-    def update_floor(self, floor):
+    def update_floor(self, floor, antecedent=set()):
         """Update the floors of the group. Recursively call the update floor for each next group."""
         if self.floor is None:
             self.floor = floor
@@ -168,8 +178,15 @@ class Group:
                 function.floor = self.floor
         for node in self.nodes:
             node.floor = self.floor
-        for group in self.next:
-            group.update_floor(self.floor + 1)
+        # Update antecedent and detect cycles
+        if self in antecedent:
+            Group.status = 400  # Cycle detected: This group is an antecedent of itself
+            return Group.status
+        self.antecedent = antecedent.union(self.antecedent)
+        if Group.status < 200:  # If the status is not Warning or Error
+            for group in self.next:
+                group.update_floor(self.floor + 1, self.antecedent.union({self}))
+        return Group.status
 
     def is_successor(self, node):
         """Recursively traverses all subsequent groups.
@@ -192,4 +209,5 @@ class Group:
         for function in self.functions:
             line += str(function) + " "
         line += " / Nb of next groups: " + str(len(self.next))
+        line += " / Nb of antedecent groups: " + str(len(self.antecedent))
         return line
