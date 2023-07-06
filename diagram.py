@@ -1,6 +1,7 @@
 from function_block import *
 from node import *
 from link import *
+
 from design import Design
 import tools as tl
 
@@ -10,7 +11,7 @@ class Diagram:
 
     def __init__(self):
         self.functions = dict()  # keys = functions names, values = functions objects
-        self.nodes = dict()  # keys = nodes names, valeus = nodes objects
+        self.nodes = dict()  # keys = nodes names, values = nodes objects
         # keys = floor number, values = list of functions in this floor.
         self.floors = dict()
         self.links = list()  # List of links
@@ -97,7 +98,7 @@ class Diagram:
             if node_A in node_B.connections:
                 node_B.connections.remove(node_A)
         if link in self.links:
-            self.links.remove(destination)
+            self.links.remove(link)
 
     def update_links(self):
         self.links = list()

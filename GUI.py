@@ -183,56 +183,66 @@ class Window:
         Stage 0: Leaves of the directed graph described by self.floors.
         The functions are divided graphically between self.MARGIN_DOWN and self.WIDTH - self.MARGIN_UP
         The free points (not associated with functions) are located on the intermediate levels.
+        Return True if the positions have been updated.
+        Otherwise, return False if it's not possible (loopback).
         """
         design = Design(self.diagram.nodes.values(), self.diagram.functions.values())
-        functions_dict, self.diagram.floors = design.report()
-        for function, level in functions_dict.items():
-            function.floor = level
-        # Search for the maximum floor
-        floor_max = design.max_floor
-        # Imposes the abscissa of unfixed function_blocks.
-        nb_intervals = floor_max + 1
-        interval_width = (self.WIDTH - 2 * self.MARGIN) // nb_intervals
-        free_height = self.HEIGHT - self.MARGIN_UP - self.MARGIN_DOWN
-        for function in self.diagram.functions.values():
-            floor = function.floor
-            if function.fixed == False:
-                function.position[0] = (
-                    self.MARGIN
-                    + (floor + 0.5) * interval_width
-                    - function.dimension[0] // 2
-                )
-                rank = tl.function_rank(function, self.diagram.floors[floor])
-                ratio = (rank + 1) / (len(self.diagram.floors[floor]) + 1)
-                function.position[1] = (
-                    round(free_height * ratio)
-                    + self.MARGIN_UP
-                    - function.dimension[1] // 2
-                )
+        if design.status < 300:
+            functions_dict, self.diagram.floors = design.report()
+            for function, level in functions_dict.items():
+                function.floor = level
+            # Search for the maximum floor
+            floor_max = design.max_floor
+            # Imposes the abscissa of unfixed function_blocks.
+            nb_intervals = floor_max + 1
+            interval_width = (self.WIDTH - 2 * self.MARGIN) // nb_intervals
+            free_height = self.HEIGHT - self.MARGIN_UP - self.MARGIN_DOWN
+            for function in self.diagram.functions.values():
+                floor = function.floor
+                if function.fixed == False:
+                    function.position[0] = (
+                        self.MARGIN
+                        + (floor + 0.5) * interval_width
+                        - function.dimension[0] // 2
+                    )
+                    rank = tl.function_rank(function, self.diagram.floors[floor])
+                    ratio = (rank + 1) / (len(self.diagram.floors[floor]) + 1)
+                    function.position[1] = (
+                        round(free_height * ratio)
+                        + self.MARGIN_UP
+                        - function.dimension[1] // 2
+                    )
+            # Position the nodes linked to the functions
+            self.position_functions_nodes()
 
-        # Position the nodes linked to the functions
-        self.position_functions_nodes()
-
-        # Calculate the position of free nodes based on the positions of related non-free nodes.
-        for node in self.diagram.nodes.values():
-            if node.free and not node.fixed:
-                max_abscissas = self.WIDTH - self.MARGIN
-                min_abscissas = self.MARGIN
-                ordinates = []
-                for connected_node in node.connections:
-                    # This point is a function input
-                    if "<" in connected_node.name:
-                        ordinates.append(connected_node.position[1])
-                        max_abscissas = min(max_abscissas, connected_node.position[0])
-                    # This point is a function output
-                    elif ">" in connected_node.name:
-                        ordinates.append(connected_node.position[1])
-                        min_abscissas = max(min_abscissas, connected_node.position[0])
-                node.position[0] = (min_abscissas + max_abscissas) // 2
-                if len(ordinates) == 0:
-                    node.position[1] = self.MARGIN_UP + free_height // 2
-                else:
-                    node.position[1] = sum(ordinates) / len(ordinates)
+            # Calculate the position of free nodes based on the positions of related non-free nodes.
+            for node in self.diagram.nodes.values():
+                if node.free and not node.fixed:
+                    max_abscissas = self.WIDTH - self.MARGIN
+                    min_abscissas = self.MARGIN
+                    ordinates = []
+                    for connected_node in node.connections:
+                        # This point is a function input
+                        if "<" in connected_node.name:
+                            ordinates.append(connected_node.position[1])
+                            max_abscissas = min(
+                                max_abscissas, connected_node.position[0]
+                            )
+                        # This point is a function output
+                        elif ">" in connected_node.name:
+                            ordinates.append(connected_node.position[1])
+                            min_abscissas = max(
+                                min_abscissas, connected_node.position[0]
+                            )
+                    node.position[0] = (min_abscissas + max_abscissas) // 2
+                    if len(ordinates) == 0:
+                        node.position[1] = self.MARGIN_UP + free_height // 2
+                    else:
+                        node.position[1] = sum(ordinates) / len(ordinates)
+            return True
+        else:
+            message("Position update impossible: Cycle detected.", self.text_message)
+            return False
 
     def draw(self):
         """Update the system display in the Tkinter window"""
@@ -664,12 +674,25 @@ class Window:
 
     @Decorators.disable_if_editing
     def cmd_auto(self):
-        """Update automatically the dimensions and positions of functions and nodes."""
+        """Update automatically the dimensions and positions of functions and nodes
+        to fit the diagram. if loopback detection is enable and if there's no loopback.
+        """
         self.state = 1
         self.auto_resize_blocks()
-        self.update_positions()
+        if self.preferences["enable loopback_bool"] == 0:
+            design = Design(
+                    self.diagram.nodes.values(), self.diagram.functions.values()
+                )
+            if design.status >= 300:  # Warning or Error detected
+                self.preferences["enable loopback_bool"] = 1
+                tl.write_preferences(self.preferences)
+                message("Loopback detected.", self.text_message)
+            else:
+                self.update_positions()
+            self.memory.add(self.diagram.export_to_text())
+        else:
+            message("Loopback is enabled.", self.text_message)
         self.draw()
-        self.memory.add(self.diagram.export_to_text())
 
     @Decorators.disable_if_editing
     def cmd_undo(self):
@@ -735,14 +758,22 @@ class Window:
                 message("Select the node to connect.", self.text_message)
                 self.state = 7  # Destination selection
         elif self.state == 7:  # Destination selected
-            design = Design(
-                self.diagram.nodes.values(), self.diagram.functions.values()
-            )
-            if design.are_reachables(self.origin, self.destination):
+            test_connection = False
+            if self.preferences["enable loopback_bool"] == 1:
+                test_connection = True
+            else:  # Design methods are recursive and should not be launched if there are cycles.
+                design = Design(
+                    self.diagram.nodes.values(), self.diagram.functions.values()
+                )
+                if design.status < 300:
+                    test_connection = design.are_reachables(
+                        self.origin, self.destination
+                    )
+            if test_connection:
                 message("Nodes connected. Select another origin.", self.text_message)
                 self.diagram.nodes_connection(self.origin.name, self.destination.name)
             else:
-                message("Forbiden link: Output shortcut.", self.text_message)
+                message("Forbiden link: Output shortcut (loopback).", self.text_message)
             self.draw()
             self.state = 6  # Choose another target to link
             self.memory.add(self.diagram.export_to_text())
