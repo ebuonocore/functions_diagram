@@ -1,13 +1,8 @@
 # DONE:
-Détection de boucle dans le diagram : Mise en place de Design.status
-    Ok lors de la création de lien et la mise à jour des positions
-    Permet de conditionner les appels récursif et de laisser une trace de l'erreur
-Résolution du Warning dans Diagram.disconnect_nodes()
-
-# TODO:
 **Options :**  
 + Espace par étage (si rien, auto) → centrer le diagramme (offset)  
 
+# TODO:
 **ReadME :**
 + Edition des paramètres
 
