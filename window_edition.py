@@ -216,7 +216,10 @@ class Window_edition(Window_pattern):
         """Change focus twice on different entries to ensure changes are committed."""
         widget_focus = tl.key_of(self.widget_grid, grid_position)
         if widget_focus is not None:
-            widget_focus.focus_set()
+            try:
+                widget_focus.focus_set()
+            except:
+                pass
         else:
             self.parameters["label"].focus_set()
 

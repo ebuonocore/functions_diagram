@@ -185,9 +185,11 @@ class Window:
         The free points (not associated with functions) are located on the intermediate levels.
         Return True if the positions have been updated.
         Otherwise, return False if it's not possible (loopback).
+        Automatic positioning is deactivated if loopbacks are activated in the settings.
         """
         design = Design(self.diagram.nodes.values(), self.diagram.functions.values())
-        if design.status < 300:
+        if design.status < 300:  # The diagram is valid : No error, no loopback
+            message("Automatic positionning", self.text_message)
             functions_dict, self.diagram.floors = design.report()
             for function, level in functions_dict.items():
                 function.floor = level
@@ -196,6 +198,14 @@ class Window:
             # Imposes the abscissa of unfixed function_blocks.
             nb_intervals = floor_max + 1
             interval_width = (self.WIDTH - 2 * self.MARGIN) // nb_intervals
+            offset = 0
+            if self.preferences["automatic spacing_int"].isdigit():
+                preference_spacing = int(self.preferences["automatic spacing_int"])
+                if preference_spacing > 0 and preference_spacing < interval_width:
+                    interval_width = preference_spacing
+                    offset = (self.WIDTH - interval_width * nb_intervals) // 2
+            else:
+                message("Invalid value for automatic spacing", self.text_message)
             free_height = self.HEIGHT - self.MARGIN_UP - self.MARGIN_DOWN
             for function in self.diagram.functions.values():
                 floor = function.floor
@@ -203,6 +213,7 @@ class Window:
                     function.position[0] = (
                         self.MARGIN
                         + (floor + 0.5) * interval_width
+                        + offset
                         - function.dimension[0] // 2
                     )
                     rank = tl.function_rank(function, self.diagram.floors[floor])
@@ -218,8 +229,8 @@ class Window:
             # Calculate the position of free nodes based on the positions of related non-free nodes.
             for node in self.diagram.nodes.values():
                 if node.free and not node.fixed:
-                    max_abscissas = self.WIDTH - self.MARGIN
-                    min_abscissas = self.MARGIN
+                    max_abscissas = self.WIDTH - self.MARGIN - offset //2
+                    min_abscissas = self.MARGIN + offset // 2
                     ordinates = []
                     for connected_node in node.connections:
                         # This point is a function input
@@ -681,8 +692,8 @@ class Window:
         self.auto_resize_blocks()
         if self.preferences["enable loopback_bool"] == 0:
             design = Design(
-                    self.diagram.nodes.values(), self.diagram.functions.values()
-                )
+                self.diagram.nodes.values(), self.diagram.functions.values()
+            )
             if design.status >= 300:  # Warning or Error detected
                 self.preferences["enable loopback_bool"] = 1
                 tl.write_preferences(self.preferences)
