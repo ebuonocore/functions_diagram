@@ -1,0 +1,12 @@
+def blend(fruit_syrup:str,water_volume:float,ice:bool)->Cocktail
+blend.position(658,340)
+blend.dimension(210,77)
+
+node(syrup:str,(406,355))
+node(water_liter:float,(334,407))
+node(cooling:bool,(401,451))
+node(my_cocktail:Cocktail,(991,407))
+blend>---my_cocktail
+a<0---syrup
+a<1---water_liter
+a<2---cooling

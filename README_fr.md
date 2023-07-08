@@ -23,6 +23,7 @@ La représentation graphique peut être exportée au format SVG.
 * [Boutons](#boutons)  
   * [Exporter un diagramme en image (.SVG)](readme/export_SVG_fr.md)
   * [Ajouter ou éditer des éléments](readme/add_edit_elements_fr.md)  
+  * [Edition des paramètres](readme/settings_fr.md)  
 * [Auteur](#auteur)
 * [Avancement du projet](#avancement-du-projet)
 * [Feuille de route](#feuille-de-route)
@@ -168,7 +169,7 @@ Les nœuds de fonction sont désignés par : ```function_name>``` pour la sortie
 ![undo](/images/undo.png) Undo  
 ![redo](/images/redo.png) Redo  
 ![auto](/images/auto.png) Placer automatiquement les objets sur l'écran  
-![configuration](/images/configuration.png) Edition des paramètres  
+![configuration](/images/configuration.png) [Edition des paramètres](readme/settings_fr.md)     
 ![information](/images/information.png) Visualiser les informations  
 
 Pour certaines opérations, vous devez d'abord sélectionner une destination. Vous pouvez quitter ce mode en cliquant avec le bouton droit de la souris ou en appuyant sur *Enter* ou *Esc*.

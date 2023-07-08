@@ -7,7 +7,7 @@
     "function background color_color": "white",
     "borders default color_color": "black",
     "line color_color": "black",
-    "line thikness_int": "4",
+    "line thikness_int": "1",
     "title size_int": "18",
     "text size_int": "12",
     "thickness_int": "3",
