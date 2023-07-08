@@ -23,6 +23,7 @@ The graphical representation can be exported in SVG format.
 * [Buttons](#buttons)
   * [Export diagram to image (.SVG)](readme/export_SVG.md)
   * [Add or edit elements](readme/add_edit_elements.md)  
+  * [Edit settings](readme/settings.md)  
 * [Author](#author)
 * [Project status](#project-status)
 * [Roadmap](#roadmap)
@@ -167,7 +168,7 @@ Function nodes are designated by : ```function_name>``` for the output, and ```f
 ![undo](/images/undo.png) Undo  
 ![redo](/images/redo.png) Redo  
 ![auto](/images/auto.png) Place automaticly the objects on the screen  
-![configuration](/images/configuration.png) Edit settings  
+![configuration](/images/configuration.png) [Edit settings](readme/settings.md)    
 ![information](/images/information.png) Show informations  
 
 Some operations require you to select a destination first. You can exit this mode by right-clicking or by pressing *Enter* or *Esc*.

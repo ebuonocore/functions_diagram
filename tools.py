@@ -513,6 +513,9 @@ def split_unembed(line: str, separator: str = ",") -> list[str]:
 
 def load_preferences(file=None):
     """Load the information stored in the preferences.json file."""
+    security_file = "preferences_security.json"
+    with open(security_file, "r") as f:
+        security_pref = json.load(f)
     if file is None:
         file = "preferences.json"
     elif file == "dark":
@@ -520,7 +523,26 @@ def load_preferences(file=None):
     elif file == "light":
         file = "preferences_default_light.json"
     with open(file, "r") as f:
-        return json.load(f)
+        preferences = json.load(f)
+    # Checking data typing for int and bool
+    for key, value in preferences.items():
+        if "_int" in key:
+            if type(value) == str:
+                if not value.isdigit():
+                    preferences[key] = security_pref[key]
+                    print(key, value, "changed to default value", security_pref[key])
+            else:
+                preferences[key] = security_pref[key]
+        elif "_bool" in key:
+            if type(value) == int:
+                if value not in {0, 1}:
+                    preferences[key] = security_pref[key]
+            else:
+                preferences[key] = security_pref[key]
+        else:
+            if type(value) != type(security_pref[key]):
+                preferences[key] = security_pref[key]
+    return preferences
 
 
 def write_preferences(preferences: dict):

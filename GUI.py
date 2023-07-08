@@ -421,6 +421,7 @@ class Window:
                     (x_last, y_end),
                     (x_end, y_end),
                     fill=color,
+                    width=thikness,
                     smooth="true",
                 )
             else:

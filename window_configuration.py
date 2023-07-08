@@ -67,7 +67,7 @@ class Window_configuration:
             label_field = tki.Label(line, textvariable=label_var, anchor="w", width=24)
             label_field.config(bg=self.colors["LABEL"])
             label_field.pack(side=tki.LEFT)
-            if "bool" in pref_key:
+            if "_bool" in pref_key:
                 value = tki.IntVar()
                 value.set(pref_value)
                 self.box_vars[pref_key] = value
@@ -102,6 +102,7 @@ class Window_configuration:
     def cmd_commit(self):
         self.update_preferences(None)
         tl.write_preferences(self.preferences)
+        self.preferences = tl.load_preferences()  # Check data type
         self.parent.draw()
         self.window.destroy()
 
@@ -122,15 +123,20 @@ class Window_configuration:
             else:
                 pref_value = entry_cell.get()
             self.preferences[pref_key] = pref_value
+        tl.write_preferences(self.preferences)
+        self.preferences = tl.load_preferences()  # Check data type
         self.parent.preferences = self.preferences
         self.parent.draw()
 
     def colorchooser(self, pref_key):
         color = colorchooser.askcolor()[1]
-        entry = self.pref_cells[pref_key]
-        entry.delete(0, tki.END)
-        entry.insert(0, color)
-        self.update_preferences(None)
+        try:
+            entry = self.pref_cells[pref_key]
+            entry.delete(0, tki.END)
+            entry.insert(0, color)
+            self.update_preferences(None)
+        except:
+            pass
 
     def window_dimension(self, geometry: str) -> tuple:
         """Take the geometry string as a parameter.
