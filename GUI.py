@@ -344,7 +344,7 @@ class Window:
         title_size = int(self.preferences["title size_int"])
         text_size = int(self.preferences["text size_int"])
         text_color = self.preferences["text color_color"]
-        thickness = int(self.preferences["thickness_int"])
+        thickness = int(self.preferences["border thickness_int"])
         font_titre = tkfont.Font(family=police, size=title_size, weight="bold")
         font_texte = tkfont.Font(family=police, size=text_size, weight="normal")
         border_color = self.preferences["borders default color_color"]

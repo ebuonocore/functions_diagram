@@ -1,10 +1,8 @@
 # DONE:
-
-
-# TODO:
 **ReadMe & window_configuration :**
 + Remettre en ordre les attributs par sections (bordures) et renommer les attributs moins explicites
 
+# TODO:
 **GUI.py :** 
 + texte alignement : Proposer de justifier le nom des noeuds libres
 + dessiner des rectangles en pointillés 
