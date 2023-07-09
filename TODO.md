@@ -2,7 +2,6 @@
 
 
 # TODO:
-test de modification
 **ReadMe & window_configuration :**
 + Remettre en ordre les attributs par sections (bordures) et renommer les attributs moins explicites
 

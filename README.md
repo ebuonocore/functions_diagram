@@ -108,7 +108,7 @@ This is what a global schematic of the problem would look like.
 [![Top_diagram](/readme/TSP_example/assets/TSP_diagram.svg)](readme/TSP_example/assets/TSP_diagram.svg)  
 The last function will be responsible for systematically calculating the cost of each route.  
 After that, we'll just have to take this top-down approach a step further by specifying each of the sub-functions more precisely.  
-Click here to see a [possible resolution](/readme/TSP_example/) and the [associated diagrams](/readme/TSP_example/assets/).  
+Click here to see a [possible resolution](https://github.com/ebuonocore/TSP_naive_approach/tree/main) with the associated diagrams.  
 
 ## Backup file format
 Diagrams are saved in a TXT file.  
