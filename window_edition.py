@@ -25,7 +25,7 @@ class Window_edition(Window_pattern):
         win_width, win_height = self.window_dimension(self.parent.tk.geometry())
         if type(self.destination) == Node:
             self.window.geometry(
-                "300x140+{}+{}".format(
+                "300x180+{}+{}".format(
                     rootx + win_width - 300 - self.MARGE, rooty + self.MARGE
                 )
             )
@@ -130,6 +130,12 @@ class Window_edition(Window_pattern):
                 "annotation", self.parameters["annotation"].get()
             ),
         )
+        self.parameters["justify"] = self.create_choice(
+            5,
+            "Justify",
+            ["left", "center", "separator", "right"],
+            self.destination.justify,
+        )
 
     def create_entry(self, line_number, key, default_value, **kwargs):
         self.button = ""
@@ -204,6 +210,22 @@ class Window_edition(Window_pattern):
         )
         box.grid(sticky=tki.W, row=line_number, column=1)
         return box
+
+    def create_choice(self, line_number, key, choices, default_value, **kwargs):
+        self.button = ""
+        for k, v in kwargs.items():
+            if k in self.__dict__:
+                self.__dict__[k] = v
+            else:
+                raise Exception("The key " + k + " doesn't exist.")
+        tki.Label(self.frame, text=key, anchor="w").grid(
+            row=line_number, column=0, sticky=tki.W
+        )
+        value = tki.StringVar()
+        value.set(default_value)
+        choice = tki.OptionMenu(self.frame, value, *choices, command=self.commit_choice)
+        choice.grid(sticky=tki.W, row=line_number, column=1)
+        return choice
 
     def cmd_commit(self):
         self.parameters["name"].focus_set()
@@ -370,6 +392,10 @@ class Window_edition(Window_pattern):
         if key == "Hide/Show output":
             self.destination.set_output_visibility(value)
         self.update_windows()
+
+    def commit_choice(self, event):
+        value = self.parameters["justify"].cget("text")
+        self.change_destination_attribut("justify", value)
 
     def change_destination_attribut(self, attribut, value):
         self.destination.__dict__[attribut] = value

@@ -139,6 +139,8 @@ def create_node_description(node):
             description += ",("
             description += str(int(node.position[0])) + ","
             description += str(int(node.position[1])) + ")"
+        if node.justify is not None:
+            description += ',justify="' + node.justify + '"'
         description += ")"
         if node.fixed:
             description += "  # fixed"
@@ -536,6 +538,12 @@ def load_preferences(file=None):
         elif "_bool" in key:
             if type(value) == int:
                 if value not in {0, 1}:
+                    preferences[key] = security_pref[key]
+            else:
+                preferences[key] = security_pref[key]
+        elif "_choice" in key:
+            if type(value) == str:
+                if value not in ["left", "center", "separator", "right"]:
                     preferences[key] = security_pref[key]
             else:
                 preferences[key] = security_pref[key]

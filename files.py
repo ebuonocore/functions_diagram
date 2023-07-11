@@ -13,7 +13,7 @@ def open_file(file_name):
 
 
 def read_state(file_text, file_name=None):
-    """Buildsthe function blocks and the nodes relatives
+    """Build the function blocks and the nodes relatives
     to the different lines of the state text. Return a diagram.
     """
     error_message = ""
@@ -191,7 +191,9 @@ def node_definition(line):
         fixed = True
     else:
         fixed = False
+    justify = None
     line = line.replace(" ", "")
+    line = line.replace('"', "'")
     first_open_parentheses = tl.index_occurrence("(", line)[0]
     last_closed_parentheses = tl.index_occurrence(")", line)[-1]
     parameters_serie = line[first_open_parentheses + 1 : last_closed_parentheses]
@@ -207,6 +209,13 @@ def node_definition(line):
         position = tl.coordinates(parameters[1])
     else:
         position = [0, 0]
+    for parameter in parameters[2:]:
+        if "justify" in parameter:
+            if "=" in parameter:
+                pos_equal = parameter.index("=")
+                value = parameter[pos_equal + 1 :]
+                if value in ["'left'", "'right'", "'center'", "'separator'"]:
+                    justify = value
     label = node_name.split("*")[0]
     return Node(
         name=node_name,
@@ -215,6 +224,7 @@ def node_definition(line):
         position=position,
         free=True,
         fixed=fixed,
+        justify=justify,
     )
 
 

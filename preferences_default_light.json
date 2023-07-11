@@ -5,6 +5,7 @@
     "title size_int": "18",
     "text color_color": "black",
     "text size_int": "12",
+    "justify_choice": "left",
     "type color_color": "#7f0055",
     "function background color_color": "white",
     "borders default color_color": "black",

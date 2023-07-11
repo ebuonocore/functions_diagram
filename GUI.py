@@ -229,7 +229,7 @@ class Window:
             # Calculate the position of free nodes based on the positions of related non-free nodes.
             for node in self.diagram.nodes.values():
                 if node.free and not node.fixed:
-                    max_abscissas = self.WIDTH - self.MARGIN - offset //2
+                    max_abscissas = self.WIDTH - self.MARGIN - offset // 2
                     min_abscissas = self.MARGIN + offset // 2
                     ordinates = []
                     for connected_node in node.connections:
@@ -281,11 +281,19 @@ class Window:
             if node.position != [None, None] and node.visible:
                 x, y = node.position
                 if node.free:
+                    justify = node.justify
+                    if justify is None:
+                        justify = self.preferences["justify_choice"]
                     self.can.create_oval(x - d, y - d, x + d, y + d, fill=color)
                     self.print_label(
-                        x, y - self.MARGIN, node.label, node.annotation, "sw"
+                        x,
+                        y - self.MARGIN,
+                        node.label,
+                        node.annotation,
+                        "sw",
+                        justify,
                     )
-                else:
+                else:  # Entry of a function
                     self.draw_triangle(x, y, 0)
                     if ">" in node.name:
                         self.print_label(
@@ -295,7 +303,7 @@ class Window:
                             node.annotation,
                             "w",
                         )
-                    else:
+                    else:  # Exit of a function
                         self.print_label(x + 2, y, node.label, node.annotation, "w")
 
     def draw_triangle(self, x, y, orientation=0, color=None, d=None):
@@ -314,13 +322,29 @@ class Window:
         ]
         self.can.create_polygon(perimeter[orientation], fill=color)
 
-    def print_label(self, x, y, label, annotation, anchor="nw"):
+    def print_label(self, x, y, label, annotation, anchor="nw", justify=None):
         """Write the label and if necessary the type annotation separated by :"""
         police = self.preferences["police"]
         text_size = int(self.preferences["text size_int"])
         font = tkfont.Font(family=police, size=text_size, weight="normal")
         text_color = self.preferences["text color_color"]
         type_color = self.preferences["type color_color"]
+        # If justify is not None, its value is "left", "center","separator" or "right"
+        total_text = label
+        sep_text = label
+        if len(annotation) != 0:
+            total_text += ": " + annotation
+            sep_text += ":"
+        len_total_text = tkfont.Font(size=text_size, family=police, weight="normal").measure(total_text)
+        len_sep_text = tkfont.Font(size=text_size, family=police, weight="normal").measure(sep_text)
+        # Calculate the offset of the text according to the justification
+        justify_offset = {None:0,
+                          "left":0,
+                          "right":len_total_text,
+                          "center":len_total_text//2,
+                          "separator":len_sep_text
+                          }  
+        x -= justify_offset[justify]
         # Display the label
         if len(annotation) > 0 and len(label) > 0:
             label += ": "
@@ -805,10 +829,14 @@ class Window:
         self.tk.quit()
         self.tk.destroy()
 
+    def copy_all(self, event):
+        message("Copy all", self.text_message)
+
     def cmd_keyboard_event(self, key):
         """Cancel operation if the user press Enter or Escape."""
         if key in (keyboard.Key.esc, keyboard.Key.enter):
             if not self.edition_in_progress:
+                message("Selection canceled", self.text_message)
                 self.state = 1
 
     def engine(self):
@@ -862,4 +890,4 @@ class Window:
             self.draw()
             self.draw_destination_outine()
 
-        self.tk.after(10, self.engine)  # Restarts state management
+        self.tk.after(100, self.engine)  # Restarts state management
