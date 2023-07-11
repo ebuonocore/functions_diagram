@@ -79,6 +79,11 @@ class Window_configuration:
                     command=lambda: self.update_preferences(None),
                 )
                 self.pref_cells[pref_key].pack(side=tki.LEFT)
+            elif "_choice" in pref_key:
+                self.pref_cells[pref_key] = self.create_choice(
+                    line, ["left", "center", "separator", "right"], pref_value
+                )
+                self.pref_cells[pref_key].pack(side=tki.LEFT)
             else:
                 value = tki.StringVar()
                 value.set(pref_value)
@@ -87,14 +92,13 @@ class Window_configuration:
                 )
                 self.pref_cells[pref_key].bind("<FocusOut>", self.update_preferences)
                 self.pref_cells[pref_key].pack(side=tki.LEFT)
-            if "color" in pref_key:
+            if "_color" in pref_key:
                 bt = tki.Button(
                     line,
                     image=self.painting_can_image,
                     command=(lambda p=pref_key: self.colorchooser(p)),
                 )
                 bt.pack(side=tki.LEFT)
-
             line.pack(side=tki.TOP, fill=tki.X)
         lines.pack()
         return lines
@@ -120,6 +124,8 @@ class Window_configuration:
         for pref_key, entry_cell in self.pref_cells.items():
             if type(entry_cell) == tki.Checkbutton:
                 pref_value = self.box_vars[pref_key].get()
+            elif type(entry_cell) == tki.OptionMenu:
+                pref_value = entry_cell.cget("text")
             else:
                 pref_value = entry_cell.get()
             self.preferences[pref_key] = pref_value
@@ -137,6 +143,12 @@ class Window_configuration:
             self.update_preferences(None)
         except:
             pass
+
+    def create_choice(self, line, choices: list[str], default_value: str):
+        value = tki.StringVar()
+        value.set(default_value)
+        choice = tki.OptionMenu(line, value, *choices, command=self.update_preferences)
+        return choice
 
     def window_dimension(self, geometry: str) -> tuple:
         """Take the geometry string as a parameter.

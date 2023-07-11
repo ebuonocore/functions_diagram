@@ -14,15 +14,9 @@ class Window_pattern:
         self.window.bind("<Return>", lambda event: self.cmd_commit())
         self.parent.tk.update_idletasks()
         self.MARGE = 4
-        file = "images/painting_can.png"
-        image = Image.open(file)
-        self.painting_can_image = ImageTk.PhotoImage(image)
-        file = "images/garbage.png"
-        image = Image.open(file)
-        self.garbage_image = ImageTk.PhotoImage(image)
-        file = "images/add.png"
-        image = Image.open(file)
-        self.add_image = ImageTk.PhotoImage(image)
+        self.painting_can_image = self.load_image("painting_can")
+        self.garbage_image = self.load_image("garbage")
+        self.add_image = self.load_image("add")
         self.colors = {"DANGER": "pink", "LABEL": "lightgrey", "NEUTRAL": "white"}
         self.frame = tki.Frame(self.window, width=300, height=200)
         self.bt_frame = tki.Frame(
@@ -105,3 +99,9 @@ class Window_pattern:
                 if dimensions[0].isdigit() and dimensions[1].isdigit():
                     return (int(dimensions[0]), int(dimensions[1]))
         return (0, 0)
+
+    def load_image(self, file_name: str) -> ImageTk.PhotoImage:
+        """Load the image from the file."""
+        file = "images/" + file_name + ".png"
+        image = Image.open(file)
+        return ImageTk.PhotoImage(image)

@@ -14,6 +14,7 @@ class Node:
         self.position = [None, None]  # [pos_x, pos_y]
         self.connections = []  # List of nodes connected
         self.fixed = False  # True if the position is fixed.
+        self.justify = None  # "left", "center","separator", "right" or None for default
         for k, v in kwargs.items():
             if k in self.__dict__:
                 self.__dict__[k] = v
