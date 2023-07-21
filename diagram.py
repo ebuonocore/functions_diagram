@@ -1,5 +1,6 @@
 from function_block import *
 from node import *
+from group import *
 from link import *
 
 from design import Design
@@ -12,6 +13,7 @@ class Diagram:
     def __init__(self):
         self.functions = dict()  # keys = functions names, values = functions objects
         self.nodes = dict()  # keys = nodes names, values = nodes objects
+        self.groups = dict()  # keys = groups names, values = groups objects
         # keys = floor number, values = list of functions in this floor.
         self.floors = dict()
         self.links = list()  # List of links
@@ -74,6 +76,19 @@ class Diagram:
             for link in self.links:
                 if pop_result in link.nodes:
                     self.links.remove(link)
+        return pop_result
+
+    def add_group(self, new_group):
+        """Add a new group in the diagram."""
+        if type(new_group) == Group and new_group.name not in self.groups.keys():
+            self.groups[new_group.name] = new_group
+            return True
+        else:
+            return False
+
+    def delete_group(self, group_name):
+        """Delete the group in the diagram."""
+        pop_result = self.groups.pop(group_name)
         return pop_result
 
     def nodes_connection(self, A, B):

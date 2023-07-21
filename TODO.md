@@ -1,11 +1,19 @@
 # DONE:
-+ Modification du taux de rafraichissement du after(): de 10 à 100ms
-+ texte alignement : Justification des noms des noeuds libres ('left, 'center','separator', 'right')
-  + Lecture du diagramme (fait), attribut du noeud(Ok), interface sur édition et écriture dans le fichier, offset dans le diagramme avec priorité à l'attribut du noeud courant sinon, valeur par défaut dans les paramètres.
+**Groups**
++ Dessin des groupes
++ Interface d'édition des groupes (liste des éléments)
++ Thickness: Ajuster le paramétrage du dash dans le dessin des pointillés en fonction de thickness
++ Test de validité de thickness et color Ok
++ Auto/Fixed : Griser position ET dimension si Auto.
++ Nouveau calcul de la hauteur de fenêtre en fonction de self.frame.bbox()
 
 # TODO:
 **GUI.py :** 
-+ dessiner des rectangles en pointillés : rectangle(x1, y1, x2, y2, title=title, annotation=annotation)
++ Ajouter un attribut "Marge" aux groupes et "group marge" aux prefs
++ Auto : Donner les dimensions minimales pour englober les objets du groupe + marges
++ Move, Edit et Erase /Group (prévoir la sélection coin sup gauche et inf droits)
++ Sauvegarde et lecture des groupes
+
 + Mettre en place .scale sur self.can ?   
 + Selection multiple :
   + gérer la destination comme une liste (Un seul élément possible pour l'édition par exemple)

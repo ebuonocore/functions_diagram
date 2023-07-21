@@ -265,6 +265,7 @@ class Window:
             self.draw_function()
             self.draw_nodes()
             self.draw_lines()
+            self.draw_groups()
         except:
             pass
 
@@ -322,7 +323,7 @@ class Window:
         ]
         self.can.create_polygon(perimeter[orientation], fill=color)
 
-    def print_label(self, x, y, label, annotation, anchor="nw", justify=None):
+    def print_label(self, x, y, label, annotation="", anchor="nw", justify=None):
         """Write the label and if necessary the type annotation separated by :"""
         police = self.preferences["police"]
         text_size = int(self.preferences["text size_int"])
@@ -335,15 +336,20 @@ class Window:
         if len(annotation) != 0:
             total_text += ": " + annotation
             sep_text += ":"
-        len_total_text = tkfont.Font(size=text_size, family=police, weight="normal").measure(total_text)
-        len_sep_text = tkfont.Font(size=text_size, family=police, weight="normal").measure(sep_text)
+        len_total_text = tkfont.Font(
+            size=text_size, family=police, weight="normal"
+        ).measure(total_text)
+        len_sep_text = tkfont.Font(
+            size=text_size, family=police, weight="normal"
+        ).measure(sep_text)
         # Calculate the offset of the text according to the justification
-        justify_offset = {None:0,
-                          "left":0,
-                          "right":len_total_text,
-                          "center":len_total_text//2,
-                          "separator":len_sep_text
-                          }  
+        justify_offset = {
+            None: 0,
+            "left": 0,
+            "right": len_total_text,
+            "center": len_total_text // 2,
+            "separator": len_sep_text,
+        }
         x -= justify_offset[justify]
         # Display the label
         if len(annotation) > 0 and len(label) > 0:
@@ -459,6 +465,31 @@ class Window:
                     (x_middle, y_end), (x_end, y_end), fill=color, width=thikness
                 )
 
+    def draw_groups(self):
+        pref_color = self.preferences["group color_color"]
+        pref_thickness = int(self.preferences["group thickness_int"])
+        for group in self.diagram.groups.values():
+            if group.color == "" or group.color is None:
+                color = pref_color
+            else:
+                color = group.color
+            thickness = group.thickness if group.thickness != "" else pref_thickness
+            dash = int(thickness) * 2
+            x_origin, y_origin = group.position
+            width, height = group.dimension
+            x_end, y_end = x_origin + width, y_origin + height
+            self.can.create_rectangle(
+                x_origin,
+                y_origin,
+                x_end,
+                y_end,
+                dash=(dash, dash),
+                fill="",
+                outline=color,
+                width=thickness,
+            )
+            self.print_label(x_origin, y_origin, group.label)
+
     def draw_destination_outine(self, color=COLOR_OUTLINE):
         if type(self.destination) == Link:
             d = 2 * int(self.preferences["text size_int"]) // 3
@@ -508,6 +539,7 @@ class Window:
             "move",
             "add_function",
             "add_node",
+            "group",
             "add_link",
             "edit",
             "erase",
@@ -534,6 +566,7 @@ class Window:
         self.create_button("move", self.cmd_move)  # state:2, 3, 4
         self.create_button("add_function", self.cmd_add_function)
         self.create_button("add_node", self.cmd_add_node)
+        self.create_button("group", self.cmd_add_group)
         self.create_button("add_link", self.cmd_add_link)
         self.create_button("edit", self.cmd_edit)
         self.create_button("erase", self.cmd_erase)
@@ -644,6 +677,16 @@ class Window:
         else:
             message("Edition already open.", self.text_message)
             self.lift_window(self.window_edition.window)
+
+    @Decorators.disable_if_editing
+    def cmd_add_group(self):
+        """Add a new group."""
+        message(
+            "Create a new group. Click to select two corners of the zone.",
+            self.text_message,
+        )
+        self.can.config(cursor="plus")
+        self.state = 8
 
     @Decorators.disable_if_editing
     def cmd_add_link(self):
@@ -813,6 +856,48 @@ class Window:
             self.draw()
             self.state = 6  # Choose another target to link
             self.memory.add(self.diagram.export_to_text())
+        elif self.state == 8:  # Add group : Selecting the first corner
+            self.origin = (Xpix, Ypix)
+            message("Select the second corner of the group zone.", self.text_message)
+            self.state = 9  # Selecting the second corner
+        elif self.state == 9:  # Selecting the second corner
+            self.destination = (Xpix, Ypix)
+            x_origin, y_origin = self.origin
+            dimension = tl.get_dimension(self.origin, self.destination)
+            objects = tl.search_in_rectangle(
+                self.diagram, self.origin, self.destination
+            )
+            elements = list()
+            for ref, element in enumerate(objects):
+                x_element, y_element = element.position
+                type_element = type(element).__name__
+                postion = [x_element - x_origin, y_element - y_origin]
+                elements.append(
+                    {
+                        "id": ref,
+                        "type": type_element,
+                        "enable": True,
+                        "element": element,
+                        "position": postion,
+                    }
+                )
+            empty_zone = len(elements) == 0
+            previous_names = [group for group in self.diagram.groups.keys()]
+            name = tl.new_label(previous_names)
+            new_group = Group(
+                name=name,
+                label=name,
+                elements=elements,
+                fixed=empty_zone,
+                position=self.origin,
+                dimension=dimension,
+            )
+            self.diagram.add_group(new_group)
+            self.destination = new_group
+            self.state = 1  # Returns to basic state
+            self.edit(self.destination)
+            self.draw()
+
         else:
             self.state = 1  # Returns to basic state
 
@@ -889,5 +974,19 @@ class Window:
             )
             self.draw()
             self.draw_destination_outine()
+        elif self.state == 9:  # Add group : Selecting the first corner
+            mouse_x, mouse_y = tl.pointer_position(self.can)
+            self.draw()
+            if type(self.origin) == tuple:
+                x_origin, y_origin = self.origin
+                self.can.create_rectangle(
+                    x_origin,
+                    y_origin,
+                    mouse_x,
+                    mouse_y,
+                    dash=(4, 4),
+                    fill="",
+                    outline="grey",
+                )
 
         self.tk.after(100, self.engine)  # Restarts state management

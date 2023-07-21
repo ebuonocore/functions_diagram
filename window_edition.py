@@ -1,4 +1,5 @@
 import tkinter as tki
+from tkinter import font
 from PIL import Image, ImageTk
 from diagram import *
 import tools as tl
@@ -36,6 +37,13 @@ class Window_edition(Window_pattern):
                     height, rootx + win_width - 300 - self.MARGE, rooty + self.MARGE
                 )
             )
+        elif type(self.destination) == Group:
+            height = (len(self.widget_grid) + 1) * self.parent.text_char_height + 40
+            self.window.geometry(
+                "300x240+{}+{}".format(
+                    rootx + win_width - 300 - self.MARGE, rooty + self.MARGE
+                )
+            )
         self.resize_height()
 
     def draw_grid(self):
@@ -57,7 +65,8 @@ class Window_edition(Window_pattern):
             self.node_parameters()
         elif type(self.destination) == Function_block:
             self.function_parameters()
-        # self.resize_height()
+        elif type(self.destination) == Group:
+            self.group_parameters()
 
     def function_parameters(self):
         self.entries = dict()
@@ -137,6 +146,51 @@ class Window_edition(Window_pattern):
             self.destination.justify,
         )
 
+    def group_parameters(self):
+        self.window.title("Edit group")
+        dimension = (
+            str(self.destination.dimension[0])
+            + ","
+            + str(self.destination.dimension[1])
+        )
+        color = self.destination.color
+        thickness = self.destination.thickness
+        self.parameters["dimension"] = self.create_entry(4, "Dimension", dimension)
+        self.parameters["dimension"].bind("<FocusOut>", self.check_dimension)
+        if not self.destination.fixed:
+            self.parameters["dimension"].configure(state="disabled")
+            self.parameters["dimension"].config(bg=self.colors["LABEL"])
+            self.parameters["position"].configure(state="disabled")
+            self.parameters["position"].config(bg=self.colors["LABEL"])
+        self.parameters["color"] = self.create_entry(5, "Color", color)
+        self.parameters["color"].bind("<FocusOut>", self.check_color)
+        bt = tki.Button(
+            self.frame, image=self.painting_can_image, command=self.colorchooser
+        )
+        bt.grid(row=5, column=2, ipadx=16)
+        self.parameters["thickness"] = self.create_entry(6, "Thickness", thickness)
+        self.parameters["thickness"].bind("<FocusOut>", self.check_int)
+        nb_line = 7
+        current_type = ""
+        for element in self.destination.elements:
+            if element["type"] != current_type:
+                current_type = element["type"]
+                label_title = "Nodes" if current_type == "Node" else "Functions"
+                tki.Label(
+                    self.frame,
+                    text=label_title,
+                    anchor="w",
+                    font=font.Font(weight="bold"),
+                ).grid(row=nb_line, column=0, sticky=tki.W)
+                nb_line += 1
+            ref = element["id"]
+            self.parameters[current_type + element["element"].name] = (
+                self.create_group_box(
+                    nb_line, ref, element["element"], element["enable"]
+                ),
+            )
+            nb_line += 1
+
     def create_entry(self, line_number, key, default_value, **kwargs):
         self.button = ""
         for k, v in kwargs.items():
@@ -211,6 +265,28 @@ class Window_edition(Window_pattern):
         box.grid(sticky=tki.W, row=line_number, column=1)
         return box
 
+    def create_group_box(self, line_number, ref, element, default_value, **kwargs):
+        self.button = ""
+        for k, v in kwargs.items():
+            if k in self.__dict__:
+                self.__dict__[k] = v
+            else:
+                raise Exception("The key " + k + " doesn't exist.")
+        tki.Label(self.frame, text=element.name, anchor="w").grid(
+            row=line_number, column=0, sticky=tki.W
+        )
+        value = tki.IntVar()
+        value.set(default_value)
+        box = tki.Checkbutton(
+            self.frame,
+            variable=value,
+            onvalue=1,
+            offvalue=0,
+            command=lambda: self.change_group_element(ref, value.get()),
+        )
+        box.grid(sticky=tki.W, row=line_number, column=1)
+        return box
+
     def create_choice(self, line_number, key, choices, default_value, **kwargs):
         self.button = ""
         for k, v in kwargs.items():
@@ -229,6 +305,12 @@ class Window_edition(Window_pattern):
 
     def cmd_commit(self):
         self.parameters["name"].focus_set()
+        # Purge the list of deselected items for groups
+        if type(self.destination) == Group:
+            for ref in range(len(self.destination.elements) - 1, -1, -1):
+                element = self.destination.elements[ref]
+                if not element["enable"]:
+                    self.destination.elements.pop(ref)
         if self.check_label(None):
             self.check_name()
             self.tk.after(10, lambda: self.validate_edition((1, 1)))
@@ -299,10 +381,14 @@ class Window_edition(Window_pattern):
 
     def colorchooser(self):
         color = colorchooser.askcolor()[1]
-        entry = self.parameters["header_color"]
+        if type(self.destination) == Function_block:
+            attribut = "header_color"
+        elif type(self.destination) == Group:
+            attribut = "color"
+        entry = self.parameters[attribut]
         entry.delete(0, tki.END)
         entry.insert(0, color)
-        self.change_destination_attribut("header_color", color)
+        self.change_destination_attribut(attribut, color)
 
     def check_name(self):
         """Test if this name is already taken by another function.
@@ -310,6 +396,8 @@ class Window_edition(Window_pattern):
         """
         if type(self.destination) == Node:
             previous_names = self.diagram.nodes.keys()
+        elif type(self.destination) == Group:
+            previous_names = self.diagram.groups.keys()
         elif type(self.destination) == Function_block:
             previous_names = self.diagram.functions.keys()
         label = self.parameters["label"].get()
@@ -332,6 +420,16 @@ class Window_edition(Window_pattern):
             else:
                 entry.config(bg=self.colors["DANGER"])
 
+    def check_int(self, event):
+        if "thickness" in self.parameters.keys():
+            entry = self.parameters["thickness"]
+            value = entry.get()
+            if value == "" or value.isdigit():
+                entry.config(bg="white")
+                self.change_destination_attribut("thickness", value)
+            else:
+                entry.config(bg=self.colors["DANGER"])
+
     def check_dimension(self, event):
         if "dimension" in self.parameters.keys():
             entry = self.parameters["dimension"]
@@ -347,7 +445,10 @@ class Window_edition(Window_pattern):
         if "label" in self.parameters.keys():
             entry = self.parameters["label"]
             value = entry.get()
-            if "*" in value or value == "":
+            if "*" in value:
+                entry.config(bg=self.colors["DANGER"])
+                return False
+            elif type(self.destination) != Group and value == "":
                 entry.config(bg=self.colors["DANGER"])
                 return False
             else:
@@ -357,8 +458,12 @@ class Window_edition(Window_pattern):
                 return True
 
     def check_color(self, event):
-        if "header_color" in self.parameters.keys():
-            entry = self.parameters["header_color"]
+        if type(self.destination) == Group:
+            attribut = "color"
+        elif type(self.destination) == Function_block:
+            attribut = "header_color"
+        if attribut in self.parameters.keys():
+            entry = self.parameters[attribut]
             color = entry.get()
             color_ok = False
             if color == "":
@@ -374,22 +479,20 @@ class Window_edition(Window_pattern):
                 return False
             else:
                 entry.config(bg="white")
-                self.change_destination_attribut("header_color", color)
+                self.change_destination_attribut(attribut, color)
                 return True
 
     def check_box(self, key, value):
         if key == "Auto/Fixed":
-            if value == 1:
+            if bool(value):
                 self.destination.__dict__["fixed"] = True
-                if "dimension" in self.parameters.keys():
-                    self.parameters["dimension"].configure(state="normal")
-                    self.parameters["dimension"].config(bg=self.colors["NEUTRAL"])
             else:
                 self.destination.__dict__["fixed"] = False
-                if "dimension" in self.parameters.keys():
-                    self.parameters["dimension"].configure(state="disabled")
-                    self.parameters["dimension"].config(bg=self.colors["LABEL"])
-        if key == "Hide/Show output":
+            if type(self.destination) == Group:
+                for ref, element in enumerate(self.destination.elements):
+                    new_value = not (bool(value))
+                    self.change_group_element(ref, new_value)
+        elif key == "Hide/Show output":
             self.destination.set_output_visibility(value)
         self.update_windows()
 
@@ -404,6 +507,11 @@ class Window_edition(Window_pattern):
     def change_node_attribut(self, node, attribut, value):
         node.__dict__[attribut] = value
         self.update_parent_window()
+
+    def change_group_element(self, ref, value):
+        group = self.destination
+        elements = group.elements
+        elements[ref]["enable"] = bool(value)
 
     def update_all_entries(self, event):
         # Abort changes if there are two labels with the same name
