@@ -10,6 +10,8 @@
     "function background color_color": "white",
     "borders default color_color": "black",
     "border thickness_int": "3",
+    "group color_color": "#a0a0a0",
+    "group thickness_int": "1",
     "line color_color": "black",
     "line thikness_int": "1",
     "automatic spacing_int": "0",

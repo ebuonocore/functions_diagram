@@ -219,6 +219,30 @@ def pointer_position(window):
     return mouse_x, mouse_y
 
 
+def get_dimension(origin, destination):
+    """Return the tuple (x,y) where x is the difference between the abscissa of the origin and the destination and y is the difference between the ordinate of the origin and the destination."""
+    x = destination[0] - origin[0]
+    y = destination[1] - origin[1]
+    return (x, y)
+
+
+def search_in_rectangle(diagram, origin, destination):
+    """Return the tuple (functions, nodes). functions is the list of the functions in the rectangle defined by origin and destination. nodes is the list of the nodes in the rectangle defined by origin and destination."""
+    objects = []
+    x1, y1 = origin
+    x2, y2 = destination
+    for function in diagram.functions.values():
+        x, y = function.position
+        if x1 <= x <= x2 and y1 <= y <= y2:
+            objects.append(function)
+    for node in diagram.nodes.values():
+        if node.free:
+            x, y = node.position
+            if x1 <= x <= x2 and y1 <= y <= y2:
+                objects.append(node)
+    return objects
+
+
 def new_label(previous_labels, label=None):
     """Return the next_label who's not in previous label.
     label (optional) is the current label.

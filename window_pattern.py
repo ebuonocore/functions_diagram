@@ -70,7 +70,7 @@ class Window_pattern:
         self.parent.can.update()
         try:
             if self.frame.winfo_exists():
-                height = self.frame.winfo_height() + 40
+                height = self.frame.bbox(tki.ALL)[3] + 40
                 width = self.window.winfo_width()
                 self.window.geometry("{}x{}".format(width, height))
         except:
