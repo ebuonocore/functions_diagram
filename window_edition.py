@@ -27,21 +27,21 @@ class Window_edition(Window_pattern):
         if type(self.destination) == Node:
             self.window.geometry(
                 "300x180+{}+{}".format(
-                    rootx + win_width - 300 - self.MARGE, rooty + self.MARGE
+                    rootx + win_width - 300 - self.MARGIN, rooty + self.MARGIN
                 )
             )
         elif type(self.destination) == Function_block:
             height = (len(self.widget_grid) + 1) * self.parent.text_char_height + 40
             self.window.geometry(
                 "300x{}+{}+{}".format(
-                    height, rootx + win_width - 300 - self.MARGE, rooty + self.MARGE
+                    height, rootx + win_width - 300 - self.MARGIN, rooty + self.MARGIN
                 )
             )
         elif type(self.destination) == Group:
             height = (len(self.widget_grid) + 1) * self.parent.text_char_height + 40
             self.window.geometry(
                 "300x240+{}+{}".format(
-                    rootx + win_width - 300 - self.MARGE, rooty + self.MARGE
+                    rootx + win_width - 300 - self.MARGIN, rooty + self.MARGIN
                 )
             )
         self.resize_height()
@@ -155,6 +155,7 @@ class Window_edition(Window_pattern):
         )
         color = self.destination.color
         thickness = self.destination.thickness
+        group_margin = self.destination.margin
         self.parameters["dimension"] = self.create_entry(4, "Dimension", dimension)
         self.parameters["dimension"].bind("<FocusOut>", self.check_dimension)
         if not self.destination.fixed:
@@ -170,7 +171,12 @@ class Window_edition(Window_pattern):
         bt.grid(row=5, column=2, ipadx=16)
         self.parameters["thickness"] = self.create_entry(6, "Thickness", thickness)
         self.parameters["thickness"].bind("<FocusOut>", self.check_int)
-        nb_line = 7
+        self.parameters["margin"] = self.create_entry(7, "Margin", group_margin)
+        self.parameters["margin"].bind("<FocusOut>", self.check_margin)
+        if self.destination.fixed:
+            self.parameters["margin"].configure(state="disabled")
+            self.parameters["margin"].config(bg=self.colors["LABEL"])
+        nb_line = 8
         current_type = ""
         for element in self.destination.elements:
             if element["type"] != current_type:
@@ -430,6 +436,18 @@ class Window_edition(Window_pattern):
             else:
                 entry.config(bg=self.colors["DANGER"])
 
+    def check_margin(self, event):
+        if "margin" in self.parameters.keys():
+            entry = self.parameters["margin"]
+            value = entry.get()
+            if value == "" or value.isdigit():
+                entry.config(bg="white")
+                self.change_destination_attribut("margin", value)
+                self.destination.update_coordinates()
+                self.update_windows()
+            else:
+                entry.config(bg=self.colors["DANGER"])
+
     def check_dimension(self, event):
         if "dimension" in self.parameters.keys():
             entry = self.parameters["dimension"]
@@ -488,6 +506,15 @@ class Window_edition(Window_pattern):
                 self.destination.__dict__["fixed"] = True
             else:
                 self.destination.__dict__["fixed"] = False
+                if type(self.destination) == Group:
+                    self.destination.update_coordinates()
+                    origin = self.destination.position
+                    dimension = self.destination.dimension
+                    destination = [origin[0] + dimension[0], origin[1] + dimension[1]]
+                    elements = self.destination.search_elements_in(
+                        self.diagram, origin, destination
+                    )
+                    self.destination.elements = elements
             if type(self.destination) == Group:
                 for ref, element in enumerate(self.destination.elements):
                     new_value = not (bool(value))

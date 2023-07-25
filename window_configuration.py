@@ -14,7 +14,7 @@ class Window_configuration:
         self.window.resizable(height=True, width=True)
         self.window.bind("<Return>", lambda event: self.cmd_commit())
         self.parent.tk.update_idletasks()
-        self.MARGE = 4
+        self.MARGIN = 4
         self.colors = {"DANGER": "pink", "LABEL": "lightgrey", "NEUTRAL": "white"}
         file = "images/painting_can.png"
         image = Image.open(file)
@@ -23,10 +23,10 @@ class Window_configuration:
         rooty = self.parent.can.winfo_rooty()
         can_height = self.parent.can.winfo_height()
         win_width, win_height = self.window_dimension(self.parent.tk.geometry())
-        height = min(460, can_height - 2 * self.MARGE - 40)
+        height = min(460, can_height - 2 * self.MARGIN - 40)
         self.window.geometry(
             "400x{}+{}+{}".format(
-                height, rootx + win_width - 400 - self.MARGE, rooty + self.MARGE
+                height, rootx + win_width - 400 - self.MARGIN, rooty + self.MARGIN
             )
         )
         self.preferences = tl.load_preferences()  # dict()

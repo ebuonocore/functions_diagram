@@ -5,9 +5,10 @@ import tkinter as tki
 from math import cos, sin, pi
 import json
 import diagram as dia
-from node import *
-from link import *
-from function_block import *
+from node import Node
+from link import Link
+from function_block import Function_block
+import group  # To avoid circular import
 
 
 def index_occurrence(char, string):
@@ -170,7 +171,7 @@ def distance(origin_position, target_position):
 
 
 def nearest(mouse_position, targets):
-    """Return the nearest object (and the distance) from the mouse_position."""
+    """Return the nearest object, and the distance, from the mouse_position."""
     nearest_target = None
     nearest_target_distance = None
     for target in targets:
@@ -180,7 +181,7 @@ def nearest(mouse_position, targets):
             position_x = target.position[0] + target.dimension[0] // 2
             position_y = target.position[1] + target.dimension[1] // 2
             position = (position_x, position_y)
-        if type(target) == Node or type(target) == Link:
+        if type(target) in [Node, Link, group.Group]:
             compliant_target = True
             position = target.position
         if compliant_target:  # target is a free node or a function
@@ -201,13 +202,13 @@ def nearest_objet(mouse_position, diagram, target_types="movable"):
     target_types can be "all" (default), "function" or "node"
     """
     population = []
+    population += diagram.groups.values()
     if target_types != "node":
         population += diagram.functions.values()
     if target_types != "function":
         population += [node for node in diagram.nodes.values() if node.free]
     if target_types == "erasable":
         population += diagram.links
-
     nearest_target, nearest_target_distance = nearest(mouse_position, population)
     return nearest_target
 
@@ -227,7 +228,7 @@ def get_dimension(origin, destination):
 
 
 def search_in_rectangle(diagram, origin, destination):
-    """Return the tuple (functions, nodes). functions is the list of the functions in the rectangle defined by origin and destination. nodes is the list of the nodes in the rectangle defined by origin and destination."""
+    """Return the list of functions end nodes in the rectangle defined by the positions origin (x1, y1) and destination (x2, y2)."""
     objects = []
     x1, y1 = origin
     x2, y2 = destination
