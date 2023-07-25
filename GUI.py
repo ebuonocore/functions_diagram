@@ -87,8 +87,8 @@ class Window:
         )
         self.menu_label = tki.Label(self.menu)
         self.menu_label.pack(padx=1, pady=1, fill=tki.X, side=tki.LEFT)
-        self.marge = tki.Label(self.menu, width=1, bg="#F0F0F0")
-        self.marge.pack(side=tki.LEFT)
+        self.margin = tki.Label(self.menu, width=1, bg="#F0F0F0")
+        self.margin.pack(side=tki.LEFT)
         self.text_message = tki.StringVar()
         self.text_message.set("\n")
         self.message = tki.Label(
@@ -183,6 +183,7 @@ class Window:
         Stage 0: Leaves of the directed graph described by self.floors.
         The functions are divided graphically between self.MARGIN_DOWN and self.WIDTH - self.MARGIN_UP
         The free points (not associated with functions) are located on the intermediate levels.
+        Update the group positions.
         Return True if the positions have been updated.
         Otherwise, return False if it's not possible (loopback).
         Automatic positioning is deactivated if loopbacks are activated in the settings.
@@ -250,6 +251,9 @@ class Window:
                         node.position[1] = self.MARGIN_UP + free_height // 2
                     else:
                         node.position[1] = sum(ordinates) / len(ordinates)
+            for group in self.diagram.groups.values():
+                if group.fixed == False:
+                    group.update_coordinates()
             return True
         else:
             message("Position update impossible: Cycle detected.", self.text_message)
@@ -262,7 +266,7 @@ class Window:
             self.can.delete("all")
             self.can.configure(bg=self.preferences["main background color_color"])
             # Draw all the elements of the system
-            self.draw_function()
+            self.draw_functions()
             self.draw_nodes()
             self.draw_lines()
             self.draw_groups()
@@ -323,12 +327,16 @@ class Window:
         ]
         self.can.create_polygon(perimeter[orientation], fill=color)
 
-    def print_label(self, x, y, label, annotation="", anchor="nw", justify=None):
+    def print_label(
+        self, x, y, label, annotation="", anchor="nw", justify=None, color=None
+    ):
         """Write the label and if necessary the type annotation separated by :"""
         police = self.preferences["police"]
         text_size = int(self.preferences["text size_int"])
         font = tkfont.Font(family=police, size=text_size, weight="normal")
         text_color = self.preferences["text color_color"]
+        if color is not None:
+            text_color = color
         type_color = self.preferences["type color_color"]
         # If justify is not None, its value is "left", "center","separator" or "right"
         total_text = label
@@ -366,7 +374,7 @@ class Window:
                 x_type, y, text=annotation, font=font, anchor=anchor, fill=type_color
             )
 
-    def draw_function(self):
+    def draw_functions(self):
         """Draw the function_block: Header, body frames.
         Update the positions of the points in the block: Inputs and outputs
         """
@@ -488,7 +496,9 @@ class Window:
                 outline=color,
                 width=thickness,
             )
-            self.print_label(x_origin, y_origin, group.label)
+            self.print_label(
+                x_origin, y_origin - self.text_char_height, group.label, color=color
+            )
 
     def draw_destination_outine(self, color=COLOR_OUTLINE):
         if type(self.destination) == Link:
@@ -513,6 +523,17 @@ class Window:
                 y - 2,
                 x + width + 2,
                 y + self.title_char_height + height + 2,
+                width=2,
+                outline=color,
+            )
+        elif type(self.destination) == Group:
+            x, y = self.destination.position
+            width, height = self.destination.dimension
+            self.can.create_rectangle(
+                x - 2,
+                y - 2,
+                x + width + 2,
+                y + height + 2,
                 width=2,
                 outline=color,
             )
@@ -698,7 +719,10 @@ class Window:
         else:
             self.state = 1
             message("No object to edit.", self.text_message)
-            self.lift_window(self.window_edition.window)
+            try:
+                self.lift_window(self.window_edition.window)
+            except:
+                pass
 
     @Decorators.disable_if_editing
     def cmd_move(self):
@@ -862,26 +886,9 @@ class Window:
             self.state = 9  # Selecting the second corner
         elif self.state == 9:  # Selecting the second corner
             self.destination = (Xpix, Ypix)
-            x_origin, y_origin = self.origin
             dimension = tl.get_dimension(self.origin, self.destination)
-            objects = tl.search_in_rectangle(
-                self.diagram, self.origin, self.destination
-            )
             elements = list()
-            for ref, element in enumerate(objects):
-                x_element, y_element = element.position
-                type_element = type(element).__name__
-                postion = [x_element - x_origin, y_element - y_origin]
-                elements.append(
-                    {
-                        "id": ref,
-                        "type": type_element,
-                        "enable": True,
-                        "element": element,
-                        "position": postion,
-                    }
-                )
-            empty_zone = len(elements) == 0
+            empty_zone = True
             previous_names = [group for group in self.diagram.groups.keys()]
             name = tl.new_label(previous_names)
             new_group = Group(
@@ -892,6 +899,8 @@ class Window:
                 position=self.origin,
                 dimension=dimension,
             )
+            elements = new_group.search_elements_in(self.diagram, self.origin, self.destination)
+            new_group.elements = elements
             self.diagram.add_group(new_group)
             self.destination = new_group
             self.state = 1  # Returns to basic state
@@ -944,6 +953,20 @@ class Window:
         elif self.state == 3 and self.destination is not None:  # Move to destination
             mouse_x, mouse_y = tl.pointer_position(self.can)
             self.destination.position = [mouse_x, mouse_y]
+            # Move the elements of the group
+            if type(self.destination) == Group:
+                if self.destination.fixed == False:
+                    for element in self.destination.elements:
+                        x_relative, y_relative = element["position"]
+                        element["element"].position = [
+                            mouse_x + x_relative,
+                            mouse_y + y_relative,
+                        ]
+            # If it's an element of a group, update the dimensions of the group
+            else:
+                for group in self.diagram.groups.values():
+                    if group.fixed == False:
+                        group.follow(self.destination)
             self.position_functions_nodes()
             self.draw()
         elif self.state == 4:  # Select object to erase

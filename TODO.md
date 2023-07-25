@@ -1,17 +1,15 @@
 # DONE:
-**Groups**
-+ Dessin des groupes
-+ Interface d'édition des groupes (liste des éléments)
-+ Thickness: Ajuster le paramétrage du dash dans le dessin des pointillés en fonction de thickness
-+ Test de validité de thickness et color Ok
-+ Auto/Fixed : Griser position ET dimension si Auto.
-+ Nouveau calcul de la hauteur de fenêtre en fonction de self.frame.bbox()
++ Ajout d'un attribut  "group margin" aux prefs et "Margin" aux groupes.
++ Group/Auto : Donner les dimensions minimales pour englober les objets du groupe + margins  
+    Fonctions: Ajout de la hauteur de l'entête seulement sur les fonctions
+    Tient compte de la marge si modifiée  
++ Déplacement d'objets & Automatic positionning : Recalculer les position/dimensions des groupes 'Auto'
++ Sélection et déplacement des groupes (et des éléments du groupe)
 
 # TODO:
 **GUI.py :** 
-+ Ajouter un attribut "Marge" aux groupes et "group marge" aux prefs
-+ Auto : Donner les dimensions minimales pour englober les objets du groupe + marges
-+ Move, Edit et Erase /Group (prévoir la sélection coin sup gauche et inf droits)
++ Move, Edit et Erase /Group (prévoir la sélection coin sup gauche et inf droit)
++ Group : Bouton Delete all elements
 + Sauvegarde et lecture des groupes
 
 + Mettre en place .scale sur self.can ?   

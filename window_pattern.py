@@ -13,7 +13,7 @@ class Window_pattern:
         self.window.resizable(height=True, width=False)
         self.window.bind("<Return>", lambda event: self.cmd_commit())
         self.parent.tk.update_idletasks()
-        self.MARGE = 4
+        self.MARGIN = 4
         self.painting_can_image = self.load_image("painting_can")
         self.garbage_image = self.load_image("garbage")
         self.add_image = self.load_image("add")

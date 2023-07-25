@@ -13,16 +13,16 @@ class Window_information:
         self.window.resizable(height=True, width=True)
         self.window.bind("<Return>", lambda event: self.cmd_commit())
         self.parent.tk.update_idletasks()
-        self.MARGE = 4
+        self.MARGIN = 4
         rootx = self.parent.can.winfo_rootx()
         rooty = self.parent.can.winfo_rooty()
         can_height = self.parent.can.winfo_height() * 2 // 3
         win_width, win_height = self.window_dimension(self.parent.tk.geometry())
         self.window.geometry(
             "400x{}+{}+{}".format(
-                can_height - 2 * self.MARGE - 40,
-                rootx + win_width - 400 - self.MARGE,
-                rooty + self.MARGE,
+                can_height - 2 * self.MARGIN - 40,
+                rootx + win_width - 400 - self.MARGIN,
+                rooty + self.MARGIN,
             )
         )
         self.images = images

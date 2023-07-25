@@ -17,7 +17,7 @@ class Window_export_image(Window_pattern):
         win_width, win_height = self.window_dimension(self.parent.tk.geometry())
         self.window.geometry(
             "300x100+{}+{}".format(
-                rootx + win_width - 300 - self.MARGE, rooty + self.MARGE
+                rootx + win_width - 300 - self.MARGIN, rooty + self.MARGIN
             )
         )
         self.diagram = diagram
