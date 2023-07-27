@@ -151,6 +151,53 @@ def create_node_description(node):
         return ""
 
 
+def create_group_description(group):
+    """Create the string description of a group.
+    Example with group g1 of position (150, 200) and dimensions (250, 250) containing functions f1, f1* and nodes n1, n2 and n3. Margin 20 pixels. Auto mode.
+
+    group g1(margin=20, mode="Auto", color="#a0a000", thickness=2)
+    g1.add_functions(f1, f1*)
+    g1.add_nodes(n1, n2, n3)
+    g1.position(150, 200)
+    g1.dimension(250, 250)
+    """
+    description = "group " + group.name + "("
+    description += "margin=" + str(group.margin) + ", "
+    if group.fixed:
+        description += 'mode="Fixed", '
+    else:
+        description += 'mode="Auto", '
+    description += 'color="' + group.color + '", '
+    description += "thickness=" + str(group.thickness)
+    description += ")\n"
+    associated_functions = []
+    associated_nodes = []
+    for element in group.elements:
+        if element["type"] == "Function_block":
+            associated_functions.append(element["element"])
+        if element["type"] == "Node":
+            associated_nodes.append(element["element"])
+    if len(associated_functions) > 0:
+        description += group.name + ".add_function("
+        for function in associated_functions:
+            description += function.name + ","
+        description = description[:-1] + ")\n"
+    if len(associated_nodes) > 0:
+        description += group.name + ".add_node("
+        for node in associated_nodes:
+            description += node.name + ","
+        description = description[:-1] + ")\n"
+    if group.position != [None, None]:
+        description += group.name + ".position("
+        description += str(int(group.position[0])) + ","
+        description += str(int(group.position[1])) + ")\n"
+    if group.dimension != []:
+        description += group.name + ".dimension("
+        description += str(int(group.dimension[0])) + ","
+        description += str(int(group.dimension[1])) + ")\n"
+    return description
+
+
 def reverse(link_description):
     """Create the symmetric expression of the link between two nodes.
     Example for "A---B" : "B---A"
@@ -242,6 +289,18 @@ def search_in_rectangle(diagram, origin, destination):
             if x1 <= x <= x2 and y1 <= y <= y2:
                 objects.append(node)
     return objects
+
+
+def all_previous_names(diagram):
+    """Return the list of all names of functions, nodes and groups in the diagram."""
+    names = []
+    for function in diagram.functions.values():
+        names.append(function.name)
+    for node in diagram.nodes.values():
+        names.append(node.name)
+    for group in diagram.groups.values():
+        names.append(group.name)
+    return names
 
 
 def new_label(previous_labels, label=None):
@@ -557,7 +616,7 @@ def load_preferences(file=None):
             if type(value) == str:
                 if not value.isdigit():
                     preferences[key] = security_pref[key]
-                    print(key, value, "changed to default value", security_pref[key])
+                    # print(key, value, "changed to default value", security_pref[key])
             else:
                 preferences[key] = security_pref[key]
         elif "_bool" in key:

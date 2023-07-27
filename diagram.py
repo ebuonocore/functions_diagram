@@ -57,10 +57,26 @@ class Diagram:
             self.delete_node(function.output.name)
         return pop_result
 
+    def delete_group(self, group_name):
+        """Delete the group in the diagram. Don't remove the elements inside."""
+        group = self.groups[group_name]
+        pop_result = self.groups.pop(group_name)
+        return pop_result
+
     def add_node(self, new_node):
         """Add a new node in the diagram."""
-        if type(new_node) == Node and new_node.name not in self.nodes.keys():
+        test_new_name = new_node.name not in tl.all_previous_names(self)
+        if type(new_node) == Node and test_new_name:
             self.nodes[new_node.name] = new_node
+            return True
+        else:
+            return False
+
+    def add_group(self, new_group):
+        """Add a new group in the diagram."""
+        test_new_name = new_group.name not in tl.all_previous_names(self)
+        if type(new_group) == Group and test_new_name:
+            self.groups[new_group.name] = new_group
             return True
         else:
             return False
@@ -77,14 +93,6 @@ class Diagram:
                 if pop_result in link.nodes:
                     self.links.remove(link)
         return pop_result
-
-    def add_group(self, new_group):
-        """Add a new group in the diagram."""
-        if type(new_group) == Group and new_group.name not in self.groups.keys():
-            self.groups[new_group.name] = new_group
-            return True
-        else:
-            return False
 
     def delete_group(self, group_name):
         """Delete the group in the diagram."""
@@ -131,6 +139,9 @@ class Diagram:
             diagram_datas += tl.create_definition_description(function) + "\n"
         for node in self.nodes.values():
             diagram_datas += tl.create_node_description(node)
+        diagram_datas += "\n"
+        for group in self.groups.values():
+            diagram_datas += tl.create_group_description(group) + "\n"
         links = []  # list of str : descriptions of the links
         for node in self.nodes.values():
             for connection in node.connections:

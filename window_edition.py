@@ -397,15 +397,10 @@ class Window_edition(Window_pattern):
         self.change_destination_attribut(attribut, color)
 
     def check_name(self):
-        """Test if this name is already taken by another function.
+        """Test if this name is already taken by another element.
         Validate it if this is not the case, otherwise, propose a new free name.
         """
-        if type(self.destination) == Node:
-            previous_names = self.diagram.nodes.keys()
-        elif type(self.destination) == Group:
-            previous_names = self.diagram.groups.keys()
-        elif type(self.destination) == Function_block:
-            previous_names = self.diagram.functions.keys()
+        previous_names = previous_names = tl.all_previous_names(self.diagram)
         label = self.parameters["label"].get()
         name = self.parameters["name"].get()
         if label != name.split("*")[0]:
@@ -503,22 +498,23 @@ class Window_edition(Window_pattern):
     def check_box(self, key, value):
         if key == "Auto/Fixed":
             if bool(value):
+                # Fixed mode: Just deselect all elements
                 self.destination.__dict__["fixed"] = True
+                if type(self.destination) == Group:
+                    for ref, element in enumerate(self.destination.elements):
+                        self.change_group_element(
+                            ref, False, redraw=False, redim=bool(value)
+                        )
             else:
+                # Auto mode: Select all elements, update dimensions and update the window
                 self.destination.__dict__["fixed"] = False
                 if type(self.destination) == Group:
+                    for ref, element in enumerate(self.destination.elements):
+                        self.change_group_element(
+                            ref, True, redraw=False, redim=bool(value)
+                        )
                     self.destination.update_coordinates()
-                    origin = self.destination.position
-                    dimension = self.destination.dimension
-                    destination = [origin[0] + dimension[0], origin[1] + dimension[1]]
-                    elements = self.destination.search_elements_in(
-                        self.diagram, origin, destination
-                    )
-                    self.destination.elements = elements
-            if type(self.destination) == Group:
-                for ref, element in enumerate(self.destination.elements):
-                    new_value = not (bool(value))
-                    self.change_group_element(ref, new_value)
+                    self.update_windows()
         elif key == "Hide/Show output":
             self.destination.set_output_visibility(value)
         self.update_windows()
@@ -535,10 +531,14 @@ class Window_edition(Window_pattern):
         node.__dict__[attribut] = value
         self.update_parent_window()
 
-    def change_group_element(self, ref, value):
+    def change_group_element(self, ref, value, redraw=True, redim=True):
         group = self.destination
         elements = group.elements
         elements[ref]["enable"] = bool(value)
+        if redim:
+            group.update_coordinates()
+        if redraw:
+            self.update_windows()
 
     def update_all_entries(self, event):
         # Abort changes if there are two labels with the same name
