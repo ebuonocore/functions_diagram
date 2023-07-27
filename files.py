@@ -2,6 +2,7 @@ import tools as tl
 import diagram as dia
 from function_block import *
 from node import *
+import group
 
 
 def open_file(file_name):
@@ -53,6 +54,14 @@ def read_state(file_text, file_name=None):
             add_node_ok = diagram.add_node(node_definition(line))
             if not add_node_ok:
                 error_message += add_message(line_number, line, "Node not added.")
+        # Create a group
+        # Syntax : group g1(margin=20, mode="Auto", color="#a0a000", thickness=2)
+        if line[:5] == "group" and test_parentheses(line):
+            new_group = group_definition(line)
+            if new_group is not None:
+                diagram.add_group(new_group)
+            else:
+                error_message += add_message(line_number, line, "Group not added.")
         # Move the function_block position
         # Syntax : funct.position(x, y)
         if ".position" in line and test_parentheses(line):
@@ -61,7 +70,7 @@ def read_state(file_text, file_name=None):
                 function_block.fixe = True
             else:
                 error_message += add_message(
-                    line_number, line, "This function doesn't exist."
+                    line_number, line, "This function or group doesn't exist."
                 )
         # Change the dimension of a function_block
         # Syntax : funct.dimension(x, y)
@@ -69,7 +78,7 @@ def read_state(file_text, file_name=None):
             function_block = change_parameter("dimension", diagram, line)
             if function_block is None:
                 error_message += add_message(
-                    line_number, line, "This function doesn't exist."
+                    line_number, line, "This function or group doesn't exist."
                 )
     if file_name is not None and error_message != "":
         error_file = file_name.split(".")[0] + ".err"
@@ -184,7 +193,7 @@ def function_definition(line):
 
 
 def node_definition(line):
-    """In the diagram, create the node describe in the line.
+    """Return the new node describe in the line.
     Syntax : node(A) or node(B:float) or node(C:int, (x,y))  # fixed
     """
     if "#fixed" in line:
@@ -228,23 +237,80 @@ def node_definition(line):
     )
 
 
+def group_definition(line: str) -> group.Group:
+    """Return the group object described in the line.
+    Example with group g1 of position (150, 200) and dimensions (250, 250) containing functions f1, f1* and nodes n1, n2 and n3. Margin 20 pixels. Auto mode.
+
+    group g1(margin=20, mode="Auto", color="#a0a000", thickness=2)
+    g1.add_functions(f1, f1*)
+    g1.add_nodes(n1, n2, n3)
+    g1.position(150, 200)
+    g1.dimension(250, 250)
+
+    ** Minimum settings **
+    By default, if the group contains elements (functions or nodes) the mode is "Auto", otherwise it is "Fixed". In this case, the position and dimension entered are used.
+    If the margin, color and thickness parameters are not set, the default values are those in the preferences.
+
+    group g2()
+
+    g2 cannot be created because it does not have enough parameters.
+
+    group g3()
+    g3.position(100, 200)
+    g3.dimension(300, 300)
+
+    g3 can be created with preferences values in "Fixed" mode.
+
+    group g4()
+    g4.add_functions(f1, f2)
+
+    g4 can be created with preferences values in "Auto" mode if f1 and/or f2 exist(s).
+    """
+    line = line.replace(" ", "")
+    line = line.replace('"', "'")
+    first_open_parentheses = tl.index_occurrence("(", line)[0]
+    last_closed_parentheses = tl.index_occurrence(")", line)[-1]
+    group_name = line[5:first_open_parentheses]
+    group_label = group_name.split("*")[0]
+    parameters_serie = line[first_open_parentheses + 1 : last_closed_parentheses]
+    parameters = tl.parameters_in(parameters_serie)
+    new_group = group.Group(name=group_name, label=group_label)
+    if len(parameters) > 1:
+        for parameter in parameters:
+            if "=" in parameter:
+                pos_equal = parameter.index("=")
+                parameter_name = parameter[:pos_equal]
+                value = parameter[pos_equal + 1 :]
+                if parameter_name == "margin":
+                    new_group.margin = int(value)
+                elif parameter_name == "mode":
+                    new_group.fixed = value == "Fixed"
+                elif parameter_name == "color":
+                    new_group.color = value.replace("'", "")
+                elif parameter_name == "thickness":
+                    new_group.thickness = int(value)
+    return new_group
+
+
 def change_parameter(parameter, diagram, line):
-    """Change the parameter of the function_block designated in the line.
+    """Change the parameter of the function_block or the group designated in the line.
     parameter is 'position' or 'dimension'
-    Return de function_block object.
+    Return the function_block object/group.
     Example : funct1.postion(42, 24)
     """
     line = line.replace(" ", "")
     pos_parameter = line.index("." + parameter)
-    function_name = line[:pos_parameter]
-    if function_name in diagram.functions.keys():
-        function = diagram.functions[function_name]
-        index_parameter = pos_parameter + len(parameter) + 2
-        new_parameters = tl.coordinates(line[index_parameter:-1])
-        function.__dict__[parameter] = new_parameters
-        return function
+    element_name = line[:pos_parameter]
+    if element_name in diagram.functions.keys():
+        element = diagram.functions[element_name]
+    elif element_name in diagram.groups.keys():
+        element = diagram.groups[element_name]
     else:
         return None
+    index_parameter = pos_parameter + len(parameter) + 2
+    new_parameters = tl.coordinates(line[index_parameter:-1])
+    element.__dict__[parameter] = new_parameters
+    return element
 
 
 def add_message(line_number, line, message):

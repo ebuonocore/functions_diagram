@@ -74,6 +74,8 @@ class Group:
 
     def update_coordinates(self):
         """Update the coordinates of the group based on the elements it contains."""
+        if self.fixed:
+            return False
         x_min = None
         y_min = None
         x_max = None
@@ -81,14 +83,14 @@ class Group:
         if len(self.elements) == 0:
             return False
         for element in self.elements:
-            if element["type"] == "Node":
+            if element["type"] == "Node" and element["enable"]:
                 x, y = element["element"].position
                 x_min = inf(x_min, x)
                 y_min = inf(y_min, y)
                 x_max = sup(x_max, x)
                 y_max = sup(y_max, y)
 
-            elif element["type"] == "Function_block":
+            elif element["type"] == "Function_block" and element["enable"]:
                 x_left, y_top = element["element"].position
                 x_right = x_left + element["element"].dimension[0]
                 y_bottom = (
@@ -99,11 +101,20 @@ class Group:
                 x_max = sup(x_max, x_right)
                 y_max = sup(y_max, y_bottom)
         margin = int(self.margin)
-        self.position = [x_min - margin, y_min - margin]
-        self.dimension = [
-            x_max - x_min + 2 * margin,
-            y_max - y_min + 2 * margin,
-        ]
+        if x_min is not None and y_min is not None:
+            self.position = [x_min - margin, y_min - margin]
+            self.dimension = [
+                x_max - x_min + 2 * margin,
+                y_max - y_min + 2 * margin,
+            ]
+        else:
+            return False
+        # Update the position of the elements in the group
+        x, y = self.position
+        for element in self.elements:
+            xe = element["element"].position[0]
+            ye = element["element"].position[1]
+            element["position"] = [xe - x, ye - y]
         return True
 
     def follow(self, destination):
@@ -113,4 +124,9 @@ class Group:
                     self.update_coordinates()
 
     def __repr__(self):
-        pass
+        line = str(self.name) + "("
+        line += "fixed: " + str(self.fixed) + ", "
+        line += "margin: " + str(self.margin) + ", "
+        line += "color: " + str(self.color) + ", "
+        line += "thickness: " + str(self.thickness) + ")"
+        return line

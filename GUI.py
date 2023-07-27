@@ -1,4 +1,3 @@
-from pynput import keyboard
 from PIL import Image, ImageTk
 from math import pi, cos, sin
 from os import path
@@ -108,8 +107,6 @@ class Window:
         self.update_positions()
         message("Function_diagram v1.0", self.text_message)
         self.edition_in_progress = False
-        self.listener = keyboard.Listener(on_press=self.cmd_keyboard_event)
-        self.listener.start()
         self.engine()  # Starts state management
 
     def screen_dimensions(self):
@@ -664,7 +661,7 @@ class Window:
         """Add a nex function block."""
         if self.edition_in_progress == False:
             message("Create a new function.", self.text_message)
-            previous_names = [function for function in self.diagram.functions.keys()]
+            previous_names = tl.all_previous_names(self.diagram)
             name = tl.new_label(previous_names)
             label = name.split("*")[0]
             output = Node(name=name + ">")
@@ -688,7 +685,7 @@ class Window:
         """Add a new node."""
         if self.edition_in_progress == False:
             message("Create a new node.", self.text_message)
-            previous_names = [node for node in self.diagram.nodes.keys()]
+            previous_names = tl.all_previous_names(self.diagram)
             name = tl.new_label(previous_names)
             new_node = Node(name=name, label=name, free=True, position=[100, 100])
             self.diagram.add_node(new_node)
@@ -767,6 +764,9 @@ class Window:
         elif type(destination) == Function_block:
             function_to_delete = tl.key_of(self.diagram.functions, destination)
             self.diagram.delete_function(function_to_delete)
+        elif type(destination) == Group:
+            group_to_delete = tl.key_of(self.diagram.groups, destination)
+            self.diagram.delete_group(group_to_delete)
 
     @Decorators.disable_if_editing
     def cmd_export(self):
@@ -889,7 +889,7 @@ class Window:
             dimension = tl.get_dimension(self.origin, self.destination)
             elements = list()
             empty_zone = True
-            previous_names = [group for group in self.diagram.groups.keys()]
+            previous_names = tl.all_previous_names(self.diagram)
             name = tl.new_label(previous_names)
             new_group = Group(
                 name=name,
@@ -899,7 +899,9 @@ class Window:
                 position=self.origin,
                 dimension=dimension,
             )
-            elements = new_group.search_elements_in(self.diagram, self.origin, self.destination)
+            elements = new_group.search_elements_in(
+                self.diagram, self.origin, self.destination
+            )
             new_group.elements = elements
             self.diagram.add_group(new_group)
             self.destination = new_group
@@ -922,16 +924,6 @@ class Window:
     def fermer_fenêtre(self):
         self.tk.quit()
         self.tk.destroy()
-
-    def copy_all(self, event):
-        message("Copy all", self.text_message)
-
-    def cmd_keyboard_event(self, key):
-        """Cancel operation if the user press Enter or Escape."""
-        if key in (keyboard.Key.esc, keyboard.Key.enter):
-            if not self.edition_in_progress:
-                message("Selection canceled", self.text_message)
-                self.state = 1
 
     def engine(self):
         """State management :
@@ -956,12 +948,22 @@ class Window:
             # Move the elements of the group
             if type(self.destination) == Group:
                 if self.destination.fixed == False:
+                    other_groups = [
+                        group
+                        for group in self.diagram.groups.values()
+                        if group != self.destination
+                    ]
                     for element in self.destination.elements:
                         x_relative, y_relative = element["position"]
                         element["element"].position = [
                             mouse_x + x_relative,
                             mouse_y + y_relative,
                         ]
+
+                    for group in other_groups:
+                        for object in self.destination.elements:
+                            group.follow(object["element"])
+
             # If it's an element of a group, update the dimensions of the group
             else:
                 for group in self.diagram.groups.values():
