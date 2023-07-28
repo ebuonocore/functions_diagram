@@ -49,19 +49,40 @@ class Diagram:
 
     def delete_function(self, function_name):
         """Delete the function in the diagram. Remove all the nodes of these function."""
-        function = self.functions[function_name]
-        pop_result = self.functions.pop(function_name)
-        if pop_result is not None:
-            for node in function.entries:
-                self.delete_node(node.name)
-            self.delete_node(function.output.name)
-        return pop_result
+        if function_name in self.functions.keys():
+            function = self.functions[function_name]
+            pop_result = self.functions.pop(function_name)
+            if pop_result is not None:
+                for node in function.entries:
+                    self.delete_node(node.name)
+                self.delete_node(function.output.name)
+            return pop_result
+        else:
+            return None
+
+    def delete_node(self, node_name):
+        """Delete the node in the diagram and all references of this node in the list of connections of the other node."""
+        if node_name in self.nodes.keys():
+            pop_result = self.nodes.pop(node_name)
+            if pop_result is not None:
+                for node in self.nodes.values():
+                    for node_connected in node.connections:
+                        if node_name == node_connected.name:
+                            node.connections.remove(node_connected)
+                for link in self.links:
+                    if pop_result in link.nodes:
+                        self.links.remove(link)
+            return pop_result
+        else:
+            return None
 
     def delete_group(self, group_name):
         """Delete the group in the diagram. Don't remove the elements inside."""
-        group = self.groups[group_name]
-        pop_result = self.groups.pop(group_name)
-        return pop_result
+        if group_name in self.groups.keys():
+            pop_result = self.groups.pop(group_name)
+            return pop_result
+        else:
+            return None
 
     def add_node(self, new_node):
         """Add a new node in the diagram."""
@@ -80,24 +101,6 @@ class Diagram:
             return True
         else:
             return False
-
-    def delete_node(self, node_name):
-        """Delete the node in the diagram and all references of this node in the list of connections of the other node."""
-        pop_result = self.nodes.pop(node_name)
-        if pop_result is not None:
-            for node in self.nodes.values():
-                for node_connected in node.connections:
-                    if node_name == node_connected.name:
-                        node.connections.remove(node_connected)
-            for link in self.links:
-                if pop_result in link.nodes:
-                    self.links.remove(link)
-        return pop_result
-
-    def delete_group(self, group_name):
-        """Delete the group in the diagram."""
-        pop_result = self.groups.pop(group_name)
-        return pop_result
 
     def nodes_connection(self, A, B):
         """Create a link between the nodes node_A and node_B designated by the names A and B respectively."""

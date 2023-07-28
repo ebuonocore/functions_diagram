@@ -53,6 +53,50 @@ class Group:
             else:
                 raise Exception("The key " + k + " doesn't exist.")
 
+    def update_existing_elements(self, diagram):
+        """check if the element exists in the diagram. Otherwise, remove it from the list."""
+        for element in self.elements:
+            if element["type"] == "Function_block":
+                if element["element"] not in diagram.functions.values():
+                    self.elements.remove(element)
+            elif element["type"] == "Node":
+                if element["element"] not in diagram.nodes.values():
+                    self.elements.remove(element)
+
+    def add_function(self, new_function):
+        """Add a new function in the elements list if it doesn't already exists."""
+        for element in self.elements:
+            if element["element"] == new_function:
+                return False
+        self.elements.append(
+            {
+                "id": len(self.elements),
+                "type": "Function_block",
+                "enable": True,
+                "element": new_function,
+                "position": [0, 0],
+            }
+        )
+        self.update_coordinates()
+        return True
+
+    def add_node(self, new_node):
+        """Add a new node in the elements list if it doesn't already exists."""
+        for element in self.elements:
+            if element["element"] == new_node:
+                return False
+        self.elements.append(
+            {
+                "id": len(self.elements),
+                "type": "Node",
+                "enable": True,
+                "element": new_node,
+                "position": [0, 0],
+            }
+        )
+        self.update_coordinates()
+        return True
+
     def search_elements_in(self, diagram, origin, destination):
         elements = list()
         x_origin, y_origin = origin

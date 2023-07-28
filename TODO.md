@@ -1,22 +1,12 @@
 # DONE:
-+ Création/Suppression/Modification de groupes
-+ Suppression de pyinput
-+ Mise en commentaire du bind de Ctrl+a
-+ Suppression de l'offset au déplacement des groupes
-+ Les sous-groupes suivent les déplacement d'un groupe supérieur
-+ Redessiner le groupe lors de sélection/deselection d'éléments dans la liste d'édition
-+ Sélection et édition de groupe
-+ Sélection et suppression de groupe
-+ Sauvegarde des groupes
-+ Aucun élément (fonction , noeud, group) n'a d'homonyme.
-+ Lecture/création des groupes
-+ Intégration des créations/modifications de groupes dans le Undo/Redo
++ Group : Bouton Delete all elements
++ Group : N'afficher les éléménets de la fenêtre d'édition qui s'ils existent.
++ Gestion des sauvegardes et lecture pour les groupes
++ Ménage dans les diagrammes d'exemples
 
 # TODO:
 **Groups :** 
-+ dans diagram add_function. Changer le test d'existence du nom par tl.all_previous_names(self)
 + Redimensionner : prévoir la sélection coin sup gauche et inf droit si Mode Fixe et non Auto
-+ Group : Bouton Delete all elements
 
 **ReadMe**
 + Feuille de route : 3 derniers points Ok!
