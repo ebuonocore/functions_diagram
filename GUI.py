@@ -5,6 +5,7 @@ from tkinter import filedialog as fd
 from tkinter import font as tkfont
 import tkinter as tki
 import tools as tl
+import group as grp
 from diagram import *
 from node import *
 from files import *
@@ -504,7 +505,7 @@ class Window:
             self.can.create_rectangle(
                 x - 2, y - 2, x + 2, y + 2, width=2, outline=color
             )
-        if type(self.destination) == Node:
+        elif type(self.destination) == Node:
             d = 2 * int(self.preferences["text size_int"]) // 3
             x, y = self.destination.position
             if self.destination.free:
@@ -512,6 +513,12 @@ class Window:
             else:
                 scale = int(self.preferences["text size_int"]) // 3
                 self.draw_triangle(x - scale // 2, y, 0, color, scale)
+
+        elif type(self.destination) == group.Corner_group:
+            d = 2 * int(self.preferences["text size_int"]) // 3
+            x, y = self.destination.position
+            self.can.create_rectangle(x - d, y - d, x + d, y + d, fill=color)
+
         elif type(self.destination) == Function_block:
             x, y = self.destination.position
             width, height = self.destination.dimension
@@ -963,6 +970,10 @@ class Window:
                     for group in other_groups:
                         for object in self.destination.elements:
                             group.follow(object["element"])
+            elif type(self.destination) == grp.Corner_group:
+                x_corner, y_corner = self.destination.position
+                x_parent, y_parent = self.destination.parent_group.position
+                self.destination.parent_group.dimension = [x_corner - x_parent, y_corner - y_parent]
 
             # If it's an element of a group, update the dimensions of the group
             else:

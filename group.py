@@ -174,3 +174,11 @@ class Group:
         line += "color: " + str(self.color) + ", "
         line += "thickness: " + str(self.thickness) + ")"
         return line
+
+
+class Corner_group:
+    def __init__(self, parent_group):
+        self.parent_group = parent_group
+        x_parent, y_parent = parent_group.position
+        w_parent, h_parent = parent_group.dimension
+        self.position = [x_parent + w_parent, y_parent + h_parent]

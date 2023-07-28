@@ -191,7 +191,7 @@ class Window_edition(Window_pattern):
             if element_Ok:
                 if element["type"] != current_type:
                     current_type = element["type"]
-                    label_title = "Nodes" if current_type == "Node" else "Functions"
+                    label_title = "Node" if current_type == "Node" else "Function"
                     tki.Label(
                         self.frame,
                         text=label_title,
@@ -209,7 +209,7 @@ class Window_edition(Window_pattern):
         tki.Label(self.frame, text="Delete all!", anchor="w").grid(
             row=nb_line, column=0, sticky=tki.W
         )
-        tki.Label(self.frame, text="group and selected items", anchor="w").grid(
+        tki.Label(self.frame, text="group & selected items", anchor="w").grid(
             row=nb_line, column=1, sticky=tki.W
         )
         bt = tki.Button(
