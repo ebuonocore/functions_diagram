@@ -178,24 +178,46 @@ class Window_edition(Window_pattern):
             self.parameters["margin"].config(bg=self.colors["LABEL"])
         nb_line = 8
         current_type = ""
+        self.destination.update_existing_elements(self.diagram)
         for element in self.destination.elements:
-            if element["type"] != current_type:
-                current_type = element["type"]
-                label_title = "Nodes" if current_type == "Node" else "Functions"
-                tki.Label(
-                    self.frame,
-                    text=label_title,
-                    anchor="w",
-                    font=font.Font(weight="bold"),
-                ).grid(row=nb_line, column=0, sticky=tki.W)
+            # Don't display elements that are not in the diagram
+            element_Ok = False
+            if element["type"] == "Node":
+                if element["element"].name in self.diagram.nodes:
+                    element_Ok = True
+            elif element["type"] == "Function_block":
+                if element["element"].name in self.diagram.functions:
+                    element_Ok = True
+            if element_Ok:
+                if element["type"] != current_type:
+                    current_type = element["type"]
+                    label_title = "Nodes" if current_type == "Node" else "Functions"
+                    tki.Label(
+                        self.frame,
+                        text=label_title,
+                        anchor="w",
+                        font=font.Font(weight="bold"),
+                    ).grid(row=nb_line, column=0, sticky=tki.W)
+                    nb_line += 1
+                ref = element["id"]
+                self.parameters[current_type + element["element"].name] = (
+                    self.create_group_box(
+                        nb_line, ref, element["element"], element["enable"]
+                    ),
+                )
                 nb_line += 1
-            ref = element["id"]
-            self.parameters[current_type + element["element"].name] = (
-                self.create_group_box(
-                    nb_line, ref, element["element"], element["enable"]
-                ),
-            )
-            nb_line += 1
+        tki.Label(self.frame, text="Delete all!", anchor="w").grid(
+            row=nb_line, column=0, sticky=tki.W
+        )
+        tki.Label(self.frame, text="group and selected items", anchor="w").grid(
+            row=nb_line, column=1, sticky=tki.W
+        )
+        bt = tki.Button(
+            self.frame,
+            image=self.garbage_image,
+            command=lambda: self.delete_all_elements(self.destination),
+        )
+        bt.grid(row=nb_line, column=2, ipadx=16)
 
     def create_entry(self, line_number, key, default_value, **kwargs):
         self.button = ""
@@ -534,11 +556,12 @@ class Window_edition(Window_pattern):
     def change_group_element(self, ref, value, redraw=True, redim=True):
         group = self.destination
         elements = group.elements
-        elements[ref]["enable"] = bool(value)
-        if redim:
-            group.update_coordinates()
-        if redraw:
-            self.update_windows()
+        if ref < len(elements):
+            elements[ref]["enable"] = bool(value)
+            if redim:
+                group.update_coordinates()
+            if redraw:
+                self.update_windows()
 
     def update_all_entries(self, event):
         # Abort changes if there are two labels with the same name
@@ -570,3 +593,15 @@ class Window_edition(Window_pattern):
                 next_suffix = str(int(suffix) + 1)
                 return prefix + next_suffix
         return None
+
+    def delete_all_elements(self, group):
+        """Delete all the elements (functions and nodes) in the group."""
+        for element in group.elements:
+            if element["enable"]:
+                if type(element["element"]) == Function_block:
+                    self.diagram.delete_function(element["element"].name)
+                elif type(element["element"]) == Node:
+                    self.diagram.delete_node(element["element"].name)
+        self.diagram.delete_group(group.name)
+        self.parent.draw()
+        self.cmd_cancel()

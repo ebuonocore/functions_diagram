@@ -80,6 +80,46 @@ def read_state(file_text, file_name=None):
                 error_message += add_message(
                     line_number, line, "This function or group doesn't exist."
                 )
+        if ".add_function" in line and test_parentheses(line):
+            method_index = line.index(".add_function")
+            first_open_parentheses = tl.index_occurrence("(", line)[0]
+            last_closed_parentheses = tl.index_occurrence(")", line)[-1]
+            group_name = line[:method_index]
+            if group_name in diagram.groups.keys():
+                group = diagram.groups[group_name]
+                parameters_serie = line[
+                    first_open_parentheses + 1 : last_closed_parentheses
+                ]
+                parameters = tl.parameters_in(parameters_serie)
+                for parameter in parameters:
+                    if parameter in diagram.functions.keys():
+                        new_function = diagram.functions[parameter]
+                        group.add_function(new_function)
+                    else:
+                        error_message += add_message(
+                            line_number, line, parameter + " doesn't exist."
+                        )
+
+        if ".add_node" in line and test_parentheses(line):
+            method_index = line.index(".add_node")
+            first_open_parentheses = tl.index_occurrence("(", line)[0]
+            last_closed_parentheses = tl.index_occurrence(")", line)[-1]
+            group_name = line[:method_index]
+            if group_name in diagram.groups.keys():
+                group = diagram.groups[group_name]
+                parameters_serie = line[
+                    first_open_parentheses + 1 : last_closed_parentheses
+                ]
+                parameters = tl.parameters_in(parameters_serie)
+                for parameter in parameters:
+                    if parameter in diagram.nodes.keys():
+                        new_node = diagram.nodes[parameter]
+                        group.add_node(new_node)
+                    else:
+                        error_message += add_message(
+                            line_number, line, parameter + " doesn't exist."
+                        )
+
     if file_name is not None and error_message != "":
         error_file = file_name.split(".")[0] + ".err"
         f = open(error_file, "w")

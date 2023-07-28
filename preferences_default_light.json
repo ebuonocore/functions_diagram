@@ -12,7 +12,7 @@
     "border thickness_int": "3",
     "group color_color": "#a0a0a0",
     "group thickness_int": "1",
-    "group margin_int": "4",
+    "group margin_int": "20",
     "line color_color": "black",
     "line thikness_int": "1",
     "automatic spacing_int": "0",

@@ -22,9 +22,9 @@ class Window_pattern:
         self.bt_frame = tki.Frame(
             self.window, relief=tki.RAISED, borderwidth=1, width=300, height=40
         )
-        self.frame.columnconfigure(0, weight=1)
-        self.frame.columnconfigure(1, weight=1)
-        self.frame.columnconfigure(2, weight=1)
+        self.frame.columnconfigure(0, weight=5)
+        self.frame.columnconfigure(1, weight=4)
+        self.frame.columnconfigure(2, weight=4)
         self.frame.columnconfigure(3, weight=0)
         self.frame.pack(fill=tki.BOTH, expand=False)
         self.cancel_button = tki.Button(
