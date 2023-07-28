@@ -8,7 +8,7 @@ import diagram as dia
 from node import Node
 from link import Link
 from function_block import Function_block
-import group  # To avoid circular import
+import group as grp  # To avoid circular import
 
 
 def index_occurrence(char, string):
@@ -228,7 +228,7 @@ def nearest(mouse_position, targets):
             position_x = target.position[0] + target.dimension[0] // 2
             position_y = target.position[1] + target.dimension[1] // 2
             position = (position_x, position_y)
-        if type(target) in [Node, Link, group.Group]:
+        elif type(target) in [Node, Link, grp.Group, grp.Corner_group]:
             compliant_target = True
             position = target.position
         if compliant_target:  # target is a free node or a function
@@ -250,6 +250,10 @@ def nearest_objet(mouse_position, diagram, target_types="movable"):
     """
     population = []
     population += diagram.groups.values()
+    for group in diagram.groups.values():
+        if group.fixed:
+            new_corner = grp.Corner_group(group)
+            population += [new_corner]
     if target_types != "node":
         population += diagram.functions.values()
     if target_types != "function":
