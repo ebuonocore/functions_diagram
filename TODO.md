@@ -1,16 +1,10 @@
 # DONE:
-+ Group : Bouton Delete all elements
-+ Group : N'afficher les éléménets de la fenêtre d'édition qui s'ils existent.
-+ Gestion des sauvegardes et lecture pour les groupes
-+ Ménage dans les diagrammes d'exemples
++ Redimensionner les groupes "Fixed": création d'une class group.Corner_group
 
 # TODO:
-**Groups :** 
-+ Redimensionner : prévoir la sélection coin sup gauche et inf droit si Mode Fixe et non Auto
-
 **ReadMe**
 + Feuille de route : 3 derniers points Ok!
-+ Ajouter explication et icone Groupes
++ Ajouter explications et icone Groupes
 
 + Mettre en place .scale sur self.can ?   
 + Selection multiple :
