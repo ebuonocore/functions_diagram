@@ -159,12 +159,13 @@ Function nodes are designated by : ```function_name>``` for the output, and ```f
 ![open](/images/open.png) Open a file  
 ![save](/images/save.png) [Save file](#backup-file-format)     
 ![export](/images/export.png) [Export diagram to image (.SVG)](readme/export_SVG.md)  
-![move](/images/move.png) Move function or node  
+![move](/images/move.png) Move function, a node or a group. Also allows to move the lower right corner of the groups in "Fixed" mode  
 ![add_function](/images/add_function.png) [Add a function](readme/add_edit_elements.md#function)  
 ![add_node](/images/add_node.png) [Add a free node](readme/add_edit_elements.md#node)    
+![add_group](/images/group.png) [Create a group](readme/add_edit_elements.md#group)  
 ![add_link](/images/add_link.png) Connect two nodes  
-![edit](/images/edit.png) [Edit element (node or function)](readme/add_edit_elements.md)    
-![erase](/images/erase.png) Delete element (node, function or connection)  
+![edit](/images/edit.png) [Edit element (function, node or group)](readme/add_edit_elements.md)    
+![erase](/images/erase.png) Delete element (node, function, group or connection). Note: To delete all elements of a group, it must be edited.    
 ![undo](/images/undo.png) Undo  
 ![redo](/images/redo.png) Redo  
 ![auto](/images/auto.png) Place automaticly the objects on the screen  
@@ -185,12 +186,12 @@ The program is operational.
 - [x] Undo/Redo
 - [x] Automatic positioning of elements
 - [x] Settings and help
+- [x] Multi-select items to move or delete them  
+- [x] Set the spacing of elements for automatic placement  
+- [x] Allow the names of free nodes to be justified  
 
 ## Roadmap
 - [ ] Enable zooming and shifting of the whole layout
-- [ ] Multi-select items to move or delete them  
-- [ ] Set the spacing of elements for automatic placement  
-- [ ] Allow the names of free nodes to be justified  
 
 ## License
 

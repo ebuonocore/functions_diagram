@@ -160,12 +160,13 @@ Les nœuds de fonction sont désignés par : ```function_name>``` pour la sortie
 ![open](/images/open.png) Ouvrir un fichier  
 ![save](/images/save.png) [Sauvegarder un fichier](#format-de-sauvegarde)     
 ![export](/images/export.png) [Exporter un diagramme en image (.SVG)](readme/export_SVG_fr.md)  
-![move](/images/move.png) Déplacer une fonction ou un noeud  
-![add_function](/images/add_function.png) [Ajouter une fonction](readme/add_edit_elements_fr.md#function)  
-![add_node](/images/add_node.png) [Ajouter un noeud libre](readme/add_edit_elements_fr.md#node)    
+![move](/images/move.png) Déplacer une fonction, un noeud ou un groupe. Permet aussi de déplacer le coin inférieur droit des groupes en mode "Fixed"  
+![add_function](/images/add_function.png) [Ajouter une fonction](readme/add_edit_elements_fr.md#fonction)  
+![add_node](/images/add_node.png) [Ajouter un noeud libre](readme/add_edit_elements_fr.md#noeud)   
+![add_group](/images/group.png) [Créer un groupe](readme/add_edit_elements_fr.md#groupe)  
 ![add_link](/images/add_link.png) Relier deux noeuds  
-![edit](/images/edit.png) [Editer un élément (noeud ou fonction)](readme/add_edit_elements_fr.md)    
-![erase](/images/erase.png) Supprimer un élément (noeud, fonction ou connexion)  
+![edit](/images/edit.png) [Editer un élément (fonction, noeud ou groupe)](readme/add_edit_elements_fr.md)    
+![erase](/images/erase.png) Supprimer un élément (noeud, fonction, groupe ou connexion). Remarque : Pour supprimer tous les éléments d'un groupe, il faut l'éditer.    
 ![undo](/images/undo.png) Undo  
 ![redo](/images/redo.png) Redo  
 ![auto](/images/auto.png) Placer automatiquement les objets sur l'écran  
@@ -186,12 +187,12 @@ Le programme est opérationnel.
 - [x] Undo/Redo
 - [x] Positionner automatiquement des éléments
 - [x] Paramétrer le programme et appeler l'aide
+- [x] Multiselection d'éléments pour les déplacements et les suppressions  
+- [x] Définir l'espacement des éléments pour le placement automatique  
+- [x] Permettre de justifier les noms des nœuds libres  
 
 ## Feuille de route
 - [ ] Permettre l'agrandissement et le déplacement de l'ensemble de la mise en page
-- [ ] Multiselection d'éléments pour les déplacements et les suppressions  
-- [ ] Définir l'espacement des éléments pour le placement automatique  
-- [ ] Permettre de justifier les noms des nœuds libres  
 
 ## Licence
 

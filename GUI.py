@@ -383,7 +383,7 @@ class Window:
         thickness = int(self.preferences["border thickness_int"])
         font_titre = tkfont.Font(family=police, size=title_size, weight="bold")
         font_texte = tkfont.Font(family=police, size=text_size, weight="normal")
-        border_color = self.preferences["borders default color_color"]
+        border_color = self.preferences["border default color_color"]
         title_background_color = self.preferences["title background color_color"]
         function_background_color = self.preferences["function background color_color"]
         rounded = True if self.preferences["rounded functions_bool"] == 1 else False
@@ -438,7 +438,7 @@ class Window:
 
     def draw_lines(self):
         """Draw the connections between the points: Vertical or horizontal lines."""
-        thikness = int(self.preferences["line thikness_int"])
+        thickness = int(self.preferences["line thickness_int"])
         color = self.preferences["line color_color"]
         smooth = True if self.preferences["smooth lines_bool"] == 1 else False
         self.diagram.update_links()
@@ -457,18 +457,18 @@ class Window:
                     (x_last, y_end),
                     (x_end, y_end),
                     fill=color,
-                    width=thikness,
+                    width=thickness,
                     smooth="true",
                 )
             else:
                 self.can.create_line(
-                    (x_start, y_start), (x_middle, y_start), fill=color, width=thikness
+                    (x_start, y_start), (x_middle, y_start), fill=color, width=thickness
                 )
                 self.can.create_line(
-                    (x_middle, y_start), (x_middle, y_end), fill=color, width=thikness
+                    (x_middle, y_start), (x_middle, y_end), fill=color, width=thickness
                 )
                 self.can.create_line(
-                    (x_middle, y_end), (x_end, y_end), fill=color, width=thikness
+                    (x_middle, y_end), (x_end, y_end), fill=color, width=thickness
                 )
 
     def draw_groups(self):
@@ -973,7 +973,10 @@ class Window:
             elif type(self.destination) == grp.Corner_group:
                 x_corner, y_corner = self.destination.position
                 x_parent, y_parent = self.destination.parent_group.position
-                self.destination.parent_group.dimension = [x_corner - x_parent, y_corner - y_parent]
+                self.destination.parent_group.dimension = [
+                    x_corner - x_parent,
+                    y_corner - y_parent,
+                ]
 
             # If it's an element of a group, update the dimensions of the group
             else:
