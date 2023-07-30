@@ -15,7 +15,7 @@
     "group margin_int": "20",
     "line color_color": "black",
     "line thickness_int": "1",
-    "automatic spacing_int": "0",
+    "automatic spacing_int": "300",
     "enable loopback_bool": 0,
     "smooth lines_bool": 1,
     "rounded functions_bool": 1
