@@ -1,0 +1,13 @@
+def a(a,b,c)
+a.position(631,152)
+a.dimension(50,77)
+
+node(b,(351,111),justify="right")
+node(cwxcxwc:xw,(300,203),justify="center")
+node(ccvbvcb:cvb,(340,382),justify="separator")
+node(csdfg:ff,(895,202),justify="left")
+
+a<0---b
+a<1---cwxcxwc
+a<2---ccvbvcb
+a>---csdfg
