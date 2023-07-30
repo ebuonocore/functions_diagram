@@ -142,7 +142,7 @@ class Window_edition(Window_pattern):
         self.parameters["justify"] = self.create_choice(
             5,
             "Justify",
-            ["left", "center", "separator", "right"],
+            ["None", "left", "center", "separator", "right"],
             self.destination.justify,
         )
 

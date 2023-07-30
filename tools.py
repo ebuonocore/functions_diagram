@@ -141,7 +141,8 @@ def create_node_description(node):
             description += str(int(node.position[0])) + ","
             description += str(int(node.position[1])) + ")"
         if node.justify is not None:
-            description += ',justify="' + node.justify + '"'
+            if node.justify in ["left", "right", "center", "separator"]:
+                description += ',justify="' + node.justify + '"'
         description += ")"
         if node.fixed:
             description += "  # fixed"

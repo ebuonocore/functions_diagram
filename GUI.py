@@ -356,7 +356,8 @@ class Window:
             "center": len_total_text // 2,
             "separator": len_sep_text,
         }
-        x -= justify_offset[justify]
+        if justify in justify_offset.keys():
+            x -= justify_offset[justify]
         # Display the label
         if len(annotation) > 0 and len(label) > 0:
             label += ": "

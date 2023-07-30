@@ -240,9 +240,8 @@ def node_definition(line):
         fixed = True
     else:
         fixed = False
-    justify = None
     line = line.replace(" ", "")
-    line = line.replace('"', "'")
+    # line = line.replace('"', "'")
     first_open_parentheses = tl.index_occurrence("(", line)[0]
     last_closed_parentheses = tl.index_occurrence(")", line)[-1]
     parameters_serie = line[first_open_parentheses + 1 : last_closed_parentheses]
@@ -254,27 +253,27 @@ def node_definition(line):
     else:
         node_name = parameters[0]
         annotation = ""
+    label = node_name.split("*")[0]
     if len(parameters) > 1:
         position = tl.coordinates(parameters[1])
     else:
         position = [0, 0]
-    for parameter in parameters[2:]:
-        if "justify" in parameter:
-            if "=" in parameter:
-                pos_equal = parameter.index("=")
-                value = parameter[pos_equal + 1 :]
-                if value in ["'left'", "'right'", "'center'", "'separator'"]:
-                    justify = value
-    label = node_name.split("*")[0]
-    return Node(
+    new_node = Node(
         name=node_name,
         label=label,
         annotation=annotation,
         position=position,
         free=True,
         fixed=fixed,
-        justify=justify,
     )
+    for parameter in parameters[2:]:
+        if "justify" in parameter:
+            if "=" in parameter:
+                pos_equal = parameter.index("=")
+                value = parameter[pos_equal + 1 :]
+                if value in ['"left"', '"right"', '"center"', '"separator"']:
+                    new_node.justify = value[1:-1]
+    return new_node
 
 
 def group_definition(line: str) -> group.Group:
