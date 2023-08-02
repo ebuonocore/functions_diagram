@@ -48,7 +48,7 @@ class Window_edition(Window_pattern):
 
     def draw_grid(self):
         position = (
-            str(self.destination.position[0]) + "," + str(self.destination.position[1])
+            str(int(self.destination.position[0])) + "," + str(int(self.destination.position[1]))
         )
         self.parameters["name"] = self.create_entry(0, "Name", self.destination.name)
         self.parameters["name"].configure(state="disabled")
@@ -72,9 +72,9 @@ class Window_edition(Window_pattern):
         self.entries = dict()
         self.window.title("Edit function")
         dimension = (
-            str(self.destination.dimension[0])
+            str(int(self.destination.dimension[0]))
             + ","
-            + str(self.destination.dimension[1])
+            + str(int(self.destination.dimension[1]))
         )
         self.parameters["dimension"] = self.create_entry(4, "Dimension", str(dimension))
         self.parameters["dimension"].bind("<FocusOut>", self.check_dimension)
@@ -149,9 +149,9 @@ class Window_edition(Window_pattern):
     def group_parameters(self):
         self.window.title("Edit group")
         dimension = (
-            str(self.destination.dimension[0])
+            str(int(self.destination.dimension[0]))
             + ","
-            + str(self.destination.dimension[1])
+            + str(int(self.destination.dimension[1]))
         )
         color = self.destination.color
         thickness = self.destination.thickness
