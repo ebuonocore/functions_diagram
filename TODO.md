@@ -1,7 +1,5 @@
 # DONE:
-**Node justification**
-+ Résolution problème à l'enregistrement de la justification.
-+ Propose None dans le menu déroulant
++ Transtypage en entier des positions et dimensions dans la fenêtre d'édition des objets.
 
 # TODO:
 + Mettre en place .scale sur self.can ?   
