@@ -15,11 +15,20 @@ class Node:
         self.connections = []  # List of nodes connected
         self.fixed = False  # True if the position is fixed.
         self.justify = None  # "left", "center","separator", "right" or None for default
+        self.floor = -1  # Depth in the graph. Leaves at 0.
         for k, v in kwargs.items():
             if k in self.__dict__:
                 self.__dict__[k] = v
             else:
                 raise Exception("The key " + k + " doesn't exist.")
+
+    def copy(self, new_name=None):
+        """Return a copy of the node with an other name if new_name is not None."""
+        next_node = Node(**self.__dict__)
+        if new_name is not None:
+            next_node.name = new_name
+        next_node.floor = -1
+        return next_node
 
     def __repr__(self):
         line = self.name

@@ -729,6 +729,23 @@ class Window:
             except:
                 pass
 
+    def copy(self, event=None):
+        if self.destination != None:
+            text = "Element copied : " + self.destination.name
+            message(text, self.text_message)
+            self.state = 3
+            previous_names = tl.all_previous_names(self.diagram)
+            new_name = tl.new_label(previous_names, self.destination.name)
+            self.destination = self.destination.copy(new_name)
+            if isinstance(self.destination, Node):
+                self.diagram.add_node(self.destination)
+            elif isinstance(self.destination, Function_block):
+                self.diagram.add_function(self.destination)
+            elif isinstance(self.destination, Group):
+                self.diagram.add_group(self.destination)
+        else:
+            message("No element selected to copy.", self.text_message)
+
     @Decorators.disable_if_editing
     def cmd_move(self):
         """Allow objects to move."""

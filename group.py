@@ -167,6 +167,13 @@ class Group:
                 if element["enable"]:
                     self.update_coordinates()
 
+    def copy(self, new_name=None):
+        """Return a copy of the group with an other name if new_name is not None."""
+        next_group = Function_block(**self.__dict__)
+        if new_name is not None:
+            next_group.name = new_name
+        return next_group
+
     def __repr__(self):
         line = str(self.name) + "("
         line += "fixed: " + str(self.fixed) + ", "
