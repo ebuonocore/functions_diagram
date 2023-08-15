@@ -67,7 +67,7 @@ def read_state(file_text, file_name=None):
         if ".position" in line and test_parentheses(line):
             function_block = change_parameter("position", diagram, line)
             if function_block is not None:
-                function_block.fixe = True
+                function_block.fixed = True
             else:
                 error_message += add_message(
                     line_number, line, "This function or group doesn't exist."

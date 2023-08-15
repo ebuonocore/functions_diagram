@@ -14,7 +14,7 @@ class Function_block:
         self.dimension = []  # [width, height]
         # True if the position is fixed (Auto mode can't move this function).
         self.fixed = False
-        self.floor = -1  # Depth in the graphe. Leaves at 0.
+        self.floor = -1  # Depth in the graph. Leaves at 0.
         self.header_color = None
         for k, v in kwargs.items():
             if k in self.__dict__:
@@ -32,6 +32,18 @@ class Function_block:
     def set_output_visibility(self, visible: bool):
         """Set the output visibility."""
         self.output.visible = visible
+
+    def copy(self, new_name=None):
+        """Return a copy of the function_block with an other name if new_name is not None."""
+        next_function = Function_block(**self.__dict__)
+        if new_name is not None:
+            next_function.name = new_name
+        next_function.entries = []
+        for entry in self.entries:
+            next_function.entries.append(entry.copy())
+        next_function.output = self.output.copy()
+        next_function.floor = -1
+        return next_function
 
     def __repr__(self):
         line = str(self.name)
