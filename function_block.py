@@ -33,18 +33,6 @@ class Function_block:
         """Set the output visibility."""
         self.output.visible = visible
 
-    def copy(self, new_name=None):
-        """Return a copy of the function_block with an other name if new_name is not None."""
-        next_function = Function_block(**self.__dict__)
-        if new_name is not None:
-            next_function.name = new_name
-        next_function.entries = []
-        for entry in self.entries:
-            next_function.entries.append(entry.copy())
-        next_function.output = self.output.copy()
-        next_function.floor = -1
-        return next_function
-
     def __repr__(self):
         line = str(self.name)
         """

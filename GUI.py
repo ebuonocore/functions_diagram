@@ -734,15 +734,19 @@ class Window:
             text = "Element copied : " + self.destination.name
             message(text, self.text_message)
             self.state = 3
-            previous_names = tl.all_previous_names(self.diagram)
-            new_name = tl.new_label(previous_names, self.destination.name)
-            self.destination = self.destination.copy(new_name)
+            new_name = self.destination.name
+            if "*" not in new_name:
+                new_name += "*"
+            new_name = tl.new_label(tl.all_previous_names(self.diagram), new_name)
+            print(self.destination.name, "->", new_name)
             if isinstance(self.destination, Node):
-                self.diagram.add_node(self.destination)
+                self.destination = self.diagram.copy_node(self.destination, new_name)
             elif isinstance(self.destination, Function_block):
-                self.diagram.add_function(self.destination)
+                self.destination = self.diagram.copy_function(
+                    self.destination, new_name
+                )
             elif isinstance(self.destination, Group):
-                self.diagram.add_group(self.destination)
+                self.destination = self.diagram.copy_group(self.destination, new_name)
         else:
             message("No element selected to copy.", self.text_message)
 
