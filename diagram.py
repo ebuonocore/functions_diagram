@@ -231,9 +231,10 @@ class Diagram:
             if "*" not in new_name:
                 new_name += "*"
             new_name = tl.new_label(tl.all_previous_names(self), new_name)
-            if element["type"] == Node:
+            # print(element["element"].name, '->', new_name)
+            if element["type"] == "Node":
                 element["element"] = self.copy_node(element["element"], new_name)
-            elif element["type"] == Function_block:
+            elif element["type"] == "Function_block":
                 element["element"] = self.copy_function(element["element"], new_name)
         new_group.floor = -1
         self.add_group(new_group)

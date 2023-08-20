@@ -753,7 +753,10 @@ class Window:
     @Decorators.disable_if_editing
     def cmd_move(self):
         """Allow objects to move."""
-        message("Select the free node or the function to move.", self.text_message)
+        message(
+            "Select the free node, the function or the group to move.",
+            self.text_message,
+        )
         self.can.config(cursor="fleur")
         self.state = 2
 
@@ -761,7 +764,10 @@ class Window:
     def cmd_edit(self):
         """Initiate the editing of the selected object."""
         if len(self.diagram.nodes) > 0 or len(self.diagram.functions) > 0:
-            message("Select the free node or the function to edit.", self.text_message)
+            message(
+                "Select the free node, the function or the group to to edit.",
+                self.text_message,
+            )
             self.can.config(cursor="pencil")
             self.state = 5
         else:
@@ -779,7 +785,10 @@ class Window:
     @Decorators.disable_if_editing
     def cmd_erase(self):
         """Initiate object deletion."""
-        message("Select the free node or the function to erase.", self.text_message)
+        message(
+            "Select the free node, the function or the group to to erase.",
+            self.text_message,
+        )
         self.can.config(cursor="pirate")
         self.state = 4
 

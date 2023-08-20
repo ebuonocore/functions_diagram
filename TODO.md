@@ -1,6 +1,6 @@
 # DONE:
-+ Ctrl+C : Ok pour noeuds et fonctions
-  - nOk pour Group
++ Ctrl+C : Ok pour noeuds, fonctions et group.
+  - Manque les liens entre les éléments d'un groupe copié
 
 # TODO:
 + Modifier le texte "free node or function" et intégrer "group"

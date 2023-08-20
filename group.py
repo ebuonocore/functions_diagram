@@ -33,7 +33,7 @@ class Group:
         self.label = ""  # Label to be print in screen
         # List of dictionaries of elements. [{"id":int, "type":str,"enable":boolean,"element":Node|Function_block,  "position":[int, int]}]
         self.elements = list()
-        # list of dictionaries : {"id": ref, "type": type_element, "enable": True, "element": element, "position": position}
+        # list of dictionaries : {"id": ref, "type": str of type_element, "enable": True, "element": element, "position": position}
         self.position = [None, None]  # [pos_x, pos_y]
         self.dimension = []  # [width, height]
         # True if the position is fixed (Auto mode can't move this function).
