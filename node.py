@@ -22,14 +22,6 @@ class Node:
             else:
                 raise Exception("The key " + k + " doesn't exist.")
 
-    def copy(self, new_name=None):
-        """Return a copy of the node with an other name if new_name is not None."""
-        next_node = Node(**self.__dict__)
-        if new_name is not None:
-            next_node.name = new_name
-        next_node.floor = -1
-        return next_node
-
     def __repr__(self):
         line = self.name
         """

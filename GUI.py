@@ -734,22 +734,29 @@ class Window:
             text = "Element copied : " + self.destination.name
             message(text, self.text_message)
             self.state = 3
-            previous_names = tl.all_previous_names(self.diagram)
-            new_name = tl.new_label(previous_names, self.destination.name)
-            self.destination = self.destination.copy(new_name)
+            new_name = self.destination.name
+            if "*" not in new_name:
+                new_name += "*"
+            new_name = tl.new_label(tl.all_previous_names(self.diagram), new_name)
+            print(self.destination.name, "->", new_name)
             if isinstance(self.destination, Node):
-                self.diagram.add_node(self.destination)
+                self.destination = self.diagram.copy_node(self.destination, new_name)
             elif isinstance(self.destination, Function_block):
-                self.diagram.add_function(self.destination)
+                self.destination = self.diagram.copy_function(
+                    self.destination, new_name
+                )
             elif isinstance(self.destination, Group):
-                self.diagram.add_group(self.destination)
+                self.destination = self.diagram.copy_group(self.destination, new_name)
         else:
             message("No element selected to copy.", self.text_message)
 
     @Decorators.disable_if_editing
     def cmd_move(self):
         """Allow objects to move."""
-        message("Select the free node or the function to move.", self.text_message)
+        message(
+            "Select the free node, the function or the group to move.",
+            self.text_message,
+        )
         self.can.config(cursor="fleur")
         self.state = 2
 
@@ -757,7 +764,10 @@ class Window:
     def cmd_edit(self):
         """Initiate the editing of the selected object."""
         if len(self.diagram.nodes) > 0 or len(self.diagram.functions) > 0:
-            message("Select the free node or the function to edit.", self.text_message)
+            message(
+                "Select the free node, the function or the group to to edit.",
+                self.text_message,
+            )
             self.can.config(cursor="pencil")
             self.state = 5
         else:
@@ -775,7 +785,10 @@ class Window:
     @Decorators.disable_if_editing
     def cmd_erase(self):
         """Initiate object deletion."""
-        message("Select the free node or the function to erase.", self.text_message)
+        message(
+            "Select the free node, the function or the group to to erase.",
+            self.text_message,
+        )
         self.can.config(cursor="pirate")
         self.state = 4
 

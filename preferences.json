@@ -5,7 +5,7 @@
     "title size_int": "18",
     "text color_color": "black",
     "text size_int": "12",
-    "justify_choice": "separator",
+    "justify_choice": "left",
     "type color_color": "#7f0055",
     "function background color_color": "white",
     "border default color_color": "black",
@@ -15,7 +15,7 @@
     "group margin_int": "20",
     "line color_color": "black",
     "line thickness_int": "1",
-    "automatic spacing_int": "300",
+    "automatic spacing_int": "0",
     "enable loopback_bool": 0,
     "smooth lines_bool": 1,
     "rounded functions_bool": 1

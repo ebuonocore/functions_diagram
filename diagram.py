@@ -5,6 +5,7 @@ from link import *
 
 from design import Design
 import tools as tl
+import copy
 
 
 class Diagram:
@@ -191,6 +192,53 @@ class Diagram:
             self.nodes[node.name] = node
             return True
         return False
+
+    def copy_node(self, node, new_name=None):
+        """Copy the node and add it to the diagram."""
+        new_node = copy.deepcopy(node)
+        new_node.connections = []  # The connections are not copied
+        if new_name is None:
+            new_name = node.name
+        new_node.name = tl.new_label(tl.all_previous_names(self), new_name)
+        new_node.floor = -1
+        self.add_node(new_node)
+        return new_node
+
+    def copy_function(self, function, new_name=None):
+        """Copy the function and add it to the diagram."""
+        new_function = copy.deepcopy(function)
+        if new_name is not None:
+            new_function.name = new_name
+        else:
+            new_function.name = tl.new_label(tl.all_previous_names(self), new_name)
+        new_function.entries = []
+        for entry in function.entries:
+            new_function.entries.append(self.copy_node(entry))
+        new_function.output = self.copy_node(function.output)
+        new_function.floor = -1
+        self.add_function(new_function)
+        return new_function
+
+    def copy_group(self, group, new_name=None):
+        """Copy the group and add it to the diagram."""
+        new_group = copy.deepcopy(group)
+        if new_name is not None:
+            new_group.name = new_name
+        else:
+            new_group.name = tl.new_label(tl.all_previous_names(self), new_name)
+        for element in new_group.elements:
+            new_name = element["element"].name
+            if "*" not in new_name:
+                new_name += "*"
+            new_name = tl.new_label(tl.all_previous_names(self), new_name)
+            # print(element["element"].name, '->', new_name)
+            if element["type"] == "Node":
+                element["element"] = self.copy_node(element["element"], new_name)
+            elif element["type"] == "Function_block":
+                element["element"] = self.copy_function(element["element"], new_name)
+        new_group.floor = -1
+        self.add_group(new_group)
+        return new_group
 
     def __repr__(self):
         line = "***** Functions\n"
