@@ -194,12 +194,16 @@ class Diagram:
         return False
 
     def copy_node(self, node, new_name=None):
-        """Copy the node and add it to the diagram."""
+        """Copy the node and add it to the diagram.
+        If new_name is not None, the new node will have this name.
+        """
         new_node = copy.deepcopy(node)
         new_node.connections = []  # The connections are not copied
         if new_name is None:
             new_name = node.name
-        new_node.name = tl.new_label(tl.all_previous_names(self), new_name)
+            new_node.name = tl.new_label(tl.all_previous_names(self), new_name)
+        else:
+            new_node.name = new_name
         new_node.floor = -1
         self.add_node(new_node)
         return new_node
@@ -213,8 +217,15 @@ class Diagram:
             new_function.name = tl.new_label(tl.all_previous_names(self), new_name)
         new_function.entries = []
         for entry in function.entries:
-            new_function.entries.append(self.copy_node(entry))
-        new_function.output = self.copy_node(function.output)
+            if "<" in entry.name:
+                new_entry_name = new_function.name + entry.name[entry.name.index("<") :]
+            new_function.entries.append(self.copy_node(entry, new_entry_name))
+        if ">" in function.output.name:
+            new_output_name = (
+                new_function.name
+                + function.output.name[function.output.name.index(">")]
+            )
+            new_function.output = self.copy_node(function.output, new_output_name)
         new_function.floor = -1
         self.add_function(new_function)
         return new_function
@@ -226,16 +237,43 @@ class Diagram:
             new_group.name = new_name
         else:
             new_group.name = tl.new_label(tl.all_previous_names(self), new_name)
+        nodes_association = dict()
+        # First turn : copy the nodes and the functions, build the nodes_association dictionnary
         for element in new_group.elements:
-            new_name = element["element"].name
-            if "*" not in new_name:
-                new_name += "*"
-            new_name = tl.new_label(tl.all_previous_names(self), new_name)
-            # print(element["element"].name, '->', new_name)
-            if element["type"] == "Node":
-                element["element"] = self.copy_node(element["element"], new_name)
-            elif element["type"] == "Function_block":
-                element["element"] = self.copy_function(element["element"], new_name)
+            if element["type"] != "Link":
+                origin = element["element"]
+                new_name = origin.name
+                if "*" not in new_name:
+                    new_name += "*"
+                new_name = tl.new_label(tl.all_previous_names(self), new_name)
+                if element["type"] == "Node":
+                    element["element"] = self.copy_node(element["element"], new_name)
+                    nodes_association[origin] = element["element"]
+                elif element["type"] == "Function_block":
+                    element["element"] = self.copy_function(
+                        element["element"], new_name
+                    )
+                    nodes_association[origin.output] = element["element"].output
+                    for i in range(len(origin.entries)):
+                        entry_origin = origin.entries[i]
+                        entry_destination = element["element"].entries[i]
+                        nodes_association[entry_origin] = entry_destination
+        # Second turn : copy the links
+        for element in new_group.elements:
+            if element["type"] == "Link":
+                link = element["element"]
+                node_origin = link.nodes[0]
+                node_destination = link.nodes[1]
+                if (
+                    node_origin in nodes_association.keys()
+                    and node_destination in nodes_association.keys()
+                ):
+                    new_origin = nodes_association[node_origin]
+                    new_destination = nodes_association[node_destination]
+                    new_link = Link(nodes=[new_origin, new_destination])
+                    self.links.append(new_link)
+                    new_origin.connections.append(new_destination)
+                    new_destination.connections.append(new_origin)
         new_group.floor = -1
         self.add_group(new_group)
         return new_group

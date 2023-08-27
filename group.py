@@ -101,9 +101,16 @@ class Group:
         elements = list()
         x_origin, y_origin = origin
         objects = tl.search_in_rectangle(diagram, origin, destination)
+        nodes = []
         for ref, element in enumerate(objects):
             x_element, y_element = element.position
             type_element = type(element).__name__
+            if type_element == "Node":
+                nodes.append(element)
+            if type_element == "Function_block":
+                for node in element.entries:
+                    nodes.append(node)
+                nodes.append(element.output)
             position = [x_element - x_origin, y_element - y_origin]
             elements.append(
                 {
@@ -114,6 +121,17 @@ class Group:
                     "position": position,
                 }
             )
+        for link in diagram.links:
+            if link.nodes[0] in nodes and link.nodes[1] in nodes:
+                elements.append(
+                    {
+                        "id": ref,
+                        "type": "Link",
+                        "enable": True,
+                        "element": link,
+                        "position": [0, 0],
+                    }
+                )
         return elements
 
     def update_coordinates(self):

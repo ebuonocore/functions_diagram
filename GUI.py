@@ -738,7 +738,6 @@ class Window:
             if "*" not in new_name:
                 new_name += "*"
             new_name = tl.new_label(tl.all_previous_names(self.diagram), new_name)
-            print(self.destination.name, "->", new_name)
             if isinstance(self.destination, Node):
                 self.destination = self.diagram.copy_node(self.destination, new_name)
             elif isinstance(self.destination, Function_block):
@@ -972,6 +971,7 @@ class Window:
         5 - Edit : Select object to edit
         6 - Add link : Select the origin
         7 - Add link : Select destination
+        9 - Add group : Selecting the first corner
         """
         if self.state == 1:  # Basic state
             self.can.config(cursor="arrow")
