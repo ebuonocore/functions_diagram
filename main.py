@@ -11,4 +11,5 @@ if __name__ == "__main__":
     window.tk.bind("<Button-3>", window.right_click)
     window.tk.bind("<Escape>", window.right_click)
     window.tk.bind("<Control -c>", window.copy)
+    window.tk.bind("<Control -z>", window.undo)
     window.tk.mainloop()

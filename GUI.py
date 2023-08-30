@@ -41,7 +41,6 @@ class Window:
                     message(
                         "Warning: First close the editing window.", obj.text_message
                     )
-                    # obj.lift_window(obj.window_edition.window)
                 return result
 
             return edition_test
@@ -68,6 +67,7 @@ class Window:
         )
         # Initialization
         self.state = 1
+        self.active_file = None
         self.memory = Memory(50, self.diagram.export_to_text())
         self.MARGIN = 10
         self.SCREEN_WIDTH, self.SCREEN_HEIGHT = self.screen_dimensions()
@@ -620,6 +620,8 @@ class Window:
         self.state = 1
         self.diagram = Diagram()
         self.draw()
+        self.tk.title("Functions Diagram")
+        self.active_file = None
 
     @Decorators.disable_if_editing
     def cmd_open(self):
@@ -630,7 +632,13 @@ class Window:
         self.can.config(cursor="arrow")
         message("Open file.", self.text_message)
         self.state = 1
-        selected_file = fd.askopenfilename(title="Open")
+        if self.active_file is not None:
+            selected_file = fd.askopenfilename(
+                title="Open", initialdir=path.split(self.active_file)[0]
+            )
+        else:
+            selected_file = fd.askopenfilename(title="Open")
+        self.active_file = selected_file
         if selected_file == "":
             message("Canceled opening.", self.text_message)
             return False
@@ -644,6 +652,7 @@ class Window:
         self.position_functions_nodes()
         self.draw()
         message("File " + file_name + " opened.", self.text_message)
+        self.tk.title("Functions Diagram" + " - " + file_name)
         self.memory.add(self.diagram.export_to_text())
         return True
 
@@ -653,12 +662,21 @@ class Window:
         self.can.config(cursor="arrow")
         message("Save diagram.", self.text_message)
         self.state = 1
-        selected_file = fd.asksaveasfile(title="Save")
+        if self.active_file is not None:
+            selected_file = fd.asksaveasfile(
+                title="Save", initialdir=path.split(self.active_file)[0]
+            )
+        else:
+            selected_file = fd.asksaveasfile(title="Save")
         diagram_datas = self.diagram.export_to_text()
         try:
             selected_file.write(diagram_datas)
+            self.active_file = selected_file.name
             message("Diagram saved.", self.text_message)
             selected_file.close()
+            file_name = selected_file.name
+            file_name = path.split(file_name)[1]
+            self.tk.title("Functions Diagram" + " - " + file_name)
             return True
         except:
             message("Backup canceled.", self.text_message)
@@ -834,6 +852,10 @@ class Window:
             message("Loopback is enabled.", self.text_message)
         self.draw()
 
+    def undo(self, event=None):
+        # Undo from keyboard Ctrl+z
+        self.cmd_undo()
+
     @Decorators.disable_if_editing
     def cmd_undo(self):
         """ """
@@ -971,7 +993,8 @@ class Window:
         5 - Edit : Select object to edit
         6 - Add link : Select the origin
         7 - Add link : Select destination
-        9 - Add group : Selecting the first corner
+        8 - Add group : Selecting the first corner
+        9 - Add group : Selecting the second corner
         """
         if self.state == 1:  # Basic state
             self.can.config(cursor="arrow")
@@ -1044,7 +1067,7 @@ class Window:
             )
             self.draw()
             self.draw_destination_outine()
-        elif self.state == 9:  # Add group : Selecting the first corner
+        elif self.state == 9:  # Add group : Selecting the second corner
             mouse_x, mouse_y = tl.pointer_position(self.can)
             self.draw()
             if type(self.origin) == tuple:

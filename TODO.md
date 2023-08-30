@@ -1,11 +1,9 @@
 # DONE:
-+ Recopie les liens au sein d'un groupe copié:
-  + Les liens internes sont listés dans group.elements cf GROUP.search_elements_in()
-  + Copier les liens => renseigner aussi les nodes.connections
++ Ajout du nom du fichier actif dans le titre de la fenêtre
++ CTRL + Z => Undo
 
 # TODO:
-+ Ajouter le nom du fichier dans le titre de la fenêtre
-+ CTRL + Z => Undo
++ Mode Auto ou Paramètres : Permettre de forcer tous les éléments à Auto
 + Mettre en place .scale sur self.can ?   
 + Détection de la touche Ctrl pour déplacer le point de reférence de l'ensemble du diagram : avec scrollregion ?  
 + Lever des exceptions plus propres dans les try (au lieu de pass)
