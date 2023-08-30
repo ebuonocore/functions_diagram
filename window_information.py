@@ -56,7 +56,7 @@ class Window_information:
             line.pack(fill="both", expand=True)
         title = tki.Label(
             frame.scrollable_frame,
-            text="function_diagram by Eric Buonocore\n2023",
+            text="functions_diagram by Eric Buonocore\n2023",
             anchor="w",
         )
         title.pack(side=tki.BOTTOM)
