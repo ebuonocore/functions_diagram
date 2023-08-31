@@ -38,6 +38,7 @@ class Window_information:
         help_grid.append(("move", "Move function or node"))
         help_grid.append(("add_function", "Add a function"))
         help_grid.append(("add_node", "Add a free node"))
+        help_grid.append(("group", "Add a group of elements"))
         help_grid.append(("add_link", "Connect two nodes"))
         help_grid.append(("edit", "Edit element (node or function)"))
         help_grid.append(("erase", "Delete element (node, function or connexion)"))

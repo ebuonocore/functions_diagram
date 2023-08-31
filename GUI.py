@@ -76,6 +76,8 @@ class Window:
         self.MENU_HEIGHT = 80
         self.smooth_lines = True
         self.window_edition = None
+        self.zooms = [i / 100 for i in range(10, 200, 10)]
+        self.zoom = 9
         self.can = tki.Canvas(
             self.tk,
             width=self.SCREEN_WIDTH,
@@ -268,8 +270,9 @@ class Window:
             self.draw_nodes()
             self.draw_lines()
             self.draw_groups()
+            self.can.scale("all", 0, 0, self.zooms[self.zoom], self.zooms[self.zoom])
         except:
-            pass
+            print("Error")
 
     def draw_nodes(self):
         """Draw discs for isolated points and arrows for points linked to blocks."""
@@ -855,6 +858,22 @@ class Window:
     def undo(self, event=None):
         # Undo from keyboard Ctrl+z
         self.cmd_undo()
+
+    def zoom_more(self, event=None):
+        """Zoom in"""
+        if self.zoom < len(self.zooms) - 1:
+            self.zoom += 1
+        zoom = self.zooms[self.zoom]
+        message("Zoom: " + str(zoom) + "%", self.text_message)
+        self.draw()
+
+    def zoom_less(self, event=None):
+        """Zoom out"""
+        if self.zoom > 0:
+            self.zoom -= 1
+        zoom = self.zooms[self.zoom]
+        message("Zoom: " + str(zoom) + "%", self.text_message)
+        self.draw()
 
     @Decorators.disable_if_editing
     def cmd_undo(self):
