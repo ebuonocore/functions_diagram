@@ -619,7 +619,6 @@ class Window_edition(Window_pattern):
         flag = False
         if value == "Fixed":
             flag = True
-        print("force all to: ", flag)
         for element in self.destination.elements:
             element["element"].fixed = flag
 

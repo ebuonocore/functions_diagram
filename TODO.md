@@ -1,11 +1,16 @@
 # DONE:
-+ Modification globale des positionnements des éléments d'un groupe (Auto ou Fixed)
++ Mettre à jour la fenêtre info 
 
 # BUG : 
++ Mettre en place .scale sur self.can.scale Ok, texte nOk
+  + self.can.fontSize plante
 
 # TODO:
-+ Mettre en place .scale sur self.can ?   
-+ Détection de la touche Ctrl pour déplacer le point de reférence de l'ensemble du diagram : avec scrollregion ?  
++ CTRL+a : Créé un groupe regroupant tous les éléments
++ Mettre à jour l'aide. Expliquer
+  + Déplacement : CRTL+v
+  + Annulation : CTRL+z
+  + Construction d'un group et utilité (déplacement, duplication, chgt groupé du positionnement, suppession)
 + Lever des exceptions plus propres dans les try (au lieu de pass)
 
 Alternative/Existant : https://app.diagrams.net/
