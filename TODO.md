@@ -4,6 +4,7 @@
 # BUG : 
 + Mettre en place .scale sur self.can.scale Ok, texte nOk
   + self.can.fontSize plante
++ .gitignore laisse toujours remonter les dossiers ....
 
 # TODO:
 + CTRL+a : Créé un groupe regroupant tous les éléments
