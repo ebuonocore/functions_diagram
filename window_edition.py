@@ -48,7 +48,9 @@ class Window_edition(Window_pattern):
 
     def draw_grid(self):
         position = (
-            str(int(self.destination.position[0])) + "," + str(int(self.destination.position[1]))
+            str(int(self.destination.position[0]))
+            + ","
+            + str(int(self.destination.position[1]))
         )
         self.parameters["name"] = self.create_entry(0, "Name", self.destination.name)
         self.parameters["name"].configure(state="disabled")
@@ -206,6 +208,20 @@ class Window_edition(Window_pattern):
                     ),
                 )
                 nb_line += 1
+        tki.Label(self.frame, text="All items", anchor="w").grid(
+            row=nb_line, column=0, sticky=tki.W
+        )
+        choices = [" ", "Fixed", "Auto"]
+        value = tki.StringVar()
+        value.set(" ")
+        choice = tki.OptionMenu(
+            self.frame,
+            value,
+            *choices,
+            command=lambda event: self.force_all_positionning_to(value.get())
+        )
+        choice.grid(row=nb_line, column=1, sticky=tki.W)
+        nb_line += 1
         tki.Label(self.frame, text="Delete all!", anchor="w").grid(
             row=nb_line, column=0, sticky=tki.W
         )
@@ -593,6 +609,19 @@ class Window_edition(Window_pattern):
                 next_suffix = str(int(suffix) + 1)
                 return prefix + next_suffix
         return None
+
+    def force_all_positionning_to(self, value):
+        """
+        Force all the elements in the group to be fixed or not fixed.
+        """
+        if value == " ":
+            return None
+        flag = False
+        if value == "Fixed":
+            flag = True
+        print("force all to: ", flag)
+        for element in self.destination.elements:
+            element["element"].fixed = flag
 
     def delete_all_elements(self, group):
         """Delete all the elements (functions and nodes) in the group."""
