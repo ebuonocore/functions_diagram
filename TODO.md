@@ -1,10 +1,12 @@
 # DONE:
-+ Mettre à jour la fenêtre info 
++ Mise en place de .gitignore
++ Mise en place partielle du zoom
+  + Dessins et textes ok
+  + l'épaisseur des traits (fonctions et links) est affecté par le zoom
 
 # BUG : 
-+ Mettre en place .scale sur self.can.scale Ok, texte nOk
-  + self.can.fontSize plante
-+ .gitignore laisse toujours remonter les dossiers ....
++ Mettre en place zoom sur self.can Ok
+  + Décalage sur les zones de sélection (move, erase...)
 
 # TODO:
 + CTRL+a : Créé un groupe regroupant tous les éléments

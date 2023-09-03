@@ -1,0 +1,10 @@
+def asdfsdf(a:dsf,bdf:sdf)->dsf
+asdfsdf.position(260,97)
+asdfsdf.dimension(118,58)
+
+node(right:type_right,(221,302),justify="right")
+node(right2:autre_type,(217,346),justify="right")
+node(separator:qssqd,(221,248),justify="separator")
+node(center_sans_type,(100,100),justify="center")
+node(left_sans_type,(100,54))
+

@@ -76,7 +76,7 @@ class Window:
         self.MENU_HEIGHT = 80
         self.smooth_lines = True
         self.window_edition = None
-        self.zooms = [i / 100 for i in range(10, 200, 10)]
+        self.zooms = [i / 100 for i in range(10, 310, 10)]
         self.zoom = 9
         self.can = tki.Canvas(
             self.tk,
@@ -278,8 +278,10 @@ class Window:
         """Draw discs for isolated points and arrows for points linked to blocks."""
         police = self.preferences["police"]
         text_size = int(self.preferences["text size_int"])
-
         font_texte = tkfont.Font(family=police, size=text_size, weight="normal")
+        sep_lenght = tkfont.Font(
+            size=text_size, family=police, weight="normal"
+        ).measure(": ")
         color = self.preferences["line color_color"]
         text_color = self.preferences["text color_color"]
         d = int(self.preferences["text size_int"]) // 2
@@ -303,13 +305,13 @@ class Window:
                     self.draw_triangle(x, y, 0)
                     if ">" in node.name:
                         self.print_label(
-                            x + (self.MARGIN) // 3,
+                            x + (self.MARGIN) // 2 - sep_lenght,
                             y - self.MARGIN,
                             node.label,
                             node.annotation,
                             "w",
                         )
-                    else:  # Exit of a function
+                    else:  # Entry of a function
                         self.print_label(x + 2, y, node.label, node.annotation, "w")
 
     def draw_triangle(self, x, y, orientation=0, color=None, d=None):
@@ -333,31 +335,36 @@ class Window:
     ):
         """Write the label and if necessary the type annotation separated by :"""
         police = self.preferences["police"]
+        zoom = self.zooms[self.zoom]
         text_size = int(self.preferences["text size_int"])
+        text_size = int(text_size * zoom)
         font = tkfont.Font(family=police, size=text_size, weight="normal")
         text_color = self.preferences["text color_color"]
         if color is not None:
             text_color = color
         type_color = self.preferences["type color_color"]
-        # If justify is not None, its value is "left", "center","separator" or "right"
-        total_text = label
-        sep_text = label
+        texts = {"name": label, "separator": label, "space": label, "real": label}
         if len(annotation) != 0:
-            total_text += ": " + annotation
-            sep_text += ":"
-        len_total_text = tkfont.Font(
-            size=text_size, family=police, weight="normal"
-        ).measure(total_text)
-        len_sep_text = tkfont.Font(
-            size=text_size, family=police, weight="normal"
-        ).measure(sep_text)
+            texts["separator"] = label + ":"
+            texts["space"] = label + ": "
+            texts["real"] = label + ": " + annotation
+        # Calculate in pixels the lengths of the different texts
+        lenghts = dict()
+        for key, text in texts.items():
+            lenghts[key] = (
+                tkfont.Font(size=text_size, family=police, weight="normal").measure(
+                    text
+                )
+                / zoom
+            )
         # Calculate the offset of the text according to the justification
+        # If justify is not None, its value is "left", "center","separator" or "right"
         justify_offset = {
             None: 0,
             "left": 0,
-            "right": len_total_text,
-            "center": len_total_text // 2,
-            "separator": len_sep_text,
+            "right": lenghts["real"],
+            "center": lenghts["real"] // 2,
+            "separator": lenghts["separator"],
         }
         if justify in justify_offset.keys():
             x -= justify_offset[justify]
@@ -368,10 +375,7 @@ class Window:
             x, y, text=label, font=font, anchor=anchor, fill=text_color
         )
         if len(annotation) > 0:
-            offset = tkfont.Font(
-                size=text_size, family=police, weight="normal"
-            ).measure(label)
-            x_type = x + offset
+            x_type = x + lenghts["space"]
             self.can.create_text(
                 x_type, y, text=annotation, font=font, anchor=anchor, fill=type_color
             )
@@ -381,11 +385,15 @@ class Window:
         Update the positions of the points in the block: Inputs and outputs
         """
         police = self.preferences["police"]
+        zoom = self.zooms[self.zoom]
         title_size = int(self.preferences["title size_int"])
+        title_size = int(title_size * zoom)
         text_size = int(self.preferences["text size_int"])
+        text_size = int(text_size * zoom)
         text_color = self.preferences["text color_color"]
         thickness = int(self.preferences["border thickness_int"])
-        font_titre = tkfont.Font(family=police, size=title_size, weight="bold")
+        thickness = thickness * zoom
+        font_title = tkfont.Font(family=police, size=title_size, weight="bold")
         font_texte = tkfont.Font(family=police, size=text_size, weight="normal")
         border_color = self.preferences["border default color_color"]
         title_background_color = self.preferences["title background color_color"]
@@ -435,14 +443,16 @@ class Window:
                     x_titre,
                     y_titre,
                     text=texte,
-                    font=font_titre,
+                    font=font_title,
                     anchor="center",
                     fill=text_color,
                 )
 
     def draw_lines(self):
         """Draw the connections between the points: Vertical or horizontal lines."""
+        zoom = self.zooms[self.zoom]
         thickness = int(self.preferences["line thickness_int"])
+        thickness = thickness * zoom
         color = self.preferences["line color_color"]
         smooth = True if self.preferences["smooth lines_bool"] == 1 else False
         self.diagram.update_links()
