@@ -97,10 +97,16 @@ class Group:
         self.update_coordinates()
         return True
 
-    def search_elements_in(self, diagram, origin, destination):
+    def search_elements_in(self, diagram, origin, destination, all=False):
         elements = list()
         x_origin, y_origin = origin
-        objects = tl.search_in_rectangle(diagram, origin, destination)
+        if all:
+            objects = list(diagram.functions.values())
+            for node in list(diagram.nodes.values()):
+                if node.free:
+                    objects.append(node)
+        else:
+            objects = tl.search_in_rectangle(diagram, origin, destination)
         nodes = []
         for ref, element in enumerate(objects):
             x_element, y_element = element.position
