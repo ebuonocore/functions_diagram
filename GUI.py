@@ -69,15 +69,15 @@ class Window:
         self.state = 1
         self.active_file = None
         self.memory = Memory(50, self.diagram.export_to_text())
-        self.MARGIN = 10
+        self.zooms = [i / 100 for i in range(10, 310, 10)]
+        self.zoom_index = 9
+        self.zoom = self.zooms[self.zoom_index]
+        self.MARGINS = {"base":10, "up":10, "down":10}
+        self.margins = tl.update_dict_ratio(self.MARGINS, self.zoom)  # Margin modified by zoom
         self.SCREEN_WIDTH, self.SCREEN_HEIGHT = self.screen_dimensions()
-        self.MARGIN_DOWN = 10
-        self.MARGIN_UP = 10
         self.MENU_HEIGHT = 80
         self.smooth_lines = True
         self.window_edition = None
-        self.zooms = [i / 100 for i in range(10, 310, 10)]
-        self.zoom = 9
         self.can = tki.Canvas(
             self.tk,
             width=self.SCREEN_WIDTH,
@@ -89,8 +89,8 @@ class Window:
         )
         self.menu_label = tki.Label(self.menu)
         self.menu_label.pack(padx=1, pady=1, fill=tki.X, side=tki.LEFT)
-        self.margin = tki.Label(self.menu, width=1, bg="#F0F0F0")
-        self.margin.pack(side=tki.LEFT)
+        self.blank = tki.Label(self.menu, width=1, bg="#F0F0F0")
+        self.blank.pack(side=tki.LEFT)
         self.text_message = tki.StringVar()
         self.text_message.set("\n")
         self.message = tki.Label(
@@ -104,8 +104,11 @@ class Window:
         self.can.pack()
         self.tk.update()
         self.WIDTH, self.HEIGHT = self.canvas_dimensions()
-        self.destination = None
-        self.origin = None
+        self.destination = None  # Element of the selection
+        self.origin = None  # First element of the selection
+        self.ref_origin = [0 ,0]  # Reference frame origin 
+        self.ref_delta_drag = [0, 0]  # Reference offset during movement
+        self.tempo_drag = 0  # >0 during drag movement.
         self.auto_resize_blocks()
         self.update_positions()
         message("Function_diagram v1.0", self.text_message)
@@ -143,29 +146,30 @@ class Window:
                     max_width = 0
                 max_width = (
                     max(max_width, len(function.label) * self.title_char_width)
-                    + 2 * self.MARGIN
+                    + 2 * self.margins["base"]
                 )
                 max_height = (
                     max(len(function.entries), 1) * self.text_char_height
-                    + 2 * self.MARGIN
+                    + 2 * self.margins["base"]
                 )
                 function.dimension = (max_width, max_height)
 
     def position_functions_nodes(self):
         """Position the nodes linked to the functions."""
+        title_char_height = self.title_char_height * self.zoom
         # Place the nodes of the functions
         for function in self.diagram.functions.values():
             # Benchmark: Body frame
             if function.position is not None:
                 x, y = function.position
                 function_width, function_height = function.dimension
-                x_entry = x + self.MARGIN
-                y_entry = y + self.title_char_height + self.MARGIN
+                x_entry = x + self.margins["base"]
+                y_entry = y + title_char_height + self.margins["base"]
 
                 for entry in function.entries:
                     # Update the positions of the points in the block
                     entry.position = [
-                        x_entry - self.MARGIN,
+                        x_entry - self.margins["base"],
                         y_entry + self.text_char_height // 2,
                     ]
                     entry.free = False
@@ -173,7 +177,7 @@ class Window:
                 # Exit point of the block
                 function.output.position = [
                     x + function_width,
-                    y + self.title_char_height + function_height // 2,
+                    y + title_char_height + function_height // 2,
                 ]
                 function.output.free = False
 
@@ -181,7 +185,7 @@ class Window:
         """The relative positions of functions and points are determined by their floor.
         Unless the positions are fixed.
         Stage 0: Leaves of the directed graph described by self.floors.
-        The functions are divided graphically between self.MARGIN_DOWN and self.WIDTH - self.MARGIN_UP
+        The functions are divided graphically between self.margins["down"] and self.WIDTH - self.margins["up"]
         The free points (not associated with functions) are located on the intermediate levels.
         Update the group positions.
         Return True if the positions have been updated.
@@ -198,7 +202,7 @@ class Window:
             floor_max = design.max_floor
             # Imposes the abscissa of unfixed function_blocks.
             nb_intervals = floor_max + 1
-            interval_width = (self.WIDTH - 2 * self.MARGIN) // nb_intervals
+            interval_width = (self.WIDTH - 2 * self.margins["base"]) // nb_intervals
             offset = 0
             if self.preferences["automatic spacing_int"].isdigit():
                 preference_spacing = int(self.preferences["automatic spacing_int"])
@@ -207,12 +211,12 @@ class Window:
                     offset = (self.WIDTH - interval_width * nb_intervals) // 2
             else:
                 message("Invalid value for automatic spacing", self.text_message)
-            free_height = self.HEIGHT - self.MARGIN_UP - self.MARGIN_DOWN
+            free_height = self.HEIGHT - self.margins["up"] - self.margins["down"]
             for function in self.diagram.functions.values():
                 floor = function.floor
                 if function.fixed == False:
                     function.position[0] = (
-                        self.MARGIN
+                        self.margins["base"]
                         + (floor + 0.5) * interval_width
                         + offset
                         - function.dimension[0] // 2
@@ -221,7 +225,7 @@ class Window:
                     ratio = (rank + 1) / (len(self.diagram.floors[floor]) + 1)
                     function.position[1] = (
                         round(free_height * ratio)
-                        + self.MARGIN_UP
+                        + self.margins["up"]
                         - function.dimension[1] // 2
                     )
             # Position the nodes linked to the functions
@@ -230,8 +234,8 @@ class Window:
             # Calculate the position of free nodes based on the positions of related non-free nodes.
             for node in self.diagram.nodes.values():
                 if node.free and not node.fixed:
-                    max_abscissas = self.WIDTH - self.MARGIN - offset // 2
-                    min_abscissas = self.MARGIN + offset // 2
+                    max_abscissas = self.WIDTH - self.margins["base"] - offset // 2
+                    min_abscissas = self.margins["base"] + offset // 2
                     ordinates = []
                     for connected_node in node.connections:
                         # This point is a function input
@@ -248,7 +252,7 @@ class Window:
                             )
                     node.position[0] = (min_abscissas + max_abscissas) // 2
                     if len(ordinates) == 0:
-                        node.position[1] = self.MARGIN_UP + free_height // 2
+                        node.position[1] = self.margins["up"] + free_height // 2
                     else:
                         node.position[1] = sum(ordinates) / len(ordinates)
             for group in self.diagram.groups.values():
@@ -261,7 +265,7 @@ class Window:
 
     def draw(self):
         """Update the system display in the Tkinter window"""
-        try:
+        if True:
             # Delete all objects from the canvas before recreating them
             self.can.delete("all")
             self.can.configure(bg=self.preferences["main background color_color"])
@@ -270,9 +274,11 @@ class Window:
             self.draw_nodes()
             self.draw_lines()
             self.draw_groups()
-            self.can.scale("all", 0, 0, self.zooms[self.zoom], self.zooms[self.zoom])
+        """    
         except:
-            print("Error")
+            print("Error during drawing.")
+        """
+
 
     def draw_nodes(self):
         """Draw discs for isolated points and arrows for points linked to blocks."""
@@ -284,10 +290,11 @@ class Window:
         ).measure(": ")
         color = self.preferences["line color_color"]
         text_color = self.preferences["text color_color"]
-        d = int(self.preferences["text size_int"]) // 2
-        for node_name, node in self.diagram.nodes.items():
+        d = int(self.preferences["text size_int"]) * self.zoom // 2
+        for node in self.diagram.nodes.values():
             if node.position != [None, None] and node.visible:
                 x, y = node.position
+                x, y = tl.offset(self.ref_origin, self.zoom, x, y)
                 if node.free:
                     justify = node.justify
                     if justify is None:
@@ -295,7 +302,7 @@ class Window:
                     self.can.create_oval(x - d, y - d, x + d, y + d, fill=color)
                     self.print_label(
                         x,
-                        y - self.MARGIN,
+                        y - self.margins["base"],
                         node.label,
                         node.annotation,
                         "sw",
@@ -305,8 +312,8 @@ class Window:
                     self.draw_triangle(x, y, 0)
                     if ">" in node.name:
                         self.print_label(
-                            x + (self.MARGIN) // 2 - sep_lenght,
-                            y - self.MARGIN,
+                            x + (self.margins["base"]) // 2 - sep_lenght,
+                            y - self.margins["base"],
                             node.label,
                             node.annotation,
                             "w",
@@ -321,13 +328,14 @@ class Window:
         if color is None:
             color = self.preferences["line color_color"]
         if d is None:
-            d = int(self.preferences["text size_int"]) // 2
+            d = int(self.preferences["text size_int"])*self.zoom // 2
         perimeter = [
             [x - 2 * d, y - d, x, y, x - 2 * d, y + d],
             [x - d, y + 2 * d, x, y, x + d, y + 2 * d],
             [x + 2 * d, y - d, x, y, x + 2 * d, y + d],
             [x - d, y - 2 * d, x, y, x + d, y - 2 * d],
         ]
+        
         self.can.create_polygon(perimeter[orientation], fill=color)
 
     def print_label(
@@ -335,9 +343,8 @@ class Window:
     ):
         """Write the label and if necessary the type annotation separated by :"""
         police = self.preferences["police"]
-        zoom = self.zooms[self.zoom]
         text_size = int(self.preferences["text size_int"])
-        text_size = int(text_size * zoom)
+        text_size = int(text_size * self.zoom)
         font = tkfont.Font(family=police, size=text_size, weight="normal")
         text_color = self.preferences["text color_color"]
         if color is not None:
@@ -355,16 +362,15 @@ class Window:
                 tkfont.Font(size=text_size, family=police, weight="normal").measure(
                     text
                 )
-                / zoom
             )
         # Calculate the offset of the text according to the justification
         # If justify is not None, its value is "left", "center","separator" or "right"
         justify_offset = {
             None: 0,
             "left": 0,
-            "right": lenghts["real"],
-            "center": lenghts["real"] // 2,
-            "separator": lenghts["separator"],
+            "right": lenghts["real"] * self.zoom,
+            "center": lenghts["real"] * self.zoom // 2,
+            "separator": lenghts["separator"] * self.zoom,
         }
         if justify in justify_offset.keys():
             x -= justify_offset[justify]
@@ -384,15 +390,15 @@ class Window:
         """Draw the function_block: Header, body frames.
         Update the positions of the points in the block: Inputs and outputs
         """
+        title_char_height = self.title_char_height * self.zoom
         police = self.preferences["police"]
-        zoom = self.zooms[self.zoom]
         title_size = int(self.preferences["title size_int"])
-        title_size = int(title_size * zoom)
+        title_size = int(title_size * self.zoom)
         text_size = int(self.preferences["text size_int"])
-        text_size = int(text_size * zoom)
+        text_size = int(text_size * self.zoom)
         text_color = self.preferences["text color_color"]
         thickness = int(self.preferences["border thickness_int"])
-        thickness = thickness * zoom
+        thickness = thickness * self.zoom
         font_title = tkfont.Font(family=police, size=title_size, weight="bold")
         font_texte = tkfont.Font(family=police, size=text_size, weight="normal")
         border_color = self.preferences["border default color_color"]
@@ -403,7 +409,10 @@ class Window:
             # Drawing of the body frame
             if function.position is not None:
                 x, y = function.position
+                x, y = tl.offset(self.ref_origin, self.zoom, x, y)
                 function_width, function_height = function.dimension
+                function_width *= self.zoom
+                function_height *= self.zoom
                 if function.header_color is None:
                     header_color = title_background_color
                 else:
@@ -414,7 +423,7 @@ class Window:
                     x,
                     y,
                     x + function_width,
-                    y + self.title_char_height,
+                    y + title_char_height,
                     outline=border_color,
                     fill=header_color,
                     thickness=thickness,
@@ -425,9 +434,9 @@ class Window:
                 tl.draw_box(
                     self.can,
                     x,
-                    y + self.title_char_height,
+                    y + title_char_height,
                     x + function_width,
-                    y + self.title_char_height + function_height,
+                    y + title_char_height + function_height,
                     outline=border_color,
                     fill=function_background_color,
                     thickness=thickness,
@@ -437,7 +446,7 @@ class Window:
 
                 # Writing the function name
                 x_titre = x + function_width // 2
-                y_titre = y + self.title_char_height // 2
+                y_titre = y + title_char_height // 2
                 texte = function.label
                 self.can.create_text(
                     x_titre,
@@ -450,9 +459,8 @@ class Window:
 
     def draw_lines(self):
         """Draw the connections between the points: Vertical or horizontal lines."""
-        zoom = self.zooms[self.zoom]
         thickness = int(self.preferences["line thickness_int"])
-        thickness = thickness * zoom
+        thickness = thickness * self.zoom
         color = self.preferences["line color_color"]
         smooth = True if self.preferences["smooth lines_bool"] == 1 else False
         self.diagram.update_links()
@@ -463,6 +471,11 @@ class Window:
             x_middle, y_middle = link.points[2]
             x_last, y_last = link.points[3]
             x_end, y_end = link.points[4]
+            x_start, y_start = tl.offset(self.ref_origin, self.zoom, x_start, y_start)
+            x_first, y_first  = tl.offset(self.ref_origin, self.zoom, x_first, y_first )
+            x_middle, y_middle = tl.offset(self.ref_origin, self.zoom, x_middle, y_middle)
+            x_last, y_last = tl.offset(self.ref_origin, self.zoom, x_last, y_last)
+            x_end, y_end = tl.offset(self.ref_origin, self.zoom, x_end, y_end)
             if smooth:
                 self.can.create_line(
                     (x_start, y_start),
@@ -496,6 +509,7 @@ class Window:
             thickness = group.thickness if group.thickness != "" else pref_thickness
             dash = int(thickness) * 2
             x_origin, y_origin = group.position
+            x_origin, y_origin = tl.offset(self.ref_origin, self.zoom, x_origin, y_origin)
             width, height = group.dimension
             x_end, y_end = x_origin + width, y_origin + height
             self.can.create_rectangle(
@@ -513,15 +527,18 @@ class Window:
             )
 
     def draw_destination_outine(self, color=COLOR_OUTLINE):
+        title_char_height = self.title_char_height*self.zoom
+        if self.destination is None:
+            return None
+        x, y = self.destination.position
+        x, y = tl.offset(self.ref_origin, self.zoom, x, y)
         if type(self.destination) == Link:
             d = 2 * int(self.preferences["text size_int"]) // 3
-            x, y = self.destination.position
             self.can.create_rectangle(
                 x - 2, y - 2, x + 2, y + 2, width=2, outline=color
             )
         elif type(self.destination) == Node:
             d = 2 * int(self.preferences["text size_int"]) // 3
-            x, y = self.destination.position
             if self.destination.free:
                 self.can.create_oval(x - d, y - d, x + d, y + d, fill=color)
             else:
@@ -530,23 +547,24 @@ class Window:
 
         elif type(self.destination) == group.Corner_group:
             d = 2 * int(self.preferences["text size_int"]) // 3
-            x, y = self.destination.position
             self.can.create_rectangle(x - d, y - d, x + d, y + d, fill=color)
 
         elif type(self.destination) == Function_block:
-            x, y = self.destination.position
             width, height = self.destination.dimension
+            width *= self.zoom
+            height = height * self.zoom
             self.can.create_rectangle(
                 x - 2,
                 y - 2,
                 x + width + 2,
-                y + self.title_char_height + height + 2,
+                y + title_char_height + height + 2,
                 width=2,
                 outline=color,
             )
         elif type(self.destination) == Group:
-            x, y = self.destination.position
             width, height = self.destination.dimension
+            width *= self.zoom
+            height *= self.zoom
             self.can.create_rectangle(
                 x - 2,
                 y - 2,
@@ -759,6 +777,33 @@ class Window:
                 self.lift_window(self.window_edition.window)
             except:
                 pass
+    
+    def group_all(self, event):
+        """ Create a group with all the elements : Functions and nodes
+        """
+        if self.state == 1:
+            mouse_x, mouse_y = tl.pointer_position(self.can)
+            origin = [mouse_x, mouse_y]
+            previous_names = tl.all_previous_names(self.diagram)
+            name = tl.new_label(previous_names)
+            new_group = Group(
+                name=name,
+                label=name,
+                fixed=False,
+                position=origin,
+                dimension=[100, 100],
+            )
+            elements = new_group.search_elements_in(
+                self.diagram, origin, self.destination, True
+            )
+            new_group.elements = elements
+            ok = new_group.update_coordinates()
+            print("Update ?", ok)
+            self.diagram.add_group(new_group)
+            self.destination = new_group
+            self.edit(self.destination)
+            self.draw()
+
 
     def copy(self, event=None):
         if self.destination != None:
@@ -869,21 +914,61 @@ class Window:
         # Undo from keyboard Ctrl+z
         self.cmd_undo()
 
+    def zoom_wheel(self, event):
+        # Respond to Linux(event.delta) or Windows(event.num) wheel event
+        if event.num == 4 or event.delta == 120:
+            self.zoom_more()
+        elif event.num == 5 or event.delta == -120:
+            self.zoom_less()
+
     def zoom_more(self, event=None):
         """Zoom in"""
-        if self.zoom < len(self.zooms) - 1:
-            self.zoom += 1
-        zoom = self.zooms[self.zoom]
-        message("Zoom: " + str(zoom) + "%", self.text_message)
-        self.draw()
+        if self.zoom_index < len(self.zooms) - 1:
+            self.zoom_index += 1
+        self.zoom_update()
 
     def zoom_less(self, event=None):
         """Zoom out"""
-        if self.zoom > 0:
-            self.zoom -= 1
-        zoom = self.zooms[self.zoom]
-        message("Zoom: " + str(zoom) + "%", self.text_message)
+        if self.zoom_index > 0:
+            self.zoom_index -= 1
+        self.zoom_update()
+
+    def zoom_update(self):
+        """ Update the zoom parameter and the margins  in line with changes in the self.zoom_index.
+        """
+        self.zoom = self.zooms[self.zoom_index]
+        message("Zoom: " + str(self.zoom) + "%", self.text_message)
+        self.margins = tl.update_dict_ratio(self.MARGINS, self.zoom)  # Margin modified by zoom
         self.draw()
+
+    def reset_origin(self, event):
+        """ Original offset and zoom parameter
+        """
+        self.state = 1
+        message("Origin reset.", self.text_message)
+        self.ref_origin = [0, 0]
+        self.zoom_index = 9
+        self.zoom = self.zooms[self.zoom_index]
+        self.margins = tl.update_dict_ratio(self.MARGINS, self.zoom)  # Margin modified by zoom
+        self.draw()
+
+    def drag_origin(self, event):
+        """Initiate the drag of the diagram."""
+        TTL = 4  # Time to live of the drag
+        if self.state == 1:
+            x, y = tl.pointer_position(self.can)
+            if self.tempo_drag == 0:
+                self.ref_delta_drag = [x, y]
+                self.tempo_drag = TTL
+                return None
+            self.tempo_drag = TTL
+            x_old, y_old = self.ref_delta_drag
+            delta_x, delta_y = (x - x_old)//self.zoom, (y - y_old)//self.zoom
+            self.ref_origin[0] += delta_x
+            self.ref_origin[1] += delta_y
+            self.ref_delta_drag = [x, y]
+            self.draw()
+            
 
     @Decorators.disable_if_editing
     def cmd_undo(self):
@@ -1014,7 +1099,7 @@ class Window:
         self.tk.destroy()
 
     def engine(self):
-        """State management :
+        """ State management :
         1 - Basic state
         2 - Move object : Select the origin
         3 - Move object : Select destination
@@ -1025,15 +1110,21 @@ class Window:
         8 - Add group : Selecting the first corner
         9 - Add group : Selecting the second corner
         """
+        if self.tempo_drag > 0:
+            self.tempo_drag -= 1
+        else:
+            self.tempo_drag = 0
         if self.state == 1:  # Basic state
             self.can.config(cursor="arrow")
         if self.state == 2:  # Move object: Select the origin
             mouse_x, mouse_y = tl.pointer_position(self.can)
-            self.destination = tl.nearest_objet((mouse_x, mouse_y), self.diagram)
+            mouse_x, mouse_y = tl.subset(self.ref_origin, self.zoom, mouse_x, mouse_y)
+            self.destination = tl.nearest_objet((mouse_x, mouse_y), self.diagram, self.zoom)
             self.draw()
             self.draw_destination_outine()
         elif self.state == 3 and self.destination is not None:  # Move to destination
             mouse_x, mouse_y = tl.pointer_position(self.can)
+            mouse_x, mouse_y = tl.subset(self.ref_origin, self.zoom, mouse_x, mouse_y)
             self.destination.position = [mouse_x, mouse_y]
             # Move the elements of the group
             if type(self.destination) == Group:
@@ -1070,18 +1161,21 @@ class Window:
             self.draw()
         elif self.state == 4:  # Select object to erase
             mouse_x, mouse_y = tl.pointer_position(self.can)
+            mouse_x, mouse_y = tl.subset(self.ref_origin, self.zoom, mouse_x, mouse_y)
             self.destination = tl.nearest_objet(
-                (mouse_x, mouse_y), self.diagram, target_types="erasable"
+                (mouse_x, mouse_y), self.diagram, self.zoom, target_types="erasable"
             )
             self.draw()
             self.draw_destination_outine("red")
         elif self.state == 5:  # Select object to edit
             mouse_x, mouse_y = tl.pointer_position(self.can)
-            self.destination = tl.nearest_objet((mouse_x, mouse_y), self.diagram)
+            mouse_x, mouse_y = tl.subset(self.ref_origin, self.zoom, mouse_x, mouse_y)
+            self.destination = tl.nearest_objet((mouse_x, mouse_y), self.diagram, self.zoom)
             self.draw()
             self.draw_destination_outine("green")
         elif self.state == 6:  # Add link : Origin selected
             mouse_x, mouse_y = tl.pointer_position(self.can)
+            mouse_x, mouse_y = tl.subset(self.ref_origin, self.zoom, mouse_x, mouse_y)
             self.destination, distance = tl.nearest(
                 (mouse_x, mouse_y), self.diagram.nodes.values()
             )
@@ -1091,6 +1185,7 @@ class Window:
             self.state == 7 and self.origin is not None
         ):  # Add link : Destination selected
             mouse_x, mouse_y = tl.pointer_position(self.can)
+            mouse_x, mouse_y = tl.subset(self.ref_origin, self.zoom, mouse_x, mouse_y)
             self.destination, distance = tl.nearest(
                 (mouse_x, mouse_y), self.diagram.nodes.values()
             )

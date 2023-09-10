@@ -245,10 +245,13 @@ def nearest(mouse_position, targets):
     return nearest_target, nearest_target_distance
 
 
-def nearest_objet(mouse_position, diagram, target_types="movable"):
+def nearest_objet(mouse_position, diagram, zoom=1, target_types="movable"):
     """Return the nearest object from the cursor.
     target_types can be "all" (default), "function" or "node"
     """
+    x_mouse = mouse_position[0]
+    y_mouse = mouse_position[1]
+    mouse_position = (x_mouse, y_mouse)
     population = []
     population += diagram.groups.values()
     for group in diagram.groups.values():
@@ -278,9 +281,28 @@ def get_dimension(origin, destination):
     y = destination[1] - origin[1]
     return (x, y)
 
+def offset(origin, zoom, x, y):
+    """ origin is a list [x_offset, y_offset].
+        Return the list modified by thr zoom factor and the offset (origin).
+    """
+    return [(origin[0])+zoom*x, (origin[1])+zoom*y]
+
+def subset(origin, zoom, x, y):
+    """ origin is a list [x_offset, y_offset].
+        Take the x,y position of the mouse. Translate it by the offset (origin) and divide it by the zoom factor.
+        Return the corresponding position.
+    """
+    return [(x-origin[0])//zoom , (y-origin[1])//zoom]
+
+def update_dict_ratio(dico:dict, zoom:float):
+    """ Retrun the dico with all values multiplied by zoom.
+    """
+    for key, value in dico.items():
+        dico[key] = value * zoom
+    return dico
 
 def search_in_rectangle(diagram, origin, destination):
-    """Return the list of functions end nodes in the rectangle defined by the positions origin (x1, y1) and destination (x2, y2)."""
+    """Return the list of functions and nodes in the rectangle defined by the positions origin (x1, y1) and destination (x2, y2)."""
     objects = []
     x1, y1 = origin
     x2, y2 = destination
