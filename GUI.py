@@ -146,30 +146,30 @@ class Window:
                     max_width = 0
                 max_width = (
                     max(max_width, len(function.label) * self.title_char_width)
-                    + 2 * self.margins["base"]
+                    + 2 * self.MARGINS["base"]
                 )
                 max_height = (
                     max(len(function.entries), 1) * self.text_char_height
-                    + 2 * self.margins["base"]
+                    + 2 * self.MARGINS["base"]
                 )
                 function.dimension = (max_width, max_height)
 
     def position_functions_nodes(self):
         """Position the nodes linked to the functions."""
-        title_char_height = self.title_char_height * self.zoom
+        title_char_height = self.title_char_height
         # Place the nodes of the functions
         for function in self.diagram.functions.values():
             # Benchmark: Body frame
             if function.position is not None:
                 x, y = function.position
                 function_width, function_height = function.dimension
-                x_entry = x + self.margins["base"]
-                y_entry = y + title_char_height + self.margins["base"]
+                x_entry = x + self.MARGINS["base"]
+                y_entry = y + title_char_height + self.MARGINS["base"]
 
                 for entry in function.entries:
                     # Update the positions of the points in the block
                     entry.position = [
-                        x_entry - self.margins["base"],
+                        x_entry - self.MARGINS["base"],
                         y_entry + self.text_char_height // 2,
                     ]
                     entry.free = False
@@ -185,7 +185,7 @@ class Window:
         """The relative positions of functions and points are determined by their floor.
         Unless the positions are fixed.
         Stage 0: Leaves of the directed graph described by self.floors.
-        The functions are divided graphically between self.margins["down"] and self.WIDTH - self.margins["up"]
+        The functions are divided graphically between self.MARGINS["down"] and self.WIDTH - self.MARGINS["up"]
         The free points (not associated with functions) are located on the intermediate levels.
         Update the group positions.
         Return True if the positions have been updated.
@@ -202,7 +202,7 @@ class Window:
             floor_max = design.max_floor
             # Imposes the abscissa of unfixed function_blocks.
             nb_intervals = floor_max + 1
-            interval_width = (self.WIDTH - 2 * self.margins["base"]) // nb_intervals
+            interval_width = (self.WIDTH - 2 * self.MARGINS["base"]) // nb_intervals
             offset = 0
             if self.preferences["automatic spacing_int"].isdigit():
                 preference_spacing = int(self.preferences["automatic spacing_int"])
@@ -211,12 +211,12 @@ class Window:
                     offset = (self.WIDTH - interval_width * nb_intervals) // 2
             else:
                 message("Invalid value for automatic spacing", self.text_message)
-            free_height = self.HEIGHT - self.margins["up"] - self.margins["down"]
+            free_height = self.HEIGHT - self.MARGINS["up"] - self.MARGINS["down"]
             for function in self.diagram.functions.values():
                 floor = function.floor
                 if function.fixed == False:
                     function.position[0] = (
-                        self.margins["base"]
+                        self.MARGINS["base"]
                         + (floor + 0.5) * interval_width
                         + offset
                         - function.dimension[0] // 2
@@ -225,7 +225,7 @@ class Window:
                     ratio = (rank + 1) / (len(self.diagram.floors[floor]) + 1)
                     function.position[1] = (
                         round(free_height * ratio)
-                        + self.margins["up"]
+                        + self.MARGINS["up"]
                         - function.dimension[1] // 2
                     )
             # Position the nodes linked to the functions
@@ -234,8 +234,8 @@ class Window:
             # Calculate the position of free nodes based on the positions of related non-free nodes.
             for node in self.diagram.nodes.values():
                 if node.free and not node.fixed:
-                    max_abscissas = self.WIDTH - self.margins["base"] - offset // 2
-                    min_abscissas = self.margins["base"] + offset // 2
+                    max_abscissas = self.WIDTH - self.MARGINS["base"] - offset // 2
+                    min_abscissas = self.MARGINS["base"] + offset // 2
                     ordinates = []
                     for connected_node in node.connections:
                         # This point is a function input
@@ -252,7 +252,7 @@ class Window:
                             )
                     node.position[0] = (min_abscissas + max_abscissas) // 2
                     if len(ordinates) == 0:
-                        node.position[1] = self.margins["up"] + free_height // 2
+                        node.position[1] = self.MARGINS["up"] + free_height // 2
                     else:
                         node.position[1] = sum(ordinates) / len(ordinates)
             for group in self.diagram.groups.values():
@@ -265,7 +265,7 @@ class Window:
 
     def draw(self):
         """Update the system display in the Tkinter window"""
-        if True:
+        try:
             # Delete all objects from the canvas before recreating them
             self.can.delete("all")
             self.can.configure(bg=self.preferences["main background color_color"])
@@ -273,11 +273,9 @@ class Window:
             self.draw_functions()
             self.draw_nodes()
             self.draw_lines()
-            self.draw_groups()
-        """    
+            self.draw_groups() 
         except:
             print("Error during drawing.")
-        """
 
 
     def draw_nodes(self):
@@ -508,26 +506,29 @@ class Window:
                 color = group.color
             thickness = group.thickness if group.thickness != "" else pref_thickness
             dash = int(thickness) * 2
-            x_origin, y_origin = group.position
-            x_origin, y_origin = tl.offset(self.ref_origin, self.zoom, x_origin, y_origin)
-            width, height = group.dimension
-            x_end, y_end = x_origin + width, y_origin + height
-            self.can.create_rectangle(
-                x_origin,
-                y_origin,
-                x_end,
-                y_end,
-                dash=(dash, dash),
-                fill="",
-                outline=color,
-                width=thickness,
-            )
-            self.print_label(
-                x_origin, y_origin - self.text_char_height, group.label, color=color
-            )
+            if group.position is not None:
+                x_origin, y_origin = group.position
+                x_origin, y_origin = tl.offset(self.ref_origin, self.zoom, x_origin, y_origin)
+                width, height = group.dimension
+                width *= self.zoom
+                height *= self.zoom
+                x_end, y_end = x_origin + width, y_origin + height
+                self.can.create_rectangle(
+                    x_origin,
+                    y_origin,
+                    x_end,
+                    y_end,
+                    dash=(dash, dash),
+                    fill="",
+                    outline=color,
+                    width=thickness,
+                )
+                self.print_label(
+                    x_origin, y_origin - self.text_char_height, group.label, color=color
+                )
 
     def draw_destination_outine(self, color=COLOR_OUTLINE):
-        title_char_height = self.title_char_height*self.zoom
+        title_char_height = self.title_char_height * self.zoom
         if self.destination is None:
             return None
         x, y = self.destination.position
@@ -642,7 +643,7 @@ class Window:
             child_window.focus_force()
             child_window.update()
         except:
-            pass
+            print("Error during window positioning.")
 
     @Decorators.disable_if_editing
     def cmd_new(self):
@@ -776,7 +777,7 @@ class Window:
             try:
                 self.lift_window(self.window_edition.window)
             except:
-                pass
+                print("Error during window positioning.")
     
     def group_all(self, event):
         """ Create a group with all the elements : Functions and nodes
@@ -913,6 +914,10 @@ class Window:
     def undo(self, event=None):
         # Undo from keyboard Ctrl+z
         self.cmd_undo()
+    
+    def redo(self, event=None):
+        # Redo from keyboard Ctrl+y
+        self.cmd_redo()
 
     def zoom_wheel(self, event):
         # Respond to Linux(event.delta) or Windows(event.num) wheel event
@@ -1011,6 +1016,7 @@ class Window:
     def left_click(self, event):
         Xpix = event.x
         Ypix = event.y
+        #Xpix, Ypix = tl.subset(self.ref_origin, self.zoom, Xpix, Ypix)
         if self.state == 2:  # Target to move selected
             self.state = 3  # Destination selection
         elif self.state == 3:  # Destination selected
@@ -1059,6 +1065,8 @@ class Window:
             self.state = 9  # Selecting the second corner
         elif self.state == 9:  # Selecting the second corner
             self.destination = (Xpix, Ypix)
+            self.origin = tl.subset(self.ref_origin, self.zoom, *self.origin)
+            self.destination = tl.subset(self.ref_origin, self.zoom, *self.destination)
             dimension = tl.get_dimension(self.origin, self.destination)
             elements = list()
             empty_zone = True
@@ -1089,10 +1097,6 @@ class Window:
         message("", self.text_message)
         self.state = 1
         self.draw()
-
-    def mouse_movement(self, event):
-        Xpix = event.x
-        Ypix = event.y
 
     def fermer_fenêtre(self):
         self.tk.quit()
@@ -1193,6 +1197,7 @@ class Window:
             self.draw_destination_outine()
         elif self.state == 9:  # Add group : Selecting the second corner
             mouse_x, mouse_y = tl.pointer_position(self.can)
+            #mouse_x, mouse_y = tl.subset(self.ref_origin, self.zoom, mouse_x, mouse_y)
             self.draw()
             if type(self.origin) == tuple:
                 x_origin, y_origin = self.origin

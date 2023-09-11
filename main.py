@@ -14,6 +14,7 @@ if __name__ == "__main__":
     window.tk.bind("<Control -a>", window.group_all)
     window.tk.bind("<Control -c>", window.copy)
     window.tk.bind("<Control -z>", window.undo)
+    window.tk.bind("<Control -y>", window.redo)
     # Detect mouse wheel with Windows
     window.tk.bind("<MouseWheel>", window.zoom_wheel)
     # Detect mouse wheel with Linux
