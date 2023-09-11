@@ -249,9 +249,6 @@ def nearest_objet(mouse_position, diagram, zoom=1, target_types="movable"):
     """Return the nearest object from the cursor.
     target_types can be "all" (default), "function" or "node"
     """
-    x_mouse = mouse_position[0]
-    y_mouse = mouse_position[1]
-    mouse_position = (x_mouse, y_mouse)
     population = []
     population += diagram.groups.values()
     for group in diagram.groups.values():
@@ -297,9 +294,10 @@ def subset(origin, zoom, x, y):
 def update_dict_ratio(dico:dict, zoom:float):
     """ Retrun the dico with all values multiplied by zoom.
     """
+    new_dico = dict()
     for key, value in dico.items():
-        dico[key] = value * zoom
-    return dico
+        new_dico[key] = value * zoom
+    return new_dico
 
 def search_in_rectangle(diagram, origin, destination):
     """Return the list of functions and nodes in the rectangle defined by the positions origin (x1, y1) and destination (x2, y2)."""
