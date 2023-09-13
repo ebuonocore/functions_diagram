@@ -1,0 +1,25 @@
+def positions_to_distances(positions_and_classes:list[tuple],target_position:tuple)->list[tuple]
+positions_to_distances.position(311,101)
+positions_to_distances.dimension(360,58)
+
+def k_nearest(distances_and_classes,k:int)
+k_nearest.position(897,165)
+k_nearest.dimension(250,58)
+
+def majority_class(knn:list[tuple])->str
+majority_class.position(1322,175)
+majority_class.dimension(216,39)
+
+node(distances_and_classes:list[tuple],(813,159),justify="center")
+node(k:int,(239,232),justify="right")
+node(population:list[tuple],(239,121),justify="right")
+node(position:tuple,(239,168),justify="right")
+node(knn:list[tuple],(1226,223),justify="center")
+
+positions_to_distances<0---population
+positions_to_distances<1---position
+positions_to_distances>---distances_and_classes
+k_nearest<0---distances_and_classes
+k_nearest<1---k
+k_nearest>---knn
+majority_class<0---knn

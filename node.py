@@ -24,12 +24,10 @@ class Node:
 
     def __repr__(self):
         line = self.name
-        """
         line = self.name + ":" + self.annotation + ' '
         line += str(len(self.connections)) + " Connection(s) "
         if self.position != []:
             line += "Position: " + str(self.position)
-        """
         return line
 
 
