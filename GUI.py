@@ -72,8 +72,10 @@ class Window:
         self.zooms = [i / 100 for i in range(10, 310, 10)]
         self.zoom_index = 9
         self.zoom = self.zooms[self.zoom_index]
-        self.MARGINS = {"base":10, "up":10, "down":10}
-        self.margins = tl.update_dict_ratio(self.MARGINS, self.zoom)  # Margin modified by zoom
+        self.MARGINS = {"base": 10, "up": 10, "down": 10}
+        self.margins = tl.update_dict_ratio(
+            self.MARGINS, self.zoom
+        )  # Margin modified by zoom
         self.SCREEN_WIDTH, self.SCREEN_HEIGHT = self.screen_dimensions()
         self.MENU_HEIGHT = 80
         self.smooth_lines = True
@@ -106,7 +108,7 @@ class Window:
         self.WIDTH, self.HEIGHT = self.canvas_dimensions()
         self.destination = None  # Element of the selection
         self.origin = None  # First element of the selection
-        self.ref_origin = [0 ,0]  # Reference frame origin 
+        self.ref_origin = [0, 0]  # Reference frame origin
         self.ref_delta_drag = [0, 0]  # Reference offset during movement
         self.tempo_drag = 0  # >0 during drag movement.
         self.auto_resize_blocks()
@@ -265,7 +267,7 @@ class Window:
 
     def draw(self):
         """Update the system display in the Tkinter window"""
-        try:
+        if True:
             # Delete all objects from the canvas before recreating them
             self.can.delete("all")
             self.can.configure(bg=self.preferences["main background color_color"])
@@ -273,19 +275,20 @@ class Window:
             self.draw_functions()
             self.draw_nodes()
             self.draw_lines()
-            self.draw_groups() 
+            self.draw_groups()
+        """
         except:
-            print("Error during drawing.")
-
+            print("Error during drawing.")"""
 
     def draw_nodes(self):
         """Draw discs for isolated points and arrows for points linked to blocks."""
         police = self.preferences["police"]
         text_size = int(self.preferences["text size_int"])
         font_texte = tkfont.Font(family=police, size=text_size, weight="normal")
-        sep_lenght = tkfont.Font(
-            size=text_size, family=police, weight="normal"
-        ).measure(": ")
+        sep_lenght = (
+            tkfont.Font(size=text_size, family=police, weight="normal").measure(": ")
+            * self.zoom
+        )
         color = self.preferences["line color_color"]
         text_color = self.preferences["text color_color"]
         d = int(self.preferences["text size_int"]) * self.zoom // 2
@@ -326,14 +329,14 @@ class Window:
         if color is None:
             color = self.preferences["line color_color"]
         if d is None:
-            d = int(self.preferences["text size_int"])*self.zoom // 2
+            d = int(self.preferences["text size_int"]) * self.zoom // 2
         perimeter = [
             [x - 2 * d, y - d, x, y, x - 2 * d, y + d],
             [x - d, y + 2 * d, x, y, x + d, y + 2 * d],
             [x + 2 * d, y - d, x, y, x + 2 * d, y + d],
             [x - d, y - 2 * d, x, y, x + d, y - 2 * d],
         ]
-        
+
         self.can.create_polygon(perimeter[orientation], fill=color)
 
     def print_label(
@@ -356,19 +359,17 @@ class Window:
         # Calculate in pixels the lengths of the different texts
         lenghts = dict()
         for key, text in texts.items():
-            lenghts[key] = (
-                tkfont.Font(size=text_size, family=police, weight="normal").measure(
-                    text
-                )
-            )
+            lenghts[key] = tkfont.Font(
+                size=text_size, family=police, weight="normal"
+            ).measure(text)
         # Calculate the offset of the text according to the justification
         # If justify is not None, its value is "left", "center","separator" or "right"
         justify_offset = {
             None: 0,
             "left": 0,
-            "right": lenghts["real"] * self.zoom,
-            "center": lenghts["real"] * self.zoom // 2,
-            "separator": lenghts["separator"] * self.zoom,
+            "right": lenghts["real"],
+            "center": lenghts["real"] // 2,
+            "separator": lenghts["separator"],
         }
         if justify in justify_offset.keys():
             x -= justify_offset[justify]
@@ -470,8 +471,10 @@ class Window:
             x_last, y_last = link.points[3]
             x_end, y_end = link.points[4]
             x_start, y_start = tl.offset(self.ref_origin, self.zoom, x_start, y_start)
-            x_first, y_first  = tl.offset(self.ref_origin, self.zoom, x_first, y_first )
-            x_middle, y_middle = tl.offset(self.ref_origin, self.zoom, x_middle, y_middle)
+            x_first, y_first = tl.offset(self.ref_origin, self.zoom, x_first, y_first)
+            x_middle, y_middle = tl.offset(
+                self.ref_origin, self.zoom, x_middle, y_middle
+            )
             x_last, y_last = tl.offset(self.ref_origin, self.zoom, x_last, y_last)
             x_end, y_end = tl.offset(self.ref_origin, self.zoom, x_end, y_end)
             if smooth:
@@ -508,7 +511,9 @@ class Window:
             dash = int(thickness) * 2
             if group.position is not None:
                 x_origin, y_origin = group.position
-                x_origin, y_origin = tl.offset(self.ref_origin, self.zoom, x_origin, y_origin)
+                x_origin, y_origin = tl.offset(
+                    self.ref_origin, self.zoom, x_origin, y_origin
+                )
                 width, height = group.dimension
                 width *= self.zoom
                 height *= self.zoom
@@ -778,10 +783,9 @@ class Window:
                 self.lift_window(self.window_edition.window)
             except:
                 print("Error during window positioning.")
-    
+
     def group_all(self, event):
-        """ Create a group with all the elements : Functions and nodes
-        """
+        """Create a group with all the elements : Functions and nodes"""
         if self.state == 1:
             mouse_x, mouse_y = tl.pointer_position(self.can)
             origin = [mouse_x, mouse_y]
@@ -804,7 +808,6 @@ class Window:
             self.destination = new_group
             self.edit(self.destination)
             self.draw()
-
 
     def copy(self, event=None):
         if self.destination != None:
@@ -914,7 +917,7 @@ class Window:
     def undo(self, event=None):
         # Undo from keyboard Ctrl+z
         self.cmd_undo()
-    
+
     def redo(self, event=None):
         # Redo from keyboard Ctrl+y
         self.cmd_redo()
@@ -939,22 +942,24 @@ class Window:
         self.zoom_update()
 
     def zoom_update(self):
-        """ Update the zoom parameter and the margins  in line with changes in the self.zoom_index.
-        """
+        """Update the zoom parameter and the margins  in line with changes in the self.zoom_index."""
         self.zoom = self.zooms[self.zoom_index]
         message("Zoom: " + str(self.zoom) + "%", self.text_message)
-        self.margins = tl.update_dict_ratio(self.MARGINS, self.zoom)  # Margin modified by zoom
+        self.margins = tl.update_dict_ratio(
+            self.MARGINS, self.zoom
+        )  # Margin modified by zoom
         self.draw()
 
     def reset_origin(self, event):
-        """ Original offset and zoom parameter
-        """
+        """Original offset and zoom parameter"""
         self.state = 1
         message("Origin reset.", self.text_message)
         self.ref_origin = [0, 0]
         self.zoom_index = 9
         self.zoom = self.zooms[self.zoom_index]
-        self.margins = tl.update_dict_ratio(self.MARGINS, self.zoom)  # Margin modified by zoom
+        self.margins = tl.update_dict_ratio(
+            self.MARGINS, self.zoom
+        )  # Margin modified by zoom
         self.draw()
 
     def drag_origin(self, event):
@@ -968,12 +973,11 @@ class Window:
                 return None
             self.tempo_drag = TTL
             x_old, y_old = self.ref_delta_drag
-            delta_x, delta_y = (x - x_old)//self.zoom, (y - y_old)//self.zoom
+            delta_x, delta_y = (x - x_old) // self.zoom, (y - y_old) // self.zoom
             self.ref_origin[0] += delta_x
             self.ref_origin[1] += delta_y
             self.ref_delta_drag = [x, y]
             self.draw()
-            
 
     @Decorators.disable_if_editing
     def cmd_undo(self):
@@ -1016,7 +1020,7 @@ class Window:
     def left_click(self, event):
         Xpix = event.x
         Ypix = event.y
-        #Xpix, Ypix = tl.subset(self.ref_origin, self.zoom, Xpix, Ypix)
+        # Xpix, Ypix = tl.subset(self.ref_origin, self.zoom, Xpix, Ypix)
         if self.state == 2:  # Target to move selected
             self.state = 3  # Destination selection
         elif self.state == 3:  # Destination selected
@@ -1103,7 +1107,7 @@ class Window:
         self.tk.destroy()
 
     def engine(self):
-        """ State management :
+        """State management :
         1 - Basic state
         2 - Move object : Select the origin
         3 - Move object : Select destination
@@ -1123,7 +1127,9 @@ class Window:
         if self.state == 2:  # Move object: Select the origin
             mouse_x, mouse_y = tl.pointer_position(self.can)
             mouse_x, mouse_y = tl.subset(self.ref_origin, self.zoom, mouse_x, mouse_y)
-            self.destination = tl.nearest_objet((mouse_x, mouse_y), self.diagram, self.zoom)
+            self.destination = tl.nearest_objet(
+                (mouse_x, mouse_y), self.diagram, self.zoom
+            )
             self.draw()
             self.draw_destination_outine()
         elif self.state == 3 and self.destination is not None:  # Move to destination
@@ -1174,7 +1180,9 @@ class Window:
         elif self.state == 5:  # Select object to edit
             mouse_x, mouse_y = tl.pointer_position(self.can)
             mouse_x, mouse_y = tl.subset(self.ref_origin, self.zoom, mouse_x, mouse_y)
-            self.destination = tl.nearest_objet((mouse_x, mouse_y), self.diagram, self.zoom)
+            self.destination = tl.nearest_objet(
+                (mouse_x, mouse_y), self.diagram, self.zoom
+            )
             self.draw()
             self.draw_destination_outine("green")
         elif self.state == 6:  # Add link : Origin selected
@@ -1197,7 +1205,7 @@ class Window:
             self.draw_destination_outine()
         elif self.state == 9:  # Add group : Selecting the second corner
             mouse_x, mouse_y = tl.pointer_position(self.can)
-            #mouse_x, mouse_y = tl.subset(self.ref_origin, self.zoom, mouse_x, mouse_y)
+            # mouse_x, mouse_y = tl.subset(self.ref_origin, self.zoom, mouse_x, mouse_y)
             self.draw()
             if type(self.origin) == tuple:
                 x_origin, y_origin = self.origin

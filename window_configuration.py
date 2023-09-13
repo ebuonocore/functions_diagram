@@ -144,7 +144,7 @@ class Window_configuration:
         except:
             pass
 
-    def create_choice(self, line, choices: list[str], default_value: str):
+    def create_choice(self, line, choices: list, default_value: str):
         value = tki.StringVar()
         value.set(default_value)
         choice = tki.OptionMenu(line, value, *choices, command=self.update_preferences)

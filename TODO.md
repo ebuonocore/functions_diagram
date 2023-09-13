@@ -1,25 +1,23 @@
 # DONE:
-Suppression de code mort, correction d'errreus (self.margins,tools.update_dict_ratio ...) 
-+ Suppression de GUI.mouse_movement() : Code mort.
-+ Dessin des groupe en Ok.
-+ réparation de tools.update_dict_ratio() : Ecrasement successif de self.MARGINS entrainait des décalages cumulatifs sur les positions des noeuds.
-+ Plusieurs self.margins (fonction du zoom) au lieu de self.MARGINS (marges sans tenir comte du zoom)
-+ Correction de plusieurs title_char_height dans GUI mal utilisés selon la nécessié de * self.zoom ou non.
-+ try/except remis dans GUI.draw()
-+ Suppression du code mort en début de tools.nearest_objet()
-+ CTRL+y : Redo
++ Accpete les entiers négatifs pour les paramètres des objets
++ Correction : Annulation du zoom sur le calcul de l'offset des justification des labels de noeuds.
++ Correction de l'espace de marge à gauche des labels de sortie de fonction
++ Test du Zoom/Molette de souris sous Windows Ok
++ Suppression des annotations de type list[str] incompatibles avec les anciennes versions de Python
++ Suppression de codes morts ou redondants autour de l'appel de tools.character_dimensions
 
 # TOFIX : 
-
++ L'affichage est erroné sur Windows (police trop grandes par rapport à la mesure de tools.character_dimensions)
 
 # TOTEST :
-+ Zoom/Molette de souris sous Windows
+
 
 # TODO:
++ Repasser temporairement en zoom = 1, le temps de l'enregistrement. Puis repasser en zoom d'origine.
 + Shortcuts dans l'aide
 + Mettre à jour l'aide. Expliquer
   + Déplacement : CRTL+v
-  + Annulation : CTRL+z
+  + Annulation : CTRL+z et CTRL+y
   + Sélection totale : CTRL+a
   + Zoom + et Zoom - : CTRL+q et CTRL+w
   + Construction d'un groupe et utilité (déplacement, duplication, chgt groupé du positionnement, suppession)

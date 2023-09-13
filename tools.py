@@ -63,7 +63,7 @@ def coordinates(parameters):
     pos_comma = index_occurrence(",", parameters)
     if len(pos_comma) == 1:
         x_str, y_str = parameters.split(",")
-        if x_str.isdigit() and y_str.isdigit():
+        if x_str.lstrip("-").isdigit() and y_str.lstrip("-").isdigit():
             x, y = int(x_str), int(y_str)
             return [x, y]
     return None
@@ -278,26 +278,29 @@ def get_dimension(origin, destination):
     y = destination[1] - origin[1]
     return (x, y)
 
+
 def offset(origin, zoom, x, y):
-    """ origin is a list [x_offset, y_offset].
-        Return the list modified by thr zoom factor and the offset (origin).
+    """origin is a list [x_offset, y_offset].
+    Return the list modified by thr zoom factor and the offset (origin).
     """
-    return [(origin[0])+zoom*x, (origin[1])+zoom*y]
+    return [(origin[0]) + zoom * x, (origin[1]) + zoom * y]
+
 
 def subset(origin, zoom, x, y):
-    """ origin is a list [x_offset, y_offset].
-        Take the x,y position of the mouse. Translate it by the offset (origin) and divide it by the zoom factor.
-        Return the corresponding position.
+    """origin is a list [x_offset, y_offset].
+    Take the x,y position of the mouse. Translate it by the offset (origin) and divide it by the zoom factor.
+    Return the corresponding position.
     """
-    return [(x-origin[0])//zoom , (y-origin[1])//zoom]
+    return [(x - origin[0]) // zoom, (y - origin[1]) // zoom]
 
-def update_dict_ratio(dico:dict, zoom:float):
-    """ Retrun the dico with all values multiplied by zoom.
-    """
+
+def update_dict_ratio(dico: dict, zoom: float):
+    """Retrun the dico with all values multiplied by zoom."""
     new_dico = dict()
     for key, value in dico.items():
         new_dico[key] = value * zoom
     return new_dico
+
 
 def search_in_rectangle(diagram, origin, destination):
     """Return the list of functions and nodes in the rectangle defined by the positions origin (x1, y1) and destination (x2, y2)."""
@@ -414,7 +417,7 @@ def cast_to_int(value_str: str, format=None) -> int:
     >>> cast_to_int("42")
     42
     """
-    if value_str.isdigit():
+    if value_str.lstrip("-").isdigit():
         value_int = int(value_str)
         if format is None:
             return value_int
@@ -487,7 +490,7 @@ def cast_rgb_to_hex_color(color_str):
 
 def hex_digit(value_str):
     """value_str is a string castable to an int , 0 < value < 255
-    Cast value in hex and return the two hexadecimal digits in a string format
+    Cast a value in hex and return the two hexadecimal digits in a string format
     """
     if value_str.isdigit():
         value = int(value_str)
@@ -497,7 +500,7 @@ def hex_digit(value_str):
 
 def test_compound(compound: str) -> bool:
     """Take a str in parameter.
-    If compound is castable to int and lower than 256, return True.
+    If compound is castable to int and between 0 to 255, return True.
     """
     if compound.isdigit():
         if 0 <= int(compound) < 256:
@@ -593,7 +596,7 @@ def compare(element1, element2):
         return element1
 
 
-def split_unembed(line: str, separator: str = ",") -> list[str]:
+def split_unembed(line: str, separator: str = ",") -> list:
     """Split a string line with the separator when it's not between two brackets or two parenthesis.
     Return a list of strings."""
     elements = []
@@ -638,10 +641,10 @@ def load_preferences(file=None):
     # Checking data typing for int and bool
     for key, value in preferences.items():
         if "_int" in key:
+            # value must be a positive integer
             if type(value) == str:
                 if not value.isdigit():
                     preferences[key] = security_pref[key]
-                    # print(key, value, "changed to default value", security_pref[key])
             else:
                 preferences[key] = security_pref[key]
         elif "_bool" in key:
