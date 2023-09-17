@@ -65,12 +65,12 @@ def read_state(file_text, file_name=None):
         # Move the function_block position
         # Syntax : funct.position(x, y)
         if ".position" in line and test_parentheses(line):
-            function_block = change_parameter("position", diagram, line)
-            if function_block is not None:
-                function_block.fixed = True
-            else:
+            element = change_parameter("position", diagram, line)
+            if element is None:
                 error_message += add_message(
-                    line_number, line, "This function or group doesn't exist."
+                    line_number,
+                    line,
+                    "This element doesn't exist. Cannot change the position. ",
                 )
         # Change the dimension of a function_block
         # Syntax : funct.dimension(x, y)
@@ -78,7 +78,17 @@ def read_state(file_text, file_name=None):
             function_block = change_parameter("dimension", diagram, line)
             if function_block is None:
                 error_message += add_message(
-                    line_number, line, "This function or group doesn't exist."
+                    line_number,
+                    line,
+                    "This element doesn't exist. Cannot change the dimension.",
+                )
+        # Set element's mode on Fixed or Auto
+        # Syntax : funct.fixed(1) to fix funct, funct.fixed(0) to set funct on Auto mode
+        if ".fixed" in line and test_parentheses(line):
+            element = change_parameter("fixed", diagram, line)
+            if element is None:
+                error_message += add_message(
+                    line_number, line, "This node, function or group doesn't exist."
                 )
         if ".add_function" in line and test_parentheses(line):
             method_index = line.index(".add_function")
@@ -152,8 +162,8 @@ def function_definition(line):
     def f1*(a: int, b: bool)->str
     def f1*1(a: int, b: bool)->*
     These lines define three different functions with the same label (f1).
-    the output of the last one is hidden.
-    def f1(a, b):  # header_color = "grey";
+    the output of the last one is hidden. And the function is on the fixed mode
+    def f1(a, b):  # header_color = "grey"; fixed
     """
     error = False
     labels = []
@@ -216,6 +226,7 @@ def function_definition(line):
         new_node = Node(name=output_name, free=False)
     new_function.position = [0, 0]
     new_function.output = new_node
+    new_function.fixed = False
     if comments_line is not None:
         comments = comments_line.split(";")
         for comment in comments:
@@ -226,6 +237,8 @@ def function_definition(line):
                     new_function.header_color = color
                 elif tl.cast_to_color(color) is not None:
                     new_function.header_color = color
+            if "fixed" in comment:
+                new_function.fixed = True
     if error == False:
         return new_function
     else:
@@ -236,11 +249,11 @@ def node_definition(line):
     """Return the new node describe in the line.
     Syntax : node(A) or node(B:float) or node(C:int, (x,y))  # fixed
     """
+    line = line.replace(" ", "")
     if "#fixed" in line:
         fixed = True
     else:
         fixed = False
-    line = line.replace(" ", "")
     # line = line.replace('"', "'")
     first_open_parentheses = tl.index_occurrence("(", line)[0]
     last_closed_parentheses = tl.index_occurrence(")", line)[-1]
@@ -344,6 +357,8 @@ def change_parameter(parameter, diagram, line):
         element = diagram.functions[element_name]
     elif element_name in diagram.groups.keys():
         element = diagram.groups[element_name]
+    elif element_name in diagram.nodes.keys():
+        element = diagram.nodes[element_name]
     else:
         return None
     index_parameter = pos_parameter + len(parameter) + 2

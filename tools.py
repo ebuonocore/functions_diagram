@@ -9,6 +9,7 @@ from node import Node
 from link import Link
 from function_block import Function_block
 import group as grp  # To avoid circular import
+from PIL import ImageFont
 
 
 def index_occurrence(char, string):
@@ -71,8 +72,10 @@ def coordinates(parameters):
 
 def character_dimensions(police, size):
     """Return the (width, height) of a character of a mono-spaced font."""
+
     nb_pixels_height = tkfont.Font(size=size, family=police).metrics("linespace")
     nb_pixels_width = tkfont.Font(size=size, family=police).measure("X")
+    print("dimensions (", police, ",", size, "): ", nb_pixels_width, nb_pixels_height)
     return (nb_pixels_width, nb_pixels_height)
 
 
@@ -106,8 +109,16 @@ def create_definition_description(function):
             description += "*"
         if function.output.annotation != "":
             description += function.output.annotation
+    # Add comments about the header color and the fixed mode
+    new_comment = True
     if function.header_color is not None:
+        new_comment = False
         description += '  # header_color = "' + function.header_color + '"'
+    if function.fixed:
+        if new_comment:
+            description += "  # fixed"
+        else:
+            description += "; fixed"
     description += "\n"
     # Add the position
     description += function.name + ".position("
