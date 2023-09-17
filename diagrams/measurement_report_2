@@ -1,0 +1,14 @@
+def number_of_negative_elements(measurement_report:list)->int  # header_color = "#4040A0"
+number_of_negative_elements.position(188,359)
+number_of_negative_elements.dimension(398,39)
+
+def comparator(nb_positive:int,nb_negative:int)->bool
+comparator.position(1052,349)
+comparator.dimension(180,58)
+
+node(report:list,(99,407))
+node(trend:bool,(1376,407))
+
+number_of_negative_elements<0---report
+number_of_negative_elements>---comparator<1
+comparator>---trend

@@ -44,6 +44,9 @@ class Group:
         self.margin = int(self.preferences["group margin_int"])
         police = self.preferences["police"]
         title_size = int(self.preferences["title size_int"])
+        self.title_char_width, self.title_char_height = tl.character_dimensions(
+            police, title_size
+        )
         for k, v in kwargs.items():
             if k in self.__dict__:
                 self.__dict__[k] = v

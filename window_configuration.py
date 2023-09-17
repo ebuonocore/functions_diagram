@@ -107,6 +107,21 @@ class Window_configuration:
         self.update_preferences(None)
         tl.write_preferences(self.preferences)
         self.preferences = tl.load_preferences()  # Check data type
+        police = self.parent.preferences["police"]
+        title_size = int(self.parent.preferences["title size_int"])
+        text_size = int(self.parent.preferences["text size_int"])
+        (
+            self.parent.title_char_width,
+            self.parent.title_char_height,
+        ) = tl.character_dimensions(police, title_size)
+        (
+            self.parent.text_char_width,
+            self.parent.text_char_height,
+        ) = tl.character_dimensions(police, text_size)
+        self.parent.memory.add(self.parent.diagram.export_to_text())
+        self.parent.auto_resize_blocks()
+        self.parent.position_functions_nodes()
+        self.parent.memory.add(self.parent.diagram.export_to_text())
         self.parent.draw()
         self.window.destroy()
 
