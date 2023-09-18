@@ -118,7 +118,6 @@ class Window_configuration:
             self.parent.text_char_width,
             self.parent.text_char_height,
         ) = tl.character_dimensions(police, text_size)
-        self.parent.memory.add(self.parent.diagram.export_to_text())
         self.parent.auto_resize_blocks()
         self.parent.position_functions_nodes()
         self.parent.memory.add(self.parent.diagram.export_to_text())

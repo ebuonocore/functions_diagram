@@ -693,6 +693,10 @@ class Window:
         self.memory.add(self.diagram.export_to_text())
         return True
 
+    def save(self, event=None):
+        if self.state == 1:
+            self.cmd_save()
+
     @Decorators.disable_if_editing
     def cmd_save(self):
         """Save the configuration of the diagram as a file."""
@@ -803,7 +807,6 @@ class Window:
             )
             new_group.elements = elements
             ok = new_group.update_coordinates()
-            print("Update ?", ok)
             self.diagram.add_group(new_group)
             self.destination = new_group
             self.edit(self.destination)
