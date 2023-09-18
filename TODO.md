@@ -1,20 +1,17 @@
 # DONE:
-+ Précision du mode "fixed" dans les commentaires des functions
-+ Correction de la lecture du commentaire "#fixed" pour les noeurds.
-+ Mise à jour des dimensions et de l'affichage lors des changements de préférences (Window_configuration)
++ CTRL+s : Lance la sauvegarde si l'état est à 1
++ Comparaison des tailles de texte entre Windows et Ubuntu (Rapport de 1.4 en moyenne)
++ print supprimer dans tools.character_dimensions et GUI.group_all
++ Inconsolas comme police par défaut dans toutes les préférences
 
-# TOFIX : 
-+ L'affichage est erroné sur Windows (police trop grandes par rapport à la mesure de tools.character_dimensions)
+# TOFIX :
 
 # TOTEST :
 
-
 # TODO:
-+ Virer les prints ds tools.character_dimensions
-+ CTRL+s : Save
-+ Repasser temporairement en zoom = 1, le temps de l'enregistrement. Puis repasser en zoom d'origine.
 + Shortcuts dans l'aide
 + Mettre à jour l'aide. Expliquer
+  + Sauvegarde : CTRL+s
   + Déplacement : CRTL+v
   + Annulation : CTRL+z et CTRL+y
   + Sélection totale : CTRL+a

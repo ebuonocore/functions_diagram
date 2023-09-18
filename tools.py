@@ -75,7 +75,6 @@ def character_dimensions(police, size):
 
     nb_pixels_height = tkfont.Font(size=size, family=police).metrics("linespace")
     nb_pixels_width = tkfont.Font(size=size, family=police).measure("X")
-    print("dimensions (", police, ",", size, "): ", nb_pixels_width, nb_pixels_height)
     return (nb_pixels_width, nb_pixels_height)
 
 

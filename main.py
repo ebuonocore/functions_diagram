@@ -11,6 +11,7 @@ if __name__ == "__main__":
     window.tk.bind("<Button-3>", window.right_click)
     window.tk.bind("<Escape>", window.right_click)
     # General keyboard controls: Select all, Copy/Paste, Undo
+    window.tk.bind("<Control -s>", window.save)
     window.tk.bind("<Control -a>", window.group_all)
     window.tk.bind("<Control -c>", window.copy)
     window.tk.bind("<Control -z>", window.undo)
