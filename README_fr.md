@@ -24,6 +24,8 @@ La représentation graphique peut être exportée au format SVG.
   * [Exporter un diagramme en image (.SVG)](readme/export_SVG_fr.md)
   * [Ajouter ou éditer des éléments](readme/add_edit_elements_fr.md)  
   * [Edition des paramètres](readme/settings_fr.md)  
+  * [Raccourcis clavier](#raccourcis-clavier)
+  * [Contrôle par la souris](#contrôle-par-la-souris) 
 * [Auteur](#auteur)
 * [Avancement du projet](#avancement-du-projet)
 * [Feuille de route](#feuille-de-route)
@@ -175,6 +177,18 @@ Les nœuds de fonction sont désignés par : ```function_name>``` pour la sortie
 
 Pour certaines opérations, vous devez d'abord sélectionner une destination. Vous pouvez quitter ce mode en cliquant avec le bouton droit de la souris ou en appuyant sur *Enter* ou *Esc*.
 
+## Raccourcis clavier
+  + **CTRL + s** : Sauvegarder
+  + **CTRL + c** : Copier/coller
+  + **CTRL + z** & **CTRL + y** : Annuler & Refaire
+  + **CTRL + a** : Création d'un groupe qui englobe tous les éléments du diagramme
+  + **CTRL + q** & **CTRL + w** : Zoom + et Zoom -
+  + **CTRL + o** : Retour au zoom et au décalage d'origine
+
+## Contrôle par la souris
+  + **Molette** : Zoom + et Zoom -
+  + **Clic + Déplacement** : Décalage du point de référence du dessin
+
 ## Auteur
 Eric Buonocore
 
@@ -190,9 +204,10 @@ Le programme est opérationnel.
 - [x] Multiselection d'éléments pour les déplacements et les suppressions  
 - [x] Définir l'espacement des éléments pour le placement automatique  
 - [x] Permettre de justifier les noms des nœuds libres  
+- [x] Permettre l'agrandissement et le déplacement de l'ensemble de la mise en page
 
 ## Feuille de route
-- [ ] Permettre l'agrandissement et le déplacement de l'ensemble de la mise en page
+- [ ] Tester et régler les bogs
 
 ## Licence
 

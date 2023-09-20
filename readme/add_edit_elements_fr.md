@@ -79,4 +79,14 @@ Resultat:
   </div>
 </div>
 
+## Utilités des groupes
+* <u>Déplacement :</u> Permet de déplacer un ensemble d'éléments.  
+* <u>Duplication :</u>  La copir d'élément avec **CTRL + c** fonctionne aussi avec les groupes. Ce qui permet de dupliquer plusieurs éléments simultannément avec leurs liens.  
+* <u>Edition groupée :</u>  Permet de modifier le positionnement de tous les éléments d'un groupe en réglant **All items** sur **Auto** ou **Fixed** 
+* <u>Suppession d'éléments :</u>  L'outil de suppression (gomme) ne détruit que le groupe, pas les éléments qu'il contient. b>Delete all! :</b> Permet de supprimer les éléments sélectionnés dans la liste du groupe.
+
+::: details Remarque
+**CTRL + a** permet de créer un groupe qui englobe tous les éléments du diagramme.
+:::
+
 [![back](assets/back.png)](../README_fr.md)

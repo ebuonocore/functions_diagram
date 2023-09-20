@@ -23,7 +23,9 @@ The graphical representation can be exported in SVG format.
 * [Buttons](#buttons)
   * [Export diagram to image (.SVG)](readme/export_SVG.md)
   * [Add or edit elements](readme/add_edit_elements.md)  
-  * [Edit settings](readme/settings.md)  
+  * [Edit settings](readme/settings.md)
+  * [Keyboard shortcuts](#keyboard-shortcuts)
+  * [Mouse controls](#mouse-controls)   
 * [Author](#author)
 * [Project status](#project-status)
 * [Roadmap](#roadmap)
@@ -174,6 +176,17 @@ Function nodes are designated by : ```function_name>``` for the output, and ```f
 
 Some operations require you to select a destination first. You can exit this mode by right-clicking or by pressing *Enter* or *Esc*.
 
+## Keyboard shortcuts
+  + **CTRL + s**: Save
+  + **CTRL + c**: Copy/paste
+  + **CTRL + z** & **CTRL + y**: Undo & Redo
+  + **CTRL + a**: Create a group including all diagram elements
+  + **CTRL + q** & **CTRL + w**: Zoom + et Zoom -
+  + **CTRL + o**: Return to original zoom and offset
+## Mouse controls
+  + **Wheel**: Zoom + et Zoom -
+  + **Clic + Move**: Offset of the drawing
+
 ## Author
 Eric Buonocore
 
@@ -189,9 +202,10 @@ The program is operational.
 - [x] Multi-select items to move or delete them  
 - [x] Set the spacing of elements for automatic placement  
 - [x] Allow the names of free nodes to be justified  
+- [x] Enable zooming and shifting of the whole layout
 
 ## Roadmap
-- [ ] Enable zooming and shifting of the whole layout
+- [ ] Testing and fixing bugs
 
 ## License
 
