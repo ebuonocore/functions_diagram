@@ -80,13 +80,13 @@ Result:
 </div>
 
 ## Group uses
-* <ins>Move:<ins>Allows you to move a set of elements.
-* <ins>Duplication:<ins>Copying elements with **CTRL + c** also works with groups. This allows you to duplicate several elements simultaneously with their links.
-* <ins>Group Edit:<ins>Allows you to modify the positioning of all items in a group by setting **All items** to **Auto** or **Fixed**
-* <ins>Deleting elements:<ins>The deletion tool (eraser) only destroys the group, not the elements it contains. **Delete all! :** Allows you to delete the selected elements in the group list.
+* <u>Move:</u>Allows you to move a set of elements.
+* <u>Duplication:</u>Copying elements with **CTRL + c** also works with groups. This allows you to duplicate several elements simultaneously with their links.
+* <u>Group Edit:</u>Allows you to modify the positioning of all items in a group by setting **All items** to **Auto** or **Fixed**
+* <u>Deleting elements:</u>The deletion tool (eraser) only destroys the group, not the elements it contains. **Delete all! :** Allows you to delete the selected elements in the group list.
 
-::: details Remarque
+**Note :**
 **CTRL + a** Create a group including all diagram elements.
-:::
+
 
 [![back](assets/back.png)](../README.md)
