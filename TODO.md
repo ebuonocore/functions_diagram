@@ -1,19 +1,21 @@
 # DONE:
-+ Shortcuts dans l'aide
-+ Mise à jour l'aide. Expliquer
-  + Sauvegarde : CTRL+s
-  + Déplacement : CRTL+v
-  + Annulation : CTRL+z et CTRL+y
-  + Sélection totale : CTRL+a
-  + Zoom + et Zoom - : CTRL+q et CTRL+w
-  + CTRL + o : Retour à l'origine
-  + Construction d'un groupe et utilité (déplacement, duplication, chgt groupé du positionnement, suppession)
 
 # TOFIX :
 
 # TOTEST :
-+ Tip fonctionne sur github ?
 
 # TODO:
+Symbole '='dans les description de noeuds :
+  + Entrées de fonctions : Affecte la valeur par défaut
+  + Noeuds libres : Affiche un exemple de valeur sous le noeuds (respectant l'alignement supérieur) ?s
 
-Alternative/Existant : https://app.diagrams.net/
+Renderer : Programme .py qui génère directement le SVG en fonction du nom de fichier de sauvegarde txt
+  + render.py chemin/source.txt chemin/destination.svg
+  + render.py chemin/source.txt => chemin/source.svg si la destination n'est pas renseignée
+Commandes:
+<Auto> : Lance le mode auto en fin de lecture de fichier 
+
+Alternatives/Existants : 
+https://app.diagrams.net/
+https://github.com/kevinpt/symbolator
+
