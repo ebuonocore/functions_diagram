@@ -152,7 +152,7 @@ A noter que le caractère <code>'*'</code> dans le nom désigne un séparateur :
 
 Les liens entre les nœuds suivent la syntaxe ci-dessous :  
 ```
-node_name1--node_name2
+node_name1---node_name2
 ```
 
 Les nœuds de fonction sont désignés par : ```function_name>``` pour la sortie, et ```function_name<id``` pour les entrées avec <code>id</code> commençant à 0.

@@ -151,7 +151,7 @@ Note that the <code>'*'</code> character in the name designates a separator: the
 
 Links between nodes follow the syntax below:  
 ```
-node_name1--node_name2
+node_name1---node_name2
 ```
 
 Function nodes are designated by : ```function_name>``` for the output, and ```function_name<id``` for inputs with <code>id</code> starting at 0.
