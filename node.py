@@ -15,6 +15,7 @@ class Node:
         self.connections = []  # List of nodes connected
         self.fixed = False  # True if the position is fixed.
         self.justify = None  # "left", "center","separator", "right" or None for default
+        self.comment = ""  # Comment to be displayed in a box below the node.
         self.floor = -1  # Depth in the graph. Leaves at 0.
         for k, v in kwargs.items():
             if k in self.__dict__:
@@ -24,7 +25,7 @@ class Node:
 
     def __repr__(self):
         line = self.name
-        line = self.name + ":" + self.annotation + ' '
+        line = self.name + ":" + self.annotation + " "
         line += str(len(self.connections)) + " Connection(s) "
         if self.position != []:
             line += "Position: " + str(self.position)

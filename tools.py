@@ -481,6 +481,35 @@ def cast_to_color(color_str: str, col_format=None) -> str:
     return None
 
 
+def byte_homotety(value: int, zoom: float, min_result: int = 1, max_result: int = 127):
+    """Multiplie the value by zoom. Cast the result in integer.
+    Return the result if it lies between the extreme limits min_result and max_result.
+    Otherwise, saturates the result at the limit reached.
+    """
+    value = int(value * zoom)
+    if value < min_result:
+        return min_result
+    elif value > max_result:
+        return max_result
+    return value
+
+
+def darker(color, coefficient):
+    """Return a darker color of the color in parameter.
+    The coefficient is between 0 and 1.
+    color is a string in hexadecimal format.
+    """
+    if color[0] == "#" and len(color) == 7:
+        color = color[1:]
+    else:
+        return color
+    R, V, B = color[:2], color[2:4], color[4:]
+    R = hex_digit(str(int(int(R, 16) * coefficient)))
+    V = hex_digit(str(int(int(V, 16) * coefficient)))
+    B = hex_digit(str(int(int(B, 16) * coefficient)))
+    return "#" + R + V + B
+
+
 def cast_rgb_to_hex_color(color_str):
     """If color_str is a color tuple, cast and return this color in an hexadecimal format.
     Otherwise, return the unmodified color string.
@@ -516,7 +545,6 @@ def test_compound(compound: str) -> bool:
         if 0 <= int(compound) < 256:
             return True
     return False
-
 
 def draw_box(can, x_start, y_start, x_end, y_end, **kwargs):
     """Create a rectangle in the canvas (can).
