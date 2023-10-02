@@ -157,6 +157,9 @@ def create_node_description(node):
         if node.fixed:
             description += "  # fixed"
         description += "\n"
+        if node.comment != "":
+            description += node.name + ".comment(" + node.comment + ")"
+            description += "\n"
         return description
     else:
         return ""
@@ -545,6 +548,7 @@ def test_compound(compound: str) -> bool:
         if 0 <= int(compound) < 256:
             return True
     return False
+
 
 def draw_box(can, x_start, y_start, x_end, y_end, **kwargs):
     """Create a rectangle in the canvas (can).

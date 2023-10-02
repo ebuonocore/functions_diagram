@@ -316,12 +316,16 @@ class Window:
                         "sw",
                         justify,
                     )
+                    # Display comments (example of values)
                     if node.comment != "":
-                        node.comment = node.comment.replace("\\n", chr(10))
-                        comment_lines = node.comment.split(chr(10))
+                        # Display the comment on multiple lines
+                        # Replace the character string "\n" with the character chr(10)
+                        node.comment = node.comment.replace(chr(10), "\\n")
+                        comment_lines = node.comment.split("\\n")
                         comment_height = (
                             len(comment_lines) * self.text_char_height * self.zoom
                         )
+                        # Calculate the maximum width of the comment area
                         comment_max = ""
                         for comment_line in comment_lines:
                             if len(comment_line) > len(comment_max):
@@ -334,6 +338,7 @@ class Window:
                         comment_width = tkfont.Font(
                             size=text_size, family=police, weight="normal"
                         ).measure(comment_max)
+                        # Calculate the maximum width of the comment area
                         comment_offset = {
                             "left": 0,
                             "right": comment_width,
@@ -345,6 +350,7 @@ class Window:
                             - self.margins["base"] // 2
                             + self.text_char_height * self.zoom
                         )
+                        # Display the lines of the comment
                         for n_line in range(len(comment_lines)):
                             y_comment = (
                                 y_ref + self.text_char_height * n_line * self.zoom
@@ -360,6 +366,7 @@ class Window:
                             )
                         margin = self.margins["base"] // 2
                         dash = tl.byte_homotety(2, self.zoom)
+                        # Display the dashed border of the comment area
                         self.can.create_rectangle(
                             x_comment - margin,
                             y_ref - margin,

@@ -1,25 +1,25 @@
 def f1(a:int,b:bool)  # header_color = "red"
-f1.position(216,226)
-f1.dimension(90,58)
+f1.position(216, 226)
+f1.dimension(90, 58)
 
 def f2(n:str,m:str)->str
-f2.position(723,349)
-f2.dimension(80,58)
+f2.position(723, 349)
+f2.dimension(80, 58)
 
 def f4(x:str,y:str,v:str)->int
-f4.position(1225,340)
-f4.dimension(80,77)
+f4.position(1225, 340)
+f4.dimension(80, 77)
 
 def f3(a:int,b:bool)->str  # header_color = "#6060A0"
-f3.position(216,472)
-f3.dimension(90,58)
+f3.position(216, 472)
+f3.dimension(90, 58)
 
-node(A:str,(514,256))
-node(B:str,(514,557))
-node(C:str,(1014,407))
-node(X,(113,293))
-node(Y,(113,397))
-node(Z,(113,539))
+node(A:str,(514, 256))
+node(B:str,(514, 557))
+node(C:str,(1014, 407))
+node(X,(113, 293))
+node(Y,(113, 397))
+node(Z,(113, 539))
 
 f1<0---Y
 f1<1---X

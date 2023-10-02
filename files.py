@@ -82,6 +82,16 @@ def read_state(file_text, file_name=None):
                     line,
                     "This element doesn't exist. Cannot change the dimension.",
                 )
+        # Change the comment of a node
+        # Syntax : node_A.comment(comment_line)
+        if ".comment" in line and test_parentheses(line):
+            element = change_parameter("comment", diagram, line)
+            if element is None:
+                error_message += add_message(
+                    line_number,
+                    line,
+                    "This node doesn't exist. Cannot change the comment.",
+                )
         # Set element's mode on Fixed or Auto
         # Syntax : funct.fixed(1) to fix funct, funct.fixed(0) to set funct on Auto mode
         if ".fixed" in line and test_parentheses(line):
@@ -346,11 +356,11 @@ def group_definition(line: str) -> group.Group:
 
 def change_parameter(parameter, diagram, line):
     """Change the parameter of the function_block or the group designated in the line.
-    parameter is 'position' or 'dimension'
+    parameter is 'position', 'dimension' or 'comment'
     Return the function_block object/group.
     Example : funct1.postion(42, 24)
+    node_a.comment(42)
     """
-    line = line.replace(" ", "")
     pos_parameter = line.index("." + parameter)
     element_name = line[:pos_parameter]
     if element_name in diagram.functions.keys():
@@ -362,8 +372,11 @@ def change_parameter(parameter, diagram, line):
     else:
         return None
     index_parameter = pos_parameter + len(parameter) + 2
-    new_parameters = tl.coordinates(line[index_parameter:-1])
-    element.__dict__[parameter] = new_parameters
+    new_parameter = tl.coordinates(line[index_parameter:-1])
+    if new_parameter is None:
+        new_parameter = line[index_parameter:-1]
+    print("change_parameter:", element.name, ".", parameter, "=", new_parameter)
+    element.__dict__[parameter] = new_parameter
     return element
 
 

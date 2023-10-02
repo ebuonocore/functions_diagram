@@ -1,14 +1,9 @@
 # DONE:
-+ tl.darker()
-+ label et comment justification dans GUI.draw_nodes()
-+ affichage du commentaire en couleur plus sombre que l'annotation de type
-+ rectification de la marge sur les noms de groupes (affectés par le zoom)
-+ rectification de l'épaisseur des pointillés des commentaires et des groupes en fonction du zoom
-+ Ajout d'une couleur de commentaire paramétrable dans les préférences
++ Ajout de commentaires dans GUI.draw_nodes()
++ Enregistrement des commentaires des noeuds
++ Lecture des commentaires des noeuds
 
 # TOFIX :
-+ Enregistrment des commentaires des noeuds
-+ Lecture des commentaires des noeuds
 
 # TOTEST :
 
