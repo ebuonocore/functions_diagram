@@ -147,6 +147,15 @@ class Window_edition(Window_pattern):
             ["None", "left", "center", "separator", "right"],
             self.destination.justify,
         )
+        self.parameters["comment"] = self.create_entry(
+            6, "Comment", self.destination.comment
+        )
+        self.parameters["comment"].bind(
+            "<FocusOut>",
+            lambda event: self.change_destination_attribut(
+                "comment", self.parameters["comment"].get()
+            ),
+        )
 
     def group_parameters(self):
         self.window.title("Edit group")

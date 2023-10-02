@@ -291,6 +291,9 @@ class Window:
         )
         color = self.preferences["line color_color"]
         text_color = self.preferences["text color_color"]
+        type_color = self.preferences["type color_color"]
+        comment_color = self.preferences["comment color_color"]
+        comment_border_color = tl.darker(comment_color, 0.7)
         d = int(self.preferences["text size_int"]) * self.zoom // 2
         for node in self.diagram.nodes.values():
             if node.position != [None, None] and node.visible:
@@ -298,8 +301,12 @@ class Window:
                 x, y = tl.offset(self.ref_origin, self.zoom, x, y)
                 if node.free:
                     justify = node.justify
-                    if justify is None:
+                    if justify is None or justify == "None":
                         justify = self.preferences["justify_choice"]
+                    if justify == "separator":
+                        comment_justify = "center"
+                    else:
+                        comment_justify = justify
                     self.can.create_oval(x - d, y - d, x + d, y + d, fill=color)
                     self.print_label(
                         x,
@@ -309,6 +316,59 @@ class Window:
                         "sw",
                         justify,
                     )
+                    if node.comment != "":
+                        node.comment = node.comment.replace("\\n", chr(10))
+                        comment_lines = node.comment.split(chr(10))
+                        comment_height = (
+                            len(comment_lines) * self.text_char_height * self.zoom
+                        )
+                        comment_max = ""
+                        for comment_line in comment_lines:
+                            if len(comment_line) > len(comment_max):
+                                comment_max = comment_line
+                        text_size = int(self.preferences["text size_int"])
+                        text_size = int(text_size * self.zoom)
+                        font = tkfont.Font(
+                            family=police, size=text_size, weight="normal"
+                        )
+                        comment_width = tkfont.Font(
+                            size=text_size, family=police, weight="normal"
+                        ).measure(comment_max)
+                        comment_offset = {
+                            "left": 0,
+                            "right": comment_width,
+                            "center": comment_width // 2,
+                        }
+                        x_comment = x - comment_offset[comment_justify]
+                        y_ref = (
+                            y
+                            - self.margins["base"] // 2
+                            + self.text_char_height * self.zoom
+                        )
+                        for n_line in range(len(comment_lines)):
+                            y_comment = (
+                                y_ref + self.text_char_height * n_line * self.zoom
+                            )
+                            comment = comment_lines[n_line]
+                            self.can.create_text(
+                                x_comment,
+                                y_comment,
+                                text=comment,
+                                font=font,
+                                anchor="nw",
+                                fill=comment_color,
+                            )
+                        margin = self.margins["base"] // 2
+                        dash = tl.byte_homotety(2, self.zoom)
+                        self.can.create_rectangle(
+                            x_comment - margin,
+                            y_ref - margin,
+                            x_comment + comment_width + margin,
+                            y_ref + comment_height + margin,
+                            outline=comment_border_color,
+                            width=max(1, dash // 2),
+                            dash=(dash, dash * 2),
+                        )
                 else:  # Entry of a function
                     self.draw_triangle(x, y, 0)
                     if ">" in node.name:
@@ -508,7 +568,7 @@ class Window:
             else:
                 color = group.color
             thickness = group.thickness if group.thickness != "" else pref_thickness
-            dash = int(thickness) * 2
+            dash = tl.byte_homotety(int(thickness), self.zoom)
             if group.position is not None:
                 x_origin, y_origin = group.position
                 x_origin, y_origin = tl.offset(
@@ -523,13 +583,16 @@ class Window:
                     y_origin,
                     x_end,
                     y_end,
-                    dash=(dash, dash),
+                    dash=(2 * dash, 2 * dash),
                     fill="",
                     outline=color,
-                    width=thickness,
+                    width=dash,
                 )
                 self.print_label(
-                    x_origin, y_origin - self.text_char_height, group.label, color=color
+                    x_origin,
+                    y_origin - self.text_char_height * self.zoom,
+                    group.label,
+                    color=color,
                 )
 
     def draw_destination_outine(self, color=COLOR_OUTLINE):
