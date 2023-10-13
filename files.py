@@ -375,7 +375,6 @@ def change_parameter(parameter, diagram, line):
     new_parameter = tl.coordinates(line[index_parameter:-1])
     if new_parameter is None:
         new_parameter = line[index_parameter:-1]
-    print("change_parameter:", element.name, ".", parameter, "=", new_parameter)
     element.__dict__[parameter] = new_parameter
     return element
 

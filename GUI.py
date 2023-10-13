@@ -657,7 +657,7 @@ class Window:
         file = "images/" + name + ".png"
         image_source = Image.open(file)
         image = ImageTk.PhotoImage(image_source)
-        resized_image = image_source.resize((25, 25), Image.ANTIALIAS)
+        resized_image = image_source.resize((25, 25))
         image_mini = ImageTk.PhotoImage(resized_image)
         return image, image_mini
 
@@ -1174,10 +1174,6 @@ class Window:
         message("", self.text_message)
         self.state = 1
         self.draw()
-
-    def fermer_fenêtre(self):
-        self.tk.quit()
-        self.tk.destroy()
 
     def engine(self):
         """State management :
