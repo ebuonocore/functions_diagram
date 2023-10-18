@@ -4,6 +4,8 @@ from files import *
 from GUI import *
 from canvasvg import saveall
 import argparse
+import window_export_image as wei
+import os
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -20,26 +22,54 @@ if __name__ == "__main__":
     parser.add_argument(
         "-p",
         "--preferences",
-        default="dark",
-        choices=["dark", "light"],
+        default=None,
+        choices=[None, "dark", "light"],
         help="Preferences",
     )
+    parser.add_argument(
+        "-a",
+        "--automode",
+        type=bool,
+        help="Runs automatic placement if True",
+    )
     args = parser.parse_args()
+    automode = args.automode
     source_file = args.source
-    if args.destination is None:
-        destination_file = source_file.replace(".txt", ".svg")
-    else:
-        destination_file = args.destination
+    destination = args.destination
+    if not os.path.exists(source_file):
+        exception_txt = (
+            source_file + " doesn't exist." + " source_file must be a file or directory"
+        )
+        raise Exception(exception_txt)
     margin = args.margin
     opacity = args.opacity
     preferences = args.preferences
-    print(source_file, destination_file, margin, opacity, preferences)
-    try:
-        diag = open_file(source_file)
-        window = Window(diag)
-        window.draw()
-        saveall(destination_file, window.can, margin=margin)
-    except:
-        print("Error: Invalid file")
-    window.tk.quit()
-    window.tk.destroy()
+    if os.path.isfile(source_file):
+        destination_file = destination
+        sources = [source_file]
+    elif os.path.isdir(source_file):
+        destination = None
+        sources = [
+            source_file + "/" + file
+            for file in os.listdir(source_file)
+            if os.path.isfile(source_file + "/" + file) and file[-4:] == ".dgm"
+        ]
+    nb_file = 0
+    for source in sources:
+        try:
+            if destination is None:
+                destination_file = source.replace(".dgm", ".svg")
+            diag = open_file(source)
+            window = Window(diag, False)
+            window.preferences = tl.load_preferences(preferences)
+            background_color = window.preferences["main background color_color"]
+            if automode:
+                window.cmd_auto()
+            window.draw()
+            saveall(destination_file, window.can)
+            wei.modify_SVG(destination_file, background_color, margin, opacity)
+            nb_file += 1
+            window.quit()
+        except:
+            print("Error: Invalid file")
+    print(nb_file, "out of ", len(sources), "files converted to .SVG")

@@ -16,7 +16,7 @@
     "line color_color": "#858585",
     "line thickness_int": "1",
     "comment color_color": "#ffcc32",
-    "automatic spacing_int": "0",
+    "automatic spacing_int": "200",
     "enable loopback_bool": 0,
     "smooth lines_bool": 1,
     "rounded functions_bool": 1
