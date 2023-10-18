@@ -45,7 +45,7 @@ class Window:
 
             return edition_test
 
-    def __init__(self, diagram=None):
+    def __init__(self, diagram=None, start_engine=True):
         self.tk = tki.Tk()
         self.tk.title("Functions Diagram")
         if diagram is None:
@@ -98,6 +98,7 @@ class Window:
         self.message = tki.Label(
             self.menu, textvariable=self.text_message, bg="#F0F0F0", justify=tki.LEFT
         )
+
         self.message.pack(side=tki.LEFT)
         self.images, self.images_mini = self.build_images_bank()
         self.buttons = {}
@@ -115,7 +116,10 @@ class Window:
         self.update_positions()
         message("Function_diagram v1.0", self.text_message)
         self.edition_in_progress = False
-        self.engine()  # Starts state management
+        self.stop_engine = False
+        self.after_id = None
+        if start_engine:
+            self.engine()  # Starts state management
 
     def screen_dimensions(self):
         WIDTH = self.tk.winfo_screenwidth()
@@ -652,7 +656,7 @@ class Window:
 
     def import_image(self, name):
         """Import the image according to the name passed in parameter
-        Return the refernces of the original image and the resized image.
+        Return the references of the original image and the resized image.
         """
         file = "images/" + name + ".png"
         image_source = Image.open(file)
@@ -736,15 +740,25 @@ class Window:
         Allow to choose the JSON format or the TXT
         Return True if the procedure succeeds otherwise False
         """
+        files = [
+            ("All Files", "*.*"),
+            ("Function Diagram Script", "*.dgm"),
+            ("Text Document", "*.txt"),
+        ]
         self.can.config(cursor="arrow")
         message("Open file.", self.text_message)
         self.state = 1
         if self.active_file is not None:
             selected_file = fd.askopenfilename(
-                title="Open", initialdir=path.split(self.active_file)[0]
+                title="Open",
+                initialdir=path.split(self.active_file)[0],
+                filetypes=files,
+                defaultextension=files,
             )
         else:
-            selected_file = fd.askopenfilename(title="Open")
+            selected_file = fd.askopenfilename(
+                title="Open", filetypes=files, defaultextension=files
+            )
         self.active_file = selected_file
         if selected_file == "":
             message("Canceled opening.", self.text_message)
@@ -773,12 +787,22 @@ class Window:
         self.can.config(cursor="arrow")
         message("Save diagram.", self.text_message)
         self.state = 1
+        files = [
+            ("All Files", "*.*"),
+            ("Function Diagram Script", "*.dgm"),
+            ("Text Document", "*.txt"),
+        ]
         if self.active_file is not None:
             selected_file = fd.asksaveasfile(
-                title="Save", initialdir=path.split(self.active_file)[0]
+                title="Save",
+                initialdir=path.split(self.active_file)[0],
+                filetypes=files,
+                defaultextension=files,
             )
         else:
-            selected_file = fd.asksaveasfile(title="Save")
+            selected_file = fd.asksaveasfile(
+                title="Save", filetypes=files, defaultextension=files
+            )
         diagram_datas = self.diagram.export_to_text()
         try:
             selected_file.write(diagram_datas)
@@ -1287,5 +1311,12 @@ class Window:
                     fill="",
                     outline="grey",
                 )
+        if not self.stop_engine:
+            self.after_id = self.tk.after(100, self.engine)  # Restarts state management
 
-        self.tk.after(100, self.engine)  # Restarts state management
+    def quit(self):
+        self.stop_engine = True
+        if self.after_id is not None:
+            self.tk.after_cancel(self.after_id)
+        self.tk.quit()
+        self.tk.destroy()

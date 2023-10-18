@@ -94,48 +94,7 @@ class Window_export_image(Window_pattern):
         opacity = tl.cast_to_float(opacity_str, "unit")
         file_name = selected_file.name
         saveall(file_name, self.parent.can)
-        if background_color is not None:
-            with open(file_name) as f:
-                file_text = f.read()
-            if "viewBox=" in file_text and 'width="' in file_text:
-                origin = file_text.index('width="') + len('width="')
-                start = file_text.index("viewBox=") + len("viewBox=")
-                end = file_text[start:].index(">") + start
-                parameters_str = file_text[start:end].replace('"', "")
-                parameters = parameters_str.split(" ")
-                good_format = True
-                for i in range(4):
-                    value = tl.cast_to_float(parameters[i])
-                    if value is not None:
-                        if i <= 1:
-                            parameters[i] = str(value - Margin)
-                        else:
-                            parameters[i] = str(value + 2 * Margin)
-                    else:
-                        good_format = False
-                if good_format and len(parameters) == 4:
-                    x, y, w, h = parameters
-                    line = w + '" height="' + h + '" viewBox="'
-                    line += x + " " + y + " " + w + " " + h + '">'
-                    line += (
-                        '<rect x="'
-                        + x
-                        + '" y="'
-                        + y
-                        + '" width="'
-                        + w
-                        + '" height="'
-                        + h
-                        + '" style="fill:'
-                        + background_color
-                        + ";"
-                    )
-                    if opacity is not None:
-                        line += "fill-opacity:" + str(opacity)
-                    line += '" />'
-                    new_file_text = file_text[:origin] + line + file_text[end + 1 :]
-                    with open(file_name, "w") as f:
-                        f.write(new_file_text)
+        modify_SVG(file_name, background_color, Margin, opacity)
 
     def check_Margin(self, event):
         if "Margin" in self.SVG_labels.keys():
@@ -147,3 +106,48 @@ class Window_export_image(Window_pattern):
             else:
                 entry.config(bg=self.colors["DANGER"])
                 return False
+
+
+def modify_SVG(file_name, background_color, Margin, opacity):
+    if background_color is not None:
+        with open(file_name) as f:
+            file_text = f.read()
+        if "viewBox=" in file_text and 'width="' in file_text:
+            origin = file_text.index('width="') + len('width="')
+            start = file_text.index("viewBox=") + len("viewBox=")
+            end = file_text[start:].index(">") + start
+            parameters_str = file_text[start:end].replace('"', "")
+            parameters = parameters_str.split(" ")
+            good_format = True
+            for i in range(4):
+                value = tl.cast_to_float(parameters[i])
+                if value is not None:
+                    if i <= 1:
+                        parameters[i] = str(value - Margin)
+                    else:
+                        parameters[i] = str(value + 2 * Margin)
+                else:
+                    good_format = False
+            if good_format and len(parameters) == 4:
+                x, y, w, h = parameters
+                line = w + '" height="' + h + '" viewBox="'
+                line += x + " " + y + " " + w + " " + h + '">'
+                line += (
+                    '<rect x="'
+                    + x
+                    + '" y="'
+                    + y
+                    + '" width="'
+                    + w
+                    + '" height="'
+                    + h
+                    + '" style="fill:'
+                    + background_color
+                    + ";"
+                )
+                if opacity is not None:
+                    line += "fill-opacity:" + str(opacity)
+                line += '" />'
+                new_file_text = file_text[:origin] + line + file_text[end + 1 :]
+                with open(file_name, "w") as f:
+                    f.write(new_file_text)

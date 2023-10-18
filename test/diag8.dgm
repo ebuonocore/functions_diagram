@@ -1,0 +1,42 @@
+def f1(a:int,b:bool)  # header_color = "red"
+f1.position(295,149)
+f1.dimension(97,58)
+
+def f2(n:str,m:str)->str
+f2.position(723,349)
+f2.dimension(86,58)
+
+def f4(x:str,y:str,v:str)->int
+f4.position(1225,340)
+f4.dimension(86,77)
+
+def f3(a:int,b:bool)->str  # header_color = "#6060A0"
+f3.position(216,472)
+f3.dimension(97,58)
+
+node(A:str,(514,256))
+node(B:str,(514,557))
+node(C:str,(1014,407))
+node(X,(113,293))
+node(Y,(113,397))
+node(Z,(113,539))
+
+group a(margin=20, mode="Auto", color="#a0a000", thickness=1)
+a.add_function(f1,f2,f4,f3)
+a.add_node(A,B,C,X,Y,Z)
+a.position(93,129)
+a.dimension(1238,450)
+
+f1<0---Y
+f1<1---X
+f1>---A
+f2<0---A
+f2<1---B
+f2>---C
+f4<0---A
+f4<1---C
+f4<2---B
+f3<0---Y
+f3<1---Z
+f3>---B
+Y---Y
