@@ -47,6 +47,8 @@ Result:
       <li><b>Position:</b> x: int, y: int.</li>
       <li><b>Auto/Fixed:</b> If the position is fixed, the node cannot be moved by automatic positioning (Auto).</li>
       <li><b>Annotation:</b> The type of the node.</li>
+      <li><b>Justify:</b> Different text alignment options: None, left, center, separator, right.</li>
+      <li><b>Comment:</b> Adds a free comment below the node.</li>
     </ul>  
   </div>
 </div>

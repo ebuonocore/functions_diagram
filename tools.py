@@ -72,7 +72,6 @@ def coordinates(parameters):
 
 def character_dimensions(police, size):
     """Return the (width, height) of a character of a mono-spaced font."""
-
     nb_pixels_height = tkfont.Font(size=size, family=police).metrics("linespace")
     nb_pixels_width = tkfont.Font(size=size, family=police).measure("X")
     return (nb_pixels_width, nb_pixels_height)

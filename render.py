@@ -1,7 +1,7 @@
 import tkinter as tki
 from diagram import *
 from files import *
-from GUI import *
+from render_GUI import *
 from canvasvg import saveall
 import argparse
 import window_export_image as wei
@@ -56,20 +56,25 @@ if __name__ == "__main__":
         ]
     nb_file = 0
     for source in sources:
-        try:
+        # try:
+        if True:
             if destination is None:
                 destination_file = source.replace(".dgm", ".svg")
+            window = Window()
             diag = open_file(source)
-            window = Window(diag, False)
+            window.diagram = diag
             window.preferences = tl.load_preferences(preferences)
             background_color = window.preferences["main background color_color"]
             if automode:
                 window.cmd_auto()
+            window.position_functions_nodes()
             window.draw()
             saveall(destination_file, window.can)
             wei.modify_SVG(destination_file, background_color, margin, opacity)
             nb_file += 1
             window.quit()
+        """
         except:
             print("Error: Invalid file")
+        """
     print(nb_file, "out of ", len(sources), "files converted to .SVG")

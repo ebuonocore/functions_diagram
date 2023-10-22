@@ -47,6 +47,8 @@ Resultat :
       <li><b>Position :</b> x: int, y: int.</li>
       <li><b>Auto/Fixed :</b> Si la position est fixe, la fonction ne peut pas être déplacée par positionnement automatique (Auto).</li>
       <li><b>Annotation :</b> Le type du noeud.</li>
+      <li><b>Justify:</b> Différentes proposition d'alignement de texte : None, left, center, separator, right.</li>
+      <li><b>Comment:</b> Ajoute un commentaire libre sous le noeud.</li>
     </ul>  
   </div>
 </div>
