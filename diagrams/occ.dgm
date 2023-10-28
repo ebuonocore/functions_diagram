@@ -1,0 +1,11 @@
+def occurrence_caracteres(str:phrase)->dict
+occurrence_caracteres.position(290,149)
+occurrence_caracteres.dimension(356,39)
+
+node(phrase:str,(136,197),justify="center")
+phrase.comment("Bonjour à tous !")
+node(dico:dict,(753,197))
+dico.comment({\n    'B': 1, 'o': 3, 'n': 1, 'j': 1, 'u': 2, 'r': 1,\n    ' ': 3, 'à': 1, 't': 1, 's': 1, '!': 1\n})
+
+occurrence_caracteres<0---phrase
+occurrence_caracteres>---dico

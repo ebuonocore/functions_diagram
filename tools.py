@@ -402,6 +402,11 @@ def cast_to_float(value_str: str, shape=None) -> float:
     >>> cast_to_float("4.2", "unit")
     None
     """
+    if value_str[0] == "-":
+        signe = -1
+        value_str = value_str[1:]
+    else:
+        signe = 1
     if value_str == "":
         value_str = "0"
     good_format = True
@@ -414,7 +419,7 @@ def cast_to_float(value_str: str, shape=None) -> float:
     if good_format:
         value = float(value_str)
         if shape is None:
-            return value
+            return value * signe
         elif shape == "unit":
             if 0.0 <= value <= 1.0:
                 return value
