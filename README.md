@@ -191,10 +191,16 @@ Some operations require you to select a destination first. You can exit this mod
 ## Render
 <code>render.py</code> is a rendering tool that converts .DMG files or a directory of .DMG files to .SVG.  
 Example of use :  
-<code>python3 render.py ./diagrams -m 40 -o 0.9</code>  
+
+```
+python3 render.py ./diagrams -m 40 -o 0.9
+```
+
 This instruction converts all .DMG files in the <code>diagrams</code> directory with an additional margin of 40 pixels (-m option) and a transparency of 0.9 (-o option)  
 
 Help:  
+
+```
 usage: render.py [-h] [-d DESTINATION] [-m MARGIN] [-o OPACITY] [-p {None,dark,light}] [-a AUTOMODE] source  
 
 positional arguments:  
@@ -212,6 +218,7 @@ options:
                         Preferences  
   -a AUTOMODE, --automode AUTOMODE  
                         Runs automatic placement if True  
+```
 
 ## Author
 Eric Buonocore
