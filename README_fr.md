@@ -26,6 +26,7 @@ La représentation graphique peut être exportée au format SVG.
   * [Edition des paramètres](readme/settings_fr.md)  
   * [Raccourcis clavier](#raccourcis-clavier)
   * [Contrôle par la souris](#contrôle-par-la-souris) 
+* [Outil de rendu](#render)  
 * [Auteur](#auteur)
 * [Avancement du projet](#avancement-du-projet)
 * [Feuille de route](#feuille-de-route)
@@ -114,7 +115,7 @@ Par la suite, il suffira de pousser plus loin cette approche descendante en spé
 Suivez ce lien pour accéder à une [proposition de résolution](/readme/TSP_example/) et les [diagrammes associés](/readme/TSP_example/assets/).  
 
 ## Format de sauvegarde
-Les diagrammes sont sauvegardés dans un fichier TXT.  
+Les diagrammes sont sauvegardés dans un fichier .DGM.  
 Voici à quoi ressemble la sauvegarde du diagramme précédent.  
 
 ```
@@ -189,6 +190,31 @@ Pour certaines opérations, vous devez d'abord sélectionner une destination. Vo
   + **Molette** : Zoom + et Zoom -
   + **Clic + Déplacement** : Décalage du point de référence du dessin
 
+## Render
+<code>render.py</code> est un outil de rendu qui permet de convertir des fichiers .DMG ou un répertoire de fichiers .DMG en .SVG.
+Exemple d'utilisation :
+<code>python3 render.py ./diagrams -m 40 -o 0.9</code>
+Cette instruction convertit l'ensemble des fichiers .DMG du répertoire <code>diagrams</code> avec une marge additionnelle de 40 pixels (option -m) et une transparence de 0.9 (option -o)
+
+Aide :
+usage: render.py [-h] [-d DESTINATION] [-m MARGIN] [-o OPACITY] [-p {None,dark,light}] [-a AUTOMODE] source
+
+positional arguments:
+  source                Source file
+
+options:
+  -h, --help            show this help message and exit
+  -d DESTINATION, --destination DESTINATION
+                        Destination file
+  -m MARGIN, --margin MARGIN
+                        Margin in pixels
+  -o OPACITY, --opacity OPACITY
+                        Opacity from 0 (transparent) to 1 (opaque)
+  -p {None,dark,light}, --preferences {None,dark,light}
+                        Preferences
+  -a AUTOMODE, --automode AUTOMODE
+                        Runs automatic placement if True
+
 ## Auteur
 Eric Buonocore
 
@@ -205,6 +231,7 @@ Le programme est opérationnel.
 - [x] Définir l'espacement des éléments pour le placement automatique  
 - [x] Permettre de justifier les noms des nœuds libres  
 - [x] Permettre l'agrandissement et le déplacement de l'ensemble de la mise en page
+- [x] Un outil de rendu (render.py) pour convertir des fichiers (ou répertoire de fichiers) .dmg en fichiers .svg
 
 ## Feuille de route
 - [ ] Tester et régler les bogs

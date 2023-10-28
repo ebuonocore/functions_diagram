@@ -26,6 +26,7 @@ The graphical representation can be exported in SVG format.
   * [Edit settings](readme/settings.md)
   * [Keyboard shortcuts](#keyboard-shortcuts)
   * [Mouse controls](#mouse-controls)   
+* [Render](#render)
 * [Author](#author)
 * [Project status](#project-status)
 * [Roadmap](#roadmap)
@@ -187,6 +188,34 @@ Some operations require you to select a destination first. You can exit this mod
   + **Wheel**: Zoom + et Zoom -
   + **Clic + Move**: Offset of the drawing
 
+## Render
+<code>render.py</code> is a rendering tool that converts .DMG files or a directory of .DMG files to .SVG.
+Example of use :
+<code>python3 render.py ./diagrams -m 40 -o 0.9</code>
+This instruction converts all .DMG files in the <code>diagrams</code> directory with an additional margin of 40 pixels (-m option) and a transparency of 0.9 (-o option)
+
+Help:
+usage: render.py [-h] [-d DESTINATION] [-m MARGIN] [-o OPACITY] [-p {None,dark,light}] [-a AUTOMODE] source
+
+positional arguments:
+  source                Source file
+
+options:
+  -h, --help            show this help message and exit
+  -d DESTINATION, --destination DESTINATION
+                        Destination file
+  -m MARGIN, --margin MARGIN
+                        Margin in pixels
+  -o OPACITY, --opacity OPACITY
+                        Opacity from 0 (transparent) to 1 (opaque)
+  -p {None,dark,light}, --preferences {None,dark,light}
+                        Preferences
+  -a AUTOMODE, --automode AUTOMODE
+                        Runs automatic placement if True
+
+
+
+
 ## Author
 Eric Buonocore
 
@@ -203,6 +232,7 @@ The program is operational.
 - [x] Set the spacing of elements for automatic placement  
 - [x] Allow the names of free nodes to be justified  
 - [x] Enable zooming and shifting of the whole layout
+- [x] A rendering tool (render.py) for converting .dmg files (or directories) into .svg files
 
 ## Roadmap
 - [ ] Testing and fixing bugs
