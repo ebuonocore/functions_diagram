@@ -114,7 +114,7 @@ After that, we'll just have to take this top-down approach a step further by spe
 Click here to see a [possible resolution](https://github.com/ebuonocore/TSP_naive_approach/tree/main) with the associated diagrams.  
 
 ## Backup file format
-Diagrams are saved in a TXT file.  
+Diagrams are saved in a .DGM file.  
 This is how the backup of the previous diagram looks.  
 
 ```
@@ -189,32 +189,29 @@ Some operations require you to select a destination first. You can exit this mod
   + **Clic + Move**: Offset of the drawing
 
 ## Render
-<code>render.py</code> is a rendering tool that converts .DMG files or a directory of .DMG files to .SVG.
-Example of use :
-<code>python3 render.py ./diagrams -m 40 -o 0.9</code>
-This instruction converts all .DMG files in the <code>diagrams</code> directory with an additional margin of 40 pixels (-m option) and a transparency of 0.9 (-o option)
+<code>render.py</code> is a rendering tool that converts .DMG files or a directory of .DMG files to .SVG.  
+Example of use :  
+<code>python3 render.py ./diagrams -m 40 -o 0.9</code>  
+This instruction converts all .DMG files in the <code>diagrams</code> directory with an additional margin of 40 pixels (-m option) and a transparency of 0.9 (-o option)  
 
-Help:
-usage: render.py [-h] [-d DESTINATION] [-m MARGIN] [-o OPACITY] [-p {None,dark,light}] [-a AUTOMODE] source
+Help:  
+usage: render.py [-h] [-d DESTINATION] [-m MARGIN] [-o OPACITY] [-p {None,dark,light}] [-a AUTOMODE] source  
 
-positional arguments:
-  source                Source file
-
-options:
-  -h, --help            show this help message and exit
-  -d DESTINATION, --destination DESTINATION
-                        Destination file
-  -m MARGIN, --margin MARGIN
-                        Margin in pixels
-  -o OPACITY, --opacity OPACITY
-                        Opacity from 0 (transparent) to 1 (opaque)
-  -p {None,dark,light}, --preferences {None,dark,light}
-                        Preferences
-  -a AUTOMODE, --automode AUTOMODE
-                        Runs automatic placement if True
-
-
-
+positional arguments:  
+  source                Source file  
+  
+options:  
+  -h, --help            show this help message and exit  
+  -d DESTINATION, --destination DESTINATION  
+                        Destination file  
+  -m MARGIN, --margin MARGIN  
+                        Margin in pixels  
+  -o OPACITY, --opacity OPACITY  
+                        Opacity from 0 (transparent) to 1 (opaque)  
+  -p {None,dark,light}, --preferences {None,dark,light}  
+                        Preferences  
+  -a AUTOMODE, --automode AUTOMODE  
+                        Runs automatic placement if True  
 
 ## Author
 Eric Buonocore

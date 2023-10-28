@@ -191,29 +191,29 @@ Pour certaines opérations, vous devez d'abord sélectionner une destination. Vo
   + **Clic + Déplacement** : Décalage du point de référence du dessin
 
 ## Render
-<code>render.py</code> est un outil de rendu qui permet de convertir des fichiers .DMG ou un répertoire de fichiers .DMG en .SVG.
-Exemple d'utilisation :
-<code>python3 render.py ./diagrams -m 40 -o 0.9</code>
-Cette instruction convertit l'ensemble des fichiers .DMG du répertoire <code>diagrams</code> avec une marge additionnelle de 40 pixels (option -m) et une transparence de 0.9 (option -o)
-
+<code>render.py</code> est un outil de rendu qui permet de convertir des fichiers .DMG ou un répertoire de fichiers .DMG en .SVG.  
+Exemple d'utilisation :  
+<code>python3 render.py ./diagrams -m 40 -o 0.9</code>  
+Cette instruction convertit l'ensemble des fichiers .DMG du répertoire <code>diagrams</code> avec une marge additionnelle de 40 pixels (option -m) et une transparence de 0.9 (option -o)  
+  
 Aide :
-usage: render.py [-h] [-d DESTINATION] [-m MARGIN] [-o OPACITY] [-p {None,dark,light}] [-a AUTOMODE] source
+usage: render.py [-h] [-d DESTINATION] [-m MARGIN] [-o OPACITY] [-p {None,dark,light}] [-a AUTOMODE] source  
 
-positional arguments:
-  source                Source file
-
-options:
-  -h, --help            show this help message and exit
-  -d DESTINATION, --destination DESTINATION
-                        Destination file
-  -m MARGIN, --margin MARGIN
-                        Margin in pixels
-  -o OPACITY, --opacity OPACITY
-                        Opacity from 0 (transparent) to 1 (opaque)
-  -p {None,dark,light}, --preferences {None,dark,light}
-                        Preferences
-  -a AUTOMODE, --automode AUTOMODE
-                        Runs automatic placement if True
+positional arguments:  
+  source                Source file  
+  
+options:  
+  -h, --help            show this help message and exit  
+  -d DESTINATION, --destination DESTINATION  
+                        Destination file  
+  -m MARGIN, --margin MARGIN  
+                        Margin in pixels  
+  -o OPACITY, --opacity OPACITY  
+                        Opacity from 0 (transparent) to 1 (opaque)  
+  -p {None,dark,light}, --preferences {None,dark,light}  
+                        Preferences  
+  -a AUTOMODE, --automode AUTOMODE  
+                        Runs automatic placement if True  
 
 ## Auteur
 Eric Buonocore
