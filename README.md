@@ -2,6 +2,10 @@
 [![flag_fr](/readme/assets/flag_fr.png)](/README_fr.md)
 # Functions diagram
 
+??? tip TEST
+tretrete
+???
+
 Functions-diagram is a Python program for graphically representing functions by specifying the input and output names and types.  
 Its aim is to help learners take their first steps with functions and analyse how a programme works.  
 Elements (nodes and functions) can be linked and connected to each other.   
