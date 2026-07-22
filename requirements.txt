@@ -1,4 +1,4 @@
 canvasvg==1.0.5
 fonttools==4.37.3
-Pillow==10.0.1
+Pillow
 matplotlib==3.6.0
